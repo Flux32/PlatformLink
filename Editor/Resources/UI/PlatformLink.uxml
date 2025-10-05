@@ -1,0 +1,21 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <ui:VisualElement name="window" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+        <ui:TwoPaneSplitView name="TwoPaneSplitView" orientation="Horizontal" fixed-pane-initial-dimension="100" view-data-key="two-pane-split-view" style="flex-grow: 1;">
+            <ui:VisualElement name="Platform" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+                <uie:Toolbar name="Platforms">
+                    <uie:ToolbarSpacer />
+                    <ui:Label tabindex="-1" text="Platforms" display-tooltip-when-elided="true" style="flex-grow: 1; -unity-text-align: middle-left;" />
+                </uie:Toolbar>
+                <ui:ListView name="platforms-list" style="flex-grow: 1;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="settings" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); min-width: 50px;">
+                <uie:Toolbar />
+                <ui:ScrollView scroll-deceleration-rate="0,135" elasticity="0,1" name="settings-scroll" style="flex-grow: 1;">
+                    <uie:PropertyField name="properly-editor" binding-path="_environmentEditor" />
+                    <uie:PropertyField name="properly-yandex-games" />
+                    <uie:PropertyField name="properly-android" binding-path="_admobSettings" />
+                </ui:ScrollView>
+            </ui:VisualElement>
+        </ui:TwoPaneSplitView>
+    </ui:VisualElement>
+</ui:UXML>

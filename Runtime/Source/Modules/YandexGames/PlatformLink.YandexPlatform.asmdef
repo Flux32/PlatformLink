@@ -1,0 +1,19 @@
+{
+    "name": "PlatformLink.YandexPlatform",
+    "rootNamespace": "",
+    "references": [
+        "GUID:32dd385ce0763a84ea4096b7588a7b69"
+    ],
+    "includePlatforms": [
+        "Editor",
+        "WebGL"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

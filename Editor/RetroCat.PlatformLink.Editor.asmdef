@@ -1,0 +1,19 @@
+{
+    "name": "RetroCat.PlatformLink.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:319d1f4d5bfc24039be16c3bb95712af",
+        "GUID:32dd385ce0763a84ea4096b7588a7b69"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
