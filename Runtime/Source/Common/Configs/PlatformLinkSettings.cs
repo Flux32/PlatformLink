@@ -2,13 +2,12 @@ using System;
 using UnityEngine;
 
 public class PlatformLinkSettings : ScriptableObject
-{
-    //[SerializeField] private EditorSettings _editor;
-    [SerializeField] private EnvironmentEditorSettings _environmentEditor;
+{ 
+    [SerializeField] private EditorSettings _editor;
     [SerializeField] private AndroidSettings _android;
 
     public AndroidSettings Android => _android;
-    //public EditorSettings Editor => _editor;
+    public EditorSettings Editor => _editor;
 
     private static PlatformLinkSettings s_instance;
 

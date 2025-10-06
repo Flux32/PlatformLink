@@ -1,10 +1,10 @@
 ﻿namespace PlatformLink
 {
-    public enum DeviceType
+    public enum DeviceType : uint
     {
-        Mobile,
-        Desktop,
-        Tablet,
-        TV,
+        Mobile = 0,
+        Desktop = 1,
+        Tablet = 2,
+        TV = 3,
     }
 }

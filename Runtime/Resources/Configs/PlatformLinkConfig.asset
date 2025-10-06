@@ -12,9 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8761f8d90e965a54c885c79f2fbe0058, type: 3}
   m_Name: PlatformLinkConfig
   m_EditorClassIdentifier: 
-  _environmentEditor:
-    _language: En
-    _deviceType: 0
+  _editor:
+    _environment:
+      _language: En
+      _deviceType: 0
+    _storage:
+      _saveFilePath: Djjd
   _android:
     _admobSettings:
       _appID: 

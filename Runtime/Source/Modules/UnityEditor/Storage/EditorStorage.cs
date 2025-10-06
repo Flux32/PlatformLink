@@ -11,19 +11,19 @@ namespace PlatformLink.Platform.UnityEditor
 {
     public class EditorStorage : IStorage
     {
+        private const string DirectoryErrorMessage = "Unable to save file. Directory {0} not found.";
         private const string FileExtension = ".txt";
-        private readonly string SaveDirectory = Application.dataPath + "/PlatformLink/Editor/Saves/";
-
         private const string SavedMessage = "data saved in editor mode";
         private const string LoadedMessage = "data loaded in editor mode";
 
-        private const string DirectoryErrorMessage = "Unable to save file. Directory {0} not found.";
-
+        private readonly string _saveDirectory;
+        
         private readonly ILogger _logger;
 
-        public EditorStorage(ILogger logger)
+        public EditorStorage(ILogger logger, string saveDirectory)
         {
             _logger = logger;
+            _saveDirectory = saveDirectory;
         }
 
         public void Load(string key, Action<bool, string> onCompleted)
@@ -40,8 +40,7 @@ namespace PlatformLink.Platform.UnityEditor
         {
             using (StreamWriter writer = new StreamWriter(CreateFullPath(key)))
                 await writer.WriteAsync(data);
-
-
+            
             AssetDatabase.Refresh();
 
             _logger.Log(SavedMessage);
@@ -52,7 +51,7 @@ namespace PlatformLink.Platform.UnityEditor
         {
             string data;
 
-            if (Directory.Exists(SaveDirectory) == false)
+            if (Directory.Exists(_saveDirectory) == false)
             {
                 _logger.LogError(DirectoryErrorMessage);
                 onCompleted?.Invoke(false, null);
@@ -62,7 +61,7 @@ namespace PlatformLink.Platform.UnityEditor
             try
             {
                 using StreamReader reader = new StreamReader(CreateFullPath(key));
-                    data = await reader.ReadToEndAsync();
+                data = await reader.ReadToEndAsync();
             }
             catch
             {
@@ -75,7 +74,7 @@ namespace PlatformLink.Platform.UnityEditor
 
         private string CreateFullPath(string key)
         {
-            return Path.Combine(SaveDirectory, key + FileExtension);
+            return Path.Combine(_saveDirectory, key + FileExtension);
         }
     }
 }
