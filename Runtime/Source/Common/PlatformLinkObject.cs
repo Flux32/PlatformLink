@@ -28,5 +28,10 @@ namespace PlatformLink
                 throw new InvalidOperationException("Component is already exists");
             }
         }
+
+        public static void ClearInstance()
+        {
+            _object = null;
+        }
     }
 }

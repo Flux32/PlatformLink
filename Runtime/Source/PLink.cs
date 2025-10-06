@@ -1,5 +1,7 @@
 using PlatformLink.PluginDebug;
 using PlatformLink.Common;
+using UnityEngine;
+using ILogger = PlatformLink.PluginDebug.ILogger;
 
 #if UNITY_EDITOR
 using PlatformLink.Platform.UnityEditor;
@@ -78,5 +80,14 @@ namespace PlatformLink
             _environment = moduleFactory.CreateEnvironment();
             _storage = moduleFactory.CreateStorage();
         }
+        
+#if UNITY_EDITOR        
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics()
+        {
+            s_instance = null;
+            PlatformLinkObject.ClearInstance();
+        }
+#endif
     }
 }
