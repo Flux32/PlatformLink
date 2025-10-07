@@ -45,5 +45,4 @@ mergeInto(LibraryManager.library, {
     jslib_purchase: function(id) {
         purchase(UTF8ToString(id));
     }
-}
 });
