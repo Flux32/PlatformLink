@@ -23,5 +23,10 @@ namespace PlatformLink.Platform.YandexGames
         {
             return PlatformLinkObject.AddComponent<YandexStorage>();
         }
+
+        public IPurchases CreatePurchases()
+        {
+            return PlatformLinkObject.AddComponent<YandexPurchases>();
+        }
     }
 }

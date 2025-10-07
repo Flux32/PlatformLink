@@ -27,6 +27,8 @@ namespace PlatformLink
         public static IAdvertisement Advertisement => Instance._advertisement;
         public static IEnvironment Environment => Instance._environment;
         public static IStorage Storage => Instance._storage;
+        public static IPurchases Purchases => Instance._purchases;
+        
         //public static IPlayer Player => Instance._player;
         //public static ILeaderboard Leaderboard => Instance._leaderboard;
 
@@ -49,6 +51,7 @@ namespace PlatformLink
         private readonly IEnvironment _environment;
         private readonly IStorage _storage;
         private readonly IPlayer _player;
+        private readonly IPurchases _purchases;
 
         //private const string GameReadyMessage = "Sended game ready message";
 
@@ -79,6 +82,7 @@ namespace PlatformLink
             _advertisement = new Advertisement(interstetialAd, rewardedAd);
             _environment = moduleFactory.CreateEnvironment();
             _storage = moduleFactory.CreateStorage();
+            _purchases = moduleFactory.CreatePurchases();
         }
         
 #if UNITY_EDITOR        

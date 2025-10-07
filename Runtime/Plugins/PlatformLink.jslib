@@ -41,4 +41,9 @@ mergeInto(LibraryManager.library, {
     jslib_sendGameReadyMessage: function() {
         sendGameReadyMessage();
     },
+    
+    jslib_purchase: function(id) {
+        purchase(id)
+    },
+}
 });

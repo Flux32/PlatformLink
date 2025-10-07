@@ -37,5 +37,10 @@ public class EditorModuleFactory : IModuleFactory
     {
         return new EditorStorage(new PLinkLogger(), EditorSettings.Storage.SaveFilePath);
     }
+
+    public IPurchases CreatePurchases()
+    {
+        return new EditorPurchases();
+    }
 }
 #endif

@@ -6,4 +6,5 @@ public interface IModuleFactory
     IRewardedAd CreateRewardedAd();
     IEnvironment CreateEnvironment();
     IStorage CreateStorage();
+    IPurchases CreatePurchases();
 }
