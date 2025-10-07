@@ -11,13 +11,14 @@ namespace PlatformLink.Platform.YandexGames
         public event Action Closed;
         public event Action Failed;
 
-        public bool IsOpened => throw new NotImplementedException();
+        public bool IsOpened { get; private set; }
 
         [DllImport("__Internal")]
         private static extern void jslib_showInterstitialAd();
 
         public void Show()
         {
+            IsOpened = true;
             jslib_showInterstitialAd();
         }
 
@@ -34,11 +35,13 @@ namespace PlatformLink.Platform.YandexGames
 
         private void fjs_onInterstetialAdClosed()
         {
+            IsOpened = false;
             Closed?.Invoke();
         }
 
         private void fjs_onInterstetialAdFailed()
         {
+            IsOpened = false;
             Failed?.Invoke();
         }
         #endregion
