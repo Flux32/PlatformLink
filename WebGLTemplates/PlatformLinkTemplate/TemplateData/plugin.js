@@ -75,6 +75,16 @@ function showRewardedAd() {
   })
 }
 
+function purchase(id) {
+  ysdk.payments.purchase({ id: id }).then(purchase => {
+    console.log('Purchase success');
+    sendMessageToUnity('fjs_onPurchaseSuccess');
+  }).catch(error => {
+    console.log('Purchase error:', error);
+    sendMessageToUnity('fjs_onPurchaseError');
+  });
+}
+
 function saveToPlatform(key, data)
 {
   let object = {
