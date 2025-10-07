@@ -43,7 +43,7 @@ mergeInto(LibraryManager.library, {
     },
     
     jslib_purchase: function(id) {
-        purchase(id)
+        purchase(id);
     },
 }
 });
