@@ -1,9 +1,12 @@
-public class Purchase
+namespace PlatformLink.Common
 {
-    public string ProductId { get; }
-
-    public Purchase(string productId)
+    public class Purchase
     {
-        ProductId = productId;
+        public string ProductId { get; }
+
+        public Purchase(string productId)
+        {
+            ProductId = productId;
+        }
     }
 }
