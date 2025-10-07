@@ -23,10 +23,8 @@ namespace PlatformLink
             {
                 return _object.AddComponent<T>();
             }
-            else
-            {
-                throw new InvalidOperationException("Component is already exists");
-            }
+            
+            throw new InvalidOperationException("Component is already exists");
         }
 
         public static void ClearInstance()

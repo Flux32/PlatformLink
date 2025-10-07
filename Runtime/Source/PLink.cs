@@ -47,11 +47,11 @@ namespace PlatformLink
 
         private static PLink s_instance;
 
-        private readonly IAdvertisement _advertisement;
-        private readonly IEnvironment _environment;
-        private readonly IStorage _storage;
-        private readonly IPlayer _player;
-        private readonly IPurchases _purchases;
+        private IAdvertisement _advertisement;
+        private IEnvironment _environment;
+        private IStorage _storage;
+        private IPlayer _player;
+        private IPurchases _purchases;
 
         //private const string GameReadyMessage = "Sended game ready message";
 
@@ -68,10 +68,7 @@ namespace PlatformLink
         private void Init()
         {
             PlatformLinkObject.Initialize();
-        }
-
-        private PLink()
-        {
+            
 #if UNITY_EDITOR
             IModuleFactory moduleFactory = new EditorModuleFactory();
 #elif UNITY_WEBGL
