@@ -1,0 +1,16 @@
+{
+    "name": "RetroCat.PlatformLink",
+    "rootNamespace": "",
+    "references": [
+        "GUID:f2f653986f162ce4aaadaa2c30dfce72"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,0 +1,27 @@
+{
+  "name": "com.retrocat.platformlink",
+  "displayName": "Platform Link",
+  "version": "0.0.3",
+  "unity": "6000.1",
+  "unityRelease": "0a9",
+  "description": "Platforn Link",
+  "keywords": [
+    "tools",
+    "editor",
+    "runtime"
+  ],
+  "author": {
+    "name": "Flux32",
+    "url": "https://github.com/Flux32"
+  },
+  "dependencies": {
+    "com.unity.textmeshpro": "3.0.6"
+  },
+  "documentationUrl": "https://example.com/docs",
+  "changelogUrl": "https://example.com/changelog",
+  "licensesUrl": "https://example.com/license",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Flux32/PlatformLink"
+  }
+}
