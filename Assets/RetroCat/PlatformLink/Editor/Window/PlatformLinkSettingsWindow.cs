@@ -7,8 +7,9 @@ using UnityEngine.UIElements;
 public class PlatformLinkSettingsWindow : EditorWindow
 {
     private const string HeaderText = "PlatformLink";
-    private const string VisualTreePath = "Packages/com.retrocat.platformlink/Editor/Resources/UI/PlatformLink.uxml";
-
+    private const string VisualTreePath = "Assets/RetroCat/PlatformLink/Editor/Resources/UI/PlatformLink.uxml";
+    private const string PackageVisualTreePath = "Packages/com.retrocat.platformlink/Editor/Resources/UI/PlatformLink.uxml";
+    
     private ListView _platformsList;
     private ScrollView _settingsScroll;
 

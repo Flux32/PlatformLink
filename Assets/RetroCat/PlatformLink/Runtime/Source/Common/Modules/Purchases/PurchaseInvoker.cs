@@ -1,10 +1,13 @@
 using PlatformLink;
 using UnityEngine;
 
-public class PurchaseInvoker : MonoBehaviour
+namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Purchases
 {
-    public void InitiatePurchase(string id)
+    public class PurchaseInvoker : MonoBehaviour
     {
-        PLink.Purchases.Purchase(id);
+        public void InitiatePurchase(string id)
+        {
+            PLink.Purchases.Purchase(id);
+        }
     }
 }

@@ -1,6 +1,6 @@
 ﻿#if UNITY_EDITOR
 using System;
-using PlatformLink.Common;
+using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Advertisement;
 using ILogger = PlatformLink.PluginDebug.ILogger;
 
 namespace PlatformLink.Platform.UnityEditor

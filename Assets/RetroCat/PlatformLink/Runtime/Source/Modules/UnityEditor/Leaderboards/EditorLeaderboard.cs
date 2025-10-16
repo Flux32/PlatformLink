@@ -1,7 +1,7 @@
 #if UNITY_EDITOR
 using System;
 using UnityEngine;
-using PlatformLink.Common;
+using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Leaderboards;
 
 public class EditorLeaderboard : ILeaderboard
 {

@@ -1,4 +1,4 @@
-namespace PlatformLink
+namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Storage
 {
     public enum WebGLPlatformStorageType
     {

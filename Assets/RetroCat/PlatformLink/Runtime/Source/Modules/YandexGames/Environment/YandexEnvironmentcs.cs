@@ -1,6 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using UnityEngine;
-using PlatformLink.Common;
+using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Environment;
+using DeviceType = RetroCat.PlatformLink.Runtime.Source.Common.Modules.Environment.DeviceType;
 
 namespace PlatformLink.Platform.YandexGames
 {

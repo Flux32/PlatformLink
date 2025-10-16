@@ -1,4 +1,4 @@
-﻿namespace PlatformLink.Common
+﻿namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Advertisement
 {
     public class Reward
     {

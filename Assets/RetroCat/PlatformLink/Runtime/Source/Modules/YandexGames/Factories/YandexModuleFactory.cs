@@ -1,6 +1,13 @@
-﻿using PlatformLink.Common;
+﻿using PlatformLink;
+using PlatformLink.Platform.YandexGames;
+using RetroCat.PlatformLink.Runtime.Source.Common.Modules;
+using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Advertisement;
+using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Environment;
+using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Purchases;
+using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Storage;
+using RetroCat.PlatformLink.Runtime.Source.Modules.YandexGames.Purchases;
 
-namespace PlatformLink.Platform.YandexGames
+namespace RetroCat.PlatformLink.Runtime.Source.Modules.YandexGames.Factories
 {
     public class YandexModuleFactory : IModuleFactory
     {

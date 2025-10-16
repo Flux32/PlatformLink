@@ -1,10 +1,16 @@
-﻿using PlatformLink.Common;
+﻿using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Advertisement;
+using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Environment;
+using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Purchases;
+using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Storage;
 
-public interface IModuleFactory
+namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules
 {
-    IInterstitialAd CreateInterstitialAd();
-    IRewardedAd CreateRewardedAd();
-    IEnvironment CreateEnvironment();
-    IStorage CreateStorage();
-    IPurchases CreatePurchases();
+    public interface IModuleFactory
+    {
+        IInterstitialAd CreateInterstitialAd();
+        IRewardedAd CreateRewardedAd();
+        IEnvironment CreateEnvironment();
+        IStorage CreateStorage();
+        IPurchases CreatePurchases();
+    }
 }

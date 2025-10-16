@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using DeviceType = RetroCat.PlatformLink.Runtime.Source.Common.Modules.Environment.DeviceType;
 using SystemDeviceType = UnityEngine.DeviceType;
 
-namespace PlatformLink.Common
+namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Environment
 {
     public class DefaultEnvironment : IEnvironment
     {

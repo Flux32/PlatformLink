@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PlatformLink.Common
+namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Player
 {
     public interface IPlayer
     {

@@ -1,4 +1,4 @@
-﻿namespace PlatformLink.Common
+﻿namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Environment
 {
     public interface IEnvironment
     {

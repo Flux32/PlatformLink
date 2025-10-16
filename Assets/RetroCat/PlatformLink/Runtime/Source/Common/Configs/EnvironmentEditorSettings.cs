@@ -1,6 +1,6 @@
 ﻿using System;
 using UnityEngine;
-using DeviceType = PlatformLink.DeviceType;
+using DeviceType = RetroCat.PlatformLink.Runtime.Source.Common.Modules.Environment.DeviceType;
 
 [Serializable]
 public class EnvironmentEditorSettings

@@ -26,7 +26,7 @@ namespace PlatformLink.Examples
 
         private void OnSaveButtonClicked()
         {
-            PLink.Storage.Save(_inputKeyField.text, _inputTextField.text, (success) =>
+            PLink.Storage.SaveString(_inputKeyField.text, _inputTextField.text, (success) =>
             {
                 if (success == true)
                     _inputTextField.text = SavedMessage;
@@ -35,7 +35,7 @@ namespace PlatformLink.Examples
 
         private void OnLoadButtonClicked()
         {
-            PLink.Storage.Load(_inputKeyField.text, (success, data) =>
+            PLink.Storage.LoadString(_inputKeyField.text, (success, data) =>
             {
                 if (success == true)
                     _inputTextField.text = data;

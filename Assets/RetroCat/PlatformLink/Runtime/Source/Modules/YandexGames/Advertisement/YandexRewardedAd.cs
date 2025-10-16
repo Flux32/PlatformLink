@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using UnityEngine;
-using PlatformLink.Common;
+using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Advertisement;
 
 namespace PlatformLink.Platform.YandexGames
 {

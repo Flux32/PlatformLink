@@ -18,6 +18,8 @@ MonoBehaviour:
       _deviceType: 0
     _storage:
       _saveFilePath: Djjd
+    _purchases:
+      _products: []
   _android:
     _admobSettings:
       _appID: 

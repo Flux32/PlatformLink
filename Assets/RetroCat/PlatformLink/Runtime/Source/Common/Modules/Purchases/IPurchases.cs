@@ -1,6 +1,6 @@
 using System;
 
-namespace PlatformLink.Common
+namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Purchases
 {
     public interface IPurchases
     {
@@ -9,5 +9,8 @@ namespace PlatformLink.Common
         public event Action<string> PurchaseFailed;
         
         public void Purchase(string id);
+        
+        public Purchase[] GetPurchases();
+        public void ConsumePurchase(Purchase purchase);
     }
 }

@@ -1,10 +1,10 @@
 ﻿#if UNITY_EDITOR
 using System;
 using System.IO;
+using System.Globalization;
 using UnityEngine;
 using UnityEditor;
-using PlatformLink.Common;
-
+using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Storage;
 using ILogger = PlatformLink.PluginDebug.ILogger;
 
 namespace PlatformLink.Platform.UnityEditor
@@ -26,17 +26,83 @@ namespace PlatformLink.Platform.UnityEditor
             _saveDirectory = saveDirectory;
         }
 
-        public void Load(string key, Action<bool, string> onCompleted)
+        public void SaveString(string key, string data, Action<bool> onCompleted = null)
         {
-            LoadAsync(key, onCompleted);
+            SaveInternalAsync(key, data, onCompleted);
         }
 
-        public void Save(string key, string data, Action<bool> onCompleted = null)
+        public void SaveInt(string key, int data, Action<bool> onCompleted = null)
         {
-            SaveAsync(key, data, onCompleted);
+            SaveInternalAsync(key, data.ToString(CultureInfo.InvariantCulture), onCompleted);
         }
 
-        private async void SaveAsync(string key, string data, Action<bool> onCompleted = null)
+        public void SaveBool(string key, bool data, Action<bool> onCompleted = null)
+        {
+            SaveInternalAsync(key, data.ToString(), onCompleted);
+        }
+
+        public void SaveFloat(string key, float data, Action<bool> onCompleted = null)
+        {
+            SaveInternalAsync(key, data.ToString(CultureInfo.InvariantCulture), onCompleted);
+        }
+
+        public void LoadString(string key, Action<bool, string> onCompleted)
+        {
+            LoadInternalAsync(key, onCompleted);
+        }
+
+        public void LoadInt(string key, Action<bool, int> onCompleted)
+        {
+            LoadInternalAsync(key, (success, rawData) =>
+            {
+                if (success == false)
+                {
+                    onCompleted?.Invoke(false, default);
+                    return;
+                }
+
+                if (int.TryParse(rawData, NumberStyles.Integer, CultureInfo.InvariantCulture, out int result))
+                    onCompleted?.Invoke(true, result);
+                else
+                    onCompleted?.Invoke(false, default);
+            });
+        }
+
+        public void LoadBool(string key, Action<bool, bool> onCompleted)
+        {
+            LoadInternalAsync(key, (success, rawData) =>
+            {
+                if (success == false)
+                {
+                    onCompleted?.Invoke(false, default);
+                    return;
+                }
+
+                if (bool.TryParse(rawData, out bool result))
+                    onCompleted?.Invoke(true, result);
+                else
+                    onCompleted?.Invoke(false, default);
+            });
+        }
+
+        public void LoadFloat(string key, Action<bool, float> onCompleted)
+        {
+            LoadInternalAsync(key, (success, rawData) =>
+            {
+                if (success == false)
+                {
+                    onCompleted?.Invoke(false, default);
+                    return;
+                }
+
+                if (float.TryParse(rawData, NumberStyles.Float, CultureInfo.InvariantCulture, out float result))
+                    onCompleted?.Invoke(true, result);
+                else
+                    onCompleted?.Invoke(false, default);
+            });
+        }
+
+        private async void SaveInternalAsync(string key, string data, Action<bool> onCompleted = null)
         {
             using (StreamWriter writer = new StreamWriter(CreateFullPath(key)))
                 await writer.WriteAsync(data);
@@ -47,7 +113,7 @@ namespace PlatformLink.Platform.UnityEditor
             onCompleted?.Invoke(true);
         }
 
-        private async void LoadAsync(string key, Action<bool, string> onCompleted)
+        private async void LoadInternalAsync(string key, Action<bool, string> onCompleted)
         {
             string data;
 

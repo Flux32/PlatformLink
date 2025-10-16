@@ -1,7 +1,7 @@
 ﻿#if UNITY_EDITOR
 using log4net.Core;
 using System;
-using PlatformLink.Common;
+using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Player;
 
 namespace PlatformLink.Platform.UnityEditor
 {
