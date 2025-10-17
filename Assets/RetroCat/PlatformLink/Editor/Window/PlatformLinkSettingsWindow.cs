@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.UIElements;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 public class PlatformLinkSettingsWindow : EditorWindow
@@ -38,6 +39,16 @@ public class PlatformLinkSettingsWindow : EditorWindow
     private void CreateGUI()
     {
         VisualTreeAsset visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(VisualTreePath);
+        if (visualTree == null)
+        {
+            visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(PackageVisualTreePath);
+        }
+        if (visualTree == null)
+        {
+            Debug.LogError($"PlatformLinkSettingsWindow: UXML not found at '{VisualTreePath}' or '{PackageVisualTreePath}'.");
+            return;
+        }
+
         visualTree.CloneTree(rootVisualElement);
         SerializedObject so = new SerializedObject(PlatformLinkSettings.Instance);
         rootVisualElement.Bind(so);
