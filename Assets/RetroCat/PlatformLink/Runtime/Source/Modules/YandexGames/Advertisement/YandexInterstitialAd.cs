@@ -12,19 +12,25 @@ namespace PlatformLink.Platform.YandexGames
         public event Action Failed;
 
         public bool IsOpened { get; private set; }
+        public bool NoAdMode { get; set; }
 
         [DllImport("__Internal")]
         private static extern void jslib_showInterstitialAd();
 
         public void Show()
         {
+            if (NoAdMode)
+            {
+                Failed?.Invoke();
+                return;
+            }
             IsOpened = true;
             jslib_showInterstitialAd();
         }
 
         public bool CanShow()
         {
-            return true;
+            return NoAdMode == false;
         }
 
         #region Called from PlatformLink.js

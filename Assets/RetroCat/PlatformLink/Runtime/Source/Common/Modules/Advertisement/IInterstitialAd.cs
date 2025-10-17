@@ -11,5 +11,6 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Advertisement
         public void Show();
         public bool CanShow();
         public bool IsOpened { get; }
+        public bool NoAdMode { get; set; }
     }
 }

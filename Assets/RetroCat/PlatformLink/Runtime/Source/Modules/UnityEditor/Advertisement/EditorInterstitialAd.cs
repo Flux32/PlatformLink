@@ -1,6 +1,7 @@
 ﻿#if UNITY_EDITOR
 using System;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Advertisement;
+using UnityEditor.PackageManager;
 using ILogger = PlatformLink.PluginDebug.ILogger;
 
 namespace PlatformLink.Platform.UnityEditor
@@ -29,6 +30,7 @@ namespace PlatformLink.Platform.UnityEditor
         public event Action Failed;
 
         public bool IsOpened { get; private set; }
+        public bool NoAdMode { get; set; }
 
         private void OnClosed()
         {
@@ -46,7 +48,13 @@ namespace PlatformLink.Platform.UnityEditor
 
         public void Show()
         {
-            if (IsOpened == true)
+            if (NoAdMode)
+            {
+                Failed?.Invoke();
+                return;
+            }
+            
+            if (IsOpened)
                 _logger.LogWarning("Attempt to show interstitial on top of open interstitial");
             else
                 _interstitialClient.Open();
@@ -54,7 +62,7 @@ namespace PlatformLink.Platform.UnityEditor
 
         public bool CanShow()
         {
-            return IsOpened == false;
+            return IsOpened == false && NoAdMode == false;
         }
     }
 }
