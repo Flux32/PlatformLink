@@ -5,12 +5,12 @@ using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Environment;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Player;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Purchases;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Storage;
-using RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Factories;
+
 using UnityEngine;
 using ILogger = PlatformLink.PluginDebug.ILogger;
 
 #if UNITY_EDITOR
-using PlatformLink.Platform.UnityEditor;
+using RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Factories;
 #endif
 
 #if UNITY_WEBGL
