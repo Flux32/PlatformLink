@@ -12,5 +12,6 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules
         IEnvironment CreateEnvironment();
         IStorage CreateStorage();
         IPurchases CreatePurchases();
+        IAnalytics CreateAnalytics();
     }
 }

@@ -34,6 +34,7 @@ namespace PlatformLink
         public static IEnvironment Environment => Instance._environment;
         public static IStorage Storage => Instance._storage;
         public static IPurchases Purchases => Instance._purchases;
+        public static IAnalytics Analytics => Instance._analytics;
         
         //public static IPlayer Player => Instance._player;
         //public static ILeaderboard Leaderboard => Instance._leaderboard;
@@ -56,11 +57,10 @@ namespace PlatformLink
         private IAdvertisement _advertisement;
         private IEnvironment _environment;
         private IStorage _storage;
-        private IPlayer _player;
+        private IAnalytics _analytics;
         private IPurchases _purchases;
-
-        //private const string GameReadyMessage = "Sended game ready message";
-
+        private IPlayer _player;
+        
 #if UNITY_WEBGL //TODO: Remove
         [DllImport("__Internal")]
         private static extern void jslib_convertString(string data);
@@ -76,9 +76,9 @@ namespace PlatformLink
             PlatformLinkObject.Initialize();
             
 #if UNITY_EDITOR
-            IModuleFactory moduleFactory = new EditorModuleFactory();
+            IModuleFactory moduleFactory = new EditorModuleFactory(_logger);
 #elif UNITY_WEBGL
-            IModuleFactory moduleFactory = new YandexModuleFactory();
+            IModuleFactory moduleFactory = new YandexModuleFactory(_logger);
 #endif
             IInterstitialAd interstetialAd = moduleFactory.CreateInterstitialAd();
             IRewardedAd rewardedAd = moduleFactory.CreateRewardedAd();
@@ -86,6 +86,7 @@ namespace PlatformLink
             _environment = moduleFactory.CreateEnvironment();
             _storage = moduleFactory.CreateStorage();
             _purchases = moduleFactory.CreatePurchases();
+            _analytics = moduleFactory.CreateAnalytics();
         }
         
 #if UNITY_EDITOR        

@@ -1,14 +1,16 @@
 #if UNITY_EDITOR
 using PlatformLink.Platform.UnityEditor;
-using PlatformLink.PluginDebug;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Advertisement;
+using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Analytics;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Environment;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Purchases;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Storage;
+using RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Analytics;
 using RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Purchases;
 using UnityEngine;
 using DeviceType = RetroCat.PlatformLink.Runtime.Source.Common.Modules.Environment.DeviceType;
+using ILogger = PlatformLink.PluginDebug.ILogger;
 
 namespace RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Factories
 {
@@ -16,11 +18,16 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Factories
     {
         private const string InterstitialViewPath = "Prefabs/Ad/interstetial_editor_ad";
         private const string RewardedViewPath = "Prefabs/Ad/rewarded_editor_ad";
-    
+        
+        private readonly ILogger _logger;
+            
+        public EditorModuleFactory(ILogger logger)
+        {
+            _logger = logger;
+        }
+        
         private EditorSettings EditorSettings => PlatformLinkSettings.Instance.Editor;
-    
-        private PLinkLogger _logger = new PLinkLogger();
-    
+        
         public IInterstitialAd CreateInterstitialAd()
         {
             EditorInterstitialView interstitialViewPrefab = Resources.Load<EditorInterstitialView>(InterstitialViewPath);
@@ -51,6 +58,12 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Factories
         public IPurchases CreatePurchases()
         {
             return new EditorPurchases(_logger);
+        }
+
+        public IAnalytics CreateAnalytics()
+        {
+            return new Common.Modules.Analytics.Analytics(_logger, new IAnalyticsService[]
+                { new EditorAnalyticsService(_logger) });
         }
     }
 }
