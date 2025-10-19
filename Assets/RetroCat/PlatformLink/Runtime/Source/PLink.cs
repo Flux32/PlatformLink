@@ -5,7 +5,6 @@ using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Environment;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Player;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Purchases;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Storage;
-
 using UnityEngine;
 using ILogger = PlatformLink.PluginDebug.ILogger;
 
@@ -15,6 +14,7 @@ using RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Factories;
 
 #if UNITY_WEBGL
 using PlatformLink.Platform.YandexGames;
+using RetroCat.PlatformLink.Runtime.Source.Modules.YandexGames.Factories;
 #endif
 
 #if UNITY_EDITOR || UNITY_WEBGL
@@ -75,6 +75,7 @@ namespace PlatformLink
         {
             PlatformLinkObject.Initialize();
             
+
 #if UNITY_EDITOR
             IModuleFactory moduleFactory = new EditorModuleFactory(_logger);
 #elif UNITY_WEBGL
