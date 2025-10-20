@@ -136,3 +136,8 @@ function getDeviceInfo()
 {
   return ysdk.deviceInfo.type;
 }
+
+function setLeaderboardScore(leaderboardId, score)
+{
+  ysdk.leaderboards.setScore(leaderboardId, score);
+}

@@ -7,25 +7,14 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.YandexGames.Leaderboards
 {
     public class YandexLeaderboard : MonoBehaviour, ILeaderboard
     {
-        private Action<bool> SetScoreCompleted;
         private Action<bool, int> GetScoreCompleted;
-
+        
         [DllImport("__Internal")]
-        private static extern void jslib_getLeaderBoardScore();
-
-        public void GetScore(string leaderBoardName, Action<bool, int> onCompleted)
+        private static extern void jslib_setLeaderboardScore(string leaderboardId, int score);
+        
+        public void SetScore(string leaderboardId, int score)
         {
-            GetScoreCompleted = onCompleted;
-            jslib_getLeaderBoardScore();
-        }
-
-        [DllImport("__Internal")]
-        private static extern void jslib_setLeaderBoardScore(int score);
-
-        public void SetScore(string leaderBoardName, int score, Action<bool> onCompleted = null)
-        {
-            SetScoreCompleted = onCompleted;
-            jslib_setLeaderBoardScore(score);
+            jslib_setLeaderboardScore(leaderboardId, score);
         }
 
         private void fjs_onGetScoreSuccess(int score)
@@ -36,16 +25,6 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.YandexGames.Leaderboards
         private void fjs_onGetScoreFailed()
         {
             GetScoreCompleted?.Invoke(true, 0);
-        }
-
-        private void fjs_onSetScoreSuccess()
-        {
-            SetScoreCompleted?.Invoke(true);
-        }
-
-        private void fjs_onSetScoreFailed()
-        {
-            SetScoreCompleted?.Invoke(false);
         }
     }
 }

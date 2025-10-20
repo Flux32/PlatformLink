@@ -44,5 +44,9 @@ mergeInto(LibraryManager.library, {
     
     jslib_purchase: function(id) {
         purchase(UTF8ToString(id));
+    },
+    
+    jslib_setLeaderboardScore: function(leaderboardId, score) {
+        setLeaderboardScore(leaderboardId, score);
     }
 });
