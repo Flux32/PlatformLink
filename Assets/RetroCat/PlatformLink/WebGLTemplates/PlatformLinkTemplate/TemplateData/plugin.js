@@ -4,8 +4,6 @@ YaGames
   console.log('Yandex SDK initialized');
   window.ysdk = ysdk;
   initializePlayer();
-
-  sendGameReadyMessage(); //DOTO: Here?
 });
 
 let player;
