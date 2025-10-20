@@ -107,8 +107,6 @@ namespace PlatformLink.Platform.UnityEditor
             using (StreamWriter writer = new StreamWriter(CreateFullPath(key)))
                 await writer.WriteAsync(data);
             
-            AssetDatabase.Refresh();
-
             _logger.Log(SavedMessage);
             onCompleted?.Invoke(true);
         }
