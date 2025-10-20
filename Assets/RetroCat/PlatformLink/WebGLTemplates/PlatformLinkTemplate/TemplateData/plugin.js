@@ -1,17 +1,22 @@
-YaGames
-.init()
-.then(ysdk => {
-  console.log('Yandex SDK initialized');
-  window.ysdk = ysdk;
-  initializePlayer();
-});
-
 let player;
+
+function initializePlugin()
+{
+  YaGames
+    .init()
+    .then(ysdk => {
+    console.log('Yandex SDK initialized');
+    window.ysdk = ysdk;
+    initializePlayer();
+});
+}
 
 function initializePlayer() {
   return ysdk.getPlayer({ scopes: false }).then(_player => {
     player = _player;
     console.log("Yandex SDK player initialized: [player mode = " + player.getMode() + "]");
+    console.log("PlatformLink initialized");
+    sendMessageToUnity('fjs_platformLinkInitialized');
   });
 }
 

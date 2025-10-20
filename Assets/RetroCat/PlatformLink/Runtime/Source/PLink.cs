@@ -1,3 +1,4 @@
+using System;
 using PlatformLink.PluginDebug;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Advertisement;
@@ -67,9 +68,14 @@ namespace PlatformLink
         private static extern void jslib_convertString(string data);
 #endif
 
-        public static void Initialize() { }
+        public static void Initialize(Action onCompleted)
+        {
+            Instance.Init(onCompleted);
+        }
 
-        private PLink()
+        private PLink() { }
+
+        private void Init(Action onCompleted)
         {
             PlatformLinkObject.Initialize();
 
@@ -86,6 +92,11 @@ namespace PlatformLink
             _purchases = moduleFactory.CreatePurchases();
             _analytics = moduleFactory.CreateAnalytics();
             _leaderboard = moduleFactory.CreateLeaderboard();
+            
+#if UNITY_WEBGL && !UNITY_EDITOR
+            YandexCore core = PlatformLinkObject.AddComponent<YandexCore>();
+            core.Initialize(onCompleted);
+#endif
         }
         
 #if UNITY_EDITOR        
