@@ -1,10 +1,9 @@
-﻿/*
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
+using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Leaderboards;
 using UnityEngine;
-using PlatformLink.Common;
 
-namespace PlatformLink.Platform
+namespace RetroCat.PlatformLink.Runtime.Source.Modules.YandexGames.Leaderboards
 {
     public class YandexLeaderboard : MonoBehaviour, ILeaderboard
     {
@@ -50,4 +49,3 @@ namespace PlatformLink.Platform
         }
     }
 }
-*/

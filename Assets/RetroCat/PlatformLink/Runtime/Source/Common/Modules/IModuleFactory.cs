@@ -1,5 +1,6 @@
 ﻿using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Advertisement;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Environment;
+using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Leaderboards;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Purchases;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Storage;
 
@@ -13,5 +14,6 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules
         IStorage CreateStorage();
         IPurchases CreatePurchases();
         IAnalytics CreateAnalytics();
+        ILeaderboard CreateLeaderboard();
     }
 }

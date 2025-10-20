@@ -2,6 +2,7 @@ using PlatformLink.PluginDebug;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Advertisement;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Environment;
+using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Leaderboards;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Player;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Purchases;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Storage;
@@ -35,9 +36,8 @@ namespace PlatformLink
         public static IStorage Storage => Instance._storage;
         public static IPurchases Purchases => Instance._purchases;
         public static IAnalytics Analytics => Instance._analytics;
-        
+        public static ILeaderboard Leaderboard => Instance._leaderboard;
         //public static IPlayer Player => Instance._player;
-        //public static ILeaderboard Leaderboard => Instance._leaderboard;
 
         private readonly ILogger _logger = new PLinkLogger();
 
@@ -60,21 +60,18 @@ namespace PlatformLink
         private IAnalytics _analytics;
         private IPurchases _purchases;
         private IPlayer _player;
+        private ILeaderboard _leaderboard;
         
 #if UNITY_WEBGL //TODO: Remove
         [DllImport("__Internal")]
         private static extern void jslib_convertString(string data);
 #endif
 
-        public static void Initialize()
-        {
-      //      Instance.Init();
-        }
+        public static void Initialize() { }
 
         private PLink()
         {
             PlatformLinkObject.Initialize();
-            
 
 #if UNITY_EDITOR
             IModuleFactory moduleFactory = new EditorModuleFactory(_logger);
@@ -88,6 +85,7 @@ namespace PlatformLink
             _storage = moduleFactory.CreateStorage();
             _purchases = moduleFactory.CreatePurchases();
             _analytics = moduleFactory.CreateAnalytics();
+            _leaderboard = moduleFactory.CreateLeaderboard();
         }
         
 #if UNITY_EDITOR        

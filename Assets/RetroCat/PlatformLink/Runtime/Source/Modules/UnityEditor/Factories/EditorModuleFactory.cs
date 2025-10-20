@@ -4,9 +4,11 @@ using RetroCat.PlatformLink.Runtime.Source.Common.Modules;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Advertisement;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Analytics;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Environment;
+using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Leaderboards;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Purchases;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Storage;
 using RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Analytics;
+using RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Leaderboards;
 using RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Purchases;
 using UnityEngine;
 using DeviceType = RetroCat.PlatformLink.Runtime.Source.Common.Modules.Environment.DeviceType;
@@ -64,6 +66,11 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Factories
         {
             return new Common.Modules.Analytics.Analytics(_logger, new IAnalyticsService[]
                 { new EditorAnalyticsService(_logger) });
+        }
+
+        public ILeaderboard CreateLeaderboard()
+        {
+            return new EditorLeaderboard();
         }
     }
 }
