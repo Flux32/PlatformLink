@@ -96,6 +96,8 @@ namespace PlatformLink
 #if UNITY_WEBGL && !UNITY_EDITOR
             YandexCore core = PlatformLinkObject.AddComponent<YandexCore>();
             core.Initialize(onCompleted);
+#else
+            onCompleted?.Invoke();
 #endif
         }
         

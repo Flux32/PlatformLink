@@ -6,6 +6,10 @@ mergeInto(LibraryManager.library, {
         return buffer;
     },
 
+    jslib_initializePlugin: function() {
+        initializePlugin();
+    },
+
     jslib_showInterstitialAd: function() {
         showInterstitialAd();
     },
