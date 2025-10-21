@@ -51,6 +51,6 @@ mergeInto(LibraryManager.library, {
     },
     
     jslib_setLeaderboardScore: function(leaderboardId, score) {
-        setLeaderboardScore(leaderboardId, score);
+        setLeaderboardScore(UTF8ToString(leaderboardId), score);
     }
 });
