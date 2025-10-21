@@ -6,7 +6,7 @@ namespace PlatformLink.Examples
     {
         private void Start()
         {
-            PLink.Initialize();
+            PLink.Initialize(null);
             //Debug.Log(PLink.Environment.DeviceType.ToString());
             //Debug.Log(PLink.Environment.Language);
         }
