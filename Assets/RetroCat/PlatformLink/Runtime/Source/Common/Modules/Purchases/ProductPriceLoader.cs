@@ -11,7 +11,8 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Purchases
         [SerializeField] private bool _loadOnEnable;
     
         [SerializeField] private UnityEvent OnLoadStarted;
-        [SerializeField] private UnityEvent<string, Texture2D> OnLoadFinished;
+        [SerializeField] private UnityEvent<Texture2D> OnIconLoadFinished;
+        [SerializeField] private UnityEvent<string> OnPriceLoadFinished;
 
         private Coroutine _coroutine;
     
@@ -64,7 +65,9 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Purchases
             });
         
             yield return new WaitUntil(() => isLoaded && loadedCurrencyIcon != null);
-            OnLoadFinished?.Invoke(loadedProduct.PriceValue, loadedCurrencyIcon);
+            
+            OnPriceLoadFinished?.Invoke(loadedProduct.PriceValue);
+            OnIconLoadFinished?.Invoke(loadedCurrencyIcon);
         }
     }
 }
