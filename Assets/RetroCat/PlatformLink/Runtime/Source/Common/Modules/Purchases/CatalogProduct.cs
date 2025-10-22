@@ -8,7 +8,7 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Purchases
         public string Id { get; }
         public string Title { get; }
         public string Description { get; }
-        public ProductIcon Icon { get; }
+        public PriceCurrencyIcon PriceCurrencyIcon { get; }
         public string Price { get; }
         public string PriceValue { get; }
         public string PriceCurrencyCode { get; }
@@ -17,7 +17,7 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Purchases
             string id,
             string title,
             string description,
-            ProductIcon icon,
+            PriceCurrencyIcon priceCurrencyIcon,
             string price,
             string priceValue,
             string priceCurrencyCode)
@@ -25,7 +25,7 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Purchases
             Id = id;
             Title = title;
             Description = description;
-            Icon = icon;
+            PriceCurrencyIcon = priceCurrencyIcon;
             Price = price;
             PriceValue = priceValue;
             PriceCurrencyCode = priceCurrencyCode;

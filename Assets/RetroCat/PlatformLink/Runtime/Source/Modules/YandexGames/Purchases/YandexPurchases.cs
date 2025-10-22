@@ -80,7 +80,7 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.YandexGames.Purchases
                         p.id ?? string.Empty,
                         p.title ?? string.Empty,
                         p.description ?? string.Empty,
-                        new ProductIcon(p.iconUrl ?? string.Empty),
+                        new PriceCurrencyIcon(p.iconUrl ?? string.Empty),
                         p.price ?? string.Empty,
                         p.priceValue ?? string.Empty,
                         p.priceCurrencyCode ?? string.Empty);
@@ -114,7 +114,7 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.YandexGames.Purchases
                     p.id ?? string.Empty,
                     p.title ?? string.Empty,
                     p.description ?? string.Empty,
-                    new ProductIcon(p.iconUrl ?? string.Empty),
+                    new PriceCurrencyIcon(p.iconUrl ?? string.Empty),
                     p.price ?? string.Empty,
                     p.priceValue ?? string.Empty,
                     p.priceCurrencyCode ?? string.Empty);
