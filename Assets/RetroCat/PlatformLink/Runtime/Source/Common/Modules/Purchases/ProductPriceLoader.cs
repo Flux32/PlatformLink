@@ -14,7 +14,8 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Purchases
         [SerializeField] private UnityEvent<Texture2D> OnIconLoadFinished;
         [SerializeField] private UnityEvent OnIconLoadError;
         [SerializeField] private UnityEvent<string> OnPriceLoadFinished;
-
+        [SerializeField] private UnityEvent OnAllLoadOperationsFinished;
+        
         private Coroutine _coroutine;
     
         private void OnEnable()
@@ -77,6 +78,8 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Purchases
             }
             
             OnPriceLoadFinished?.Invoke(loadedProduct.PriceValue);
+            
+            OnAllLoadOperationsFinished?.Invoke();
         }
     }
 }
