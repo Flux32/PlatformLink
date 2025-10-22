@@ -49,9 +49,10 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Purchases
             bool isLoaded = false;
             CatalogProduct loadedProduct = null;
         
-            PLink.Purchases.GetProduct(_productId, (success, product) =>
+            PLink.Purchases.GetProduct(_productId, (isSuccess, product) =>
             {
-                isLoaded = success;
+                Debug.Log($"Product {_productId} loaded with result: {isSuccess}");
+                isLoaded = isSuccess;
                 loadedProduct = product;
             });
         
@@ -60,7 +61,7 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Purchases
             isLoaded = false;
             Texture2D loadedCurrencyIcon = null;
         
-            loadedProduct.PriceCurrencyIcon.LoadTexture((success, currencyIcon ) =>
+            loadedProduct.PriceCurrencyIcon.LoadTexture((isSuccess, currencyIcon ) =>
             {
                 isLoaded = true;
                 loadedCurrencyIcon = currencyIcon;
