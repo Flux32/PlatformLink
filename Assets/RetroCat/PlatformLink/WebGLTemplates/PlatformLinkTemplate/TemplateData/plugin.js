@@ -120,6 +120,44 @@ function getCatalog() {
     });
 }
 
+function getProduct(id) {
+  if (!ysdk || !ysdk.payments || !ysdk.payments.getCatalog) {
+    console.warn('Yandex SDK payments.getCatalog is not available');
+    sendMessageToUnity('fjs_onGetProductFailed');
+    return;
+  }
+
+  ysdk.payments.getCatalog()
+    .then(products => {
+      const product = (products || []).find(p => p.id === id);
+      if (!product) {
+        sendMessageToUnity('fjs_onGetProductFailed');
+        return;
+      }
+
+      try {
+        const mapped = {
+          id: product.id || '',
+          title: product.title || '',
+          description: product.description || '',
+          imageURI: product.imageURI || '',
+          price: product.price || '',
+          priceValue: product.priceValue || '',
+          priceCurrencyCode: product.priceCurrencyCode || ''
+        };
+        const payload = JSON.stringify(mapped);
+        sendMessageToUnity('fjs_onGetProductSuccess', payload);
+      } catch (e) {
+        console.error('Error serializing product:', e);
+        sendMessageToUnity('fjs_onGetProductFailed');
+      }
+    })
+    .catch(error => {
+      console.log('getProduct error:', error);
+      sendMessageToUnity('fjs_onGetProductFailed');
+    });
+}
+
 function saveToPlatform(key, data)
 {
   let object = {

@@ -73,5 +73,26 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Purchases
 
             onCompleted?.Invoke(true, catalog);
         }
+
+        public void GetProduct(string id, Action<bool, CatalogProduct> onCompleted)
+        {
+            ProductSettings[] products = PlatformLinkSettings.Instance.Editor.Purchases.Products;
+            ProductSettings product = products?.FirstOrDefault(p => p.Id == id);
+            if (product == null)
+            {
+                onCompleted?.Invoke(false, null);
+                return;
+            }
+
+            var result = new CatalogProduct(
+                product.Id,
+                string.Empty,
+                string.Empty,
+                string.Empty,
+                string.Empty,
+                string.Empty,
+                string.Empty);
+            onCompleted?.Invoke(true, result);
+        }
     }
 }

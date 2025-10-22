@@ -12,12 +12,15 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.YandexGames.Purchases
         public event Action<string> PurchaseFailed;
         
         private Action<bool, CatalogProduct[]> _getCatalogCompleted;
+        private Action<bool, CatalogProduct> _getProductCompleted;
 
         [DllImport("__Internal")]
         private static extern void jslib_purchase(string id);
         private static extern void jslib_consumePurchase(string token);
         [DllImport("__Internal")]
         private static extern void jslib_getCatalog();
+        [DllImport("__Internal")]
+        private static extern void jslib_getProduct(string id);
         
         public void Purchase(string id)
         {
@@ -38,6 +41,12 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.YandexGames.Purchases
         {
             _getCatalogCompleted = onCompleted;
             jslib_getCatalog();
+        }
+
+        public void GetProduct(string id, Action<bool, CatalogProduct> onCompleted)
+        {
+            _getProductCompleted = onCompleted;
+            jslib_getProduct(id);
         }
 
         #region Called from PlatformLink.js
@@ -88,6 +97,39 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.YandexGames.Purchases
         private void fjs_onGetCatalogFailed()
         {
             _getCatalogCompleted?.Invoke(false, Array.Empty<CatalogProduct>());
+        }
+
+        private void fjs_onGetProductSuccess(string json)
+        {
+            try
+            {
+                var p = JsonUtility.FromJson<CatalogProductJson>(json);
+                if (p == null)
+                {
+                    _getProductCompleted?.Invoke(false, null);
+                    return;
+                }
+
+                var product = new CatalogProduct(
+                    p.id ?? string.Empty,
+                    p.title ?? string.Empty,
+                    p.description ?? string.Empty,
+                    p.imageURI ?? string.Empty,
+                    p.price ?? string.Empty,
+                    p.priceValue ?? string.Empty,
+                    p.priceCurrencyCode ?? string.Empty);
+
+                _getProductCompleted?.Invoke(true, product);
+            }
+            catch (Exception)
+            {
+                _getProductCompleted?.Invoke(false, null);
+            }
+        }
+
+        private void fjs_onGetProductFailed()
+        {
+            _getProductCompleted?.Invoke(false, null);
         }
         #endregion
 
