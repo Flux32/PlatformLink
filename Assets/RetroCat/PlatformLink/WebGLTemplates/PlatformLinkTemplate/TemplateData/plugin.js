@@ -88,6 +88,38 @@ function purchase(id) {
   });
 }
 
+function getCatalog() {
+  if (!ysdk || !ysdk.payments || !ysdk.payments.getCatalog) {
+    console.warn('Yandex SDK payments.getCatalog is not available');
+    sendMessageToUnity('fjs_onGetCatalogFailed');
+    return;
+  }
+
+  ysdk.payments.getCatalog()
+    .then(products => {
+      try {
+        const mapped = (products || []).map(p => ({
+          id: p.id || '',
+          title: p.title || '',
+          description: p.description || '',
+          imageURI: p.imageURI || '',
+          price: p.price || '',
+          priceValue: p.priceValue || '',
+          priceCurrencyCode: p.priceCurrencyCode || ''
+        }));
+        const payload = JSON.stringify({ items: mapped });
+        sendMessageToUnity('fjs_onGetCatalogSuccess', payload);
+      } catch (e) {
+        console.error('Error serializing catalog:', e);
+        sendMessageToUnity('fjs_onGetCatalogFailed');
+      }
+    })
+    .catch(error => {
+      console.log('getCatalog error:', error);
+      sendMessageToUnity('fjs_onGetCatalogFailed');
+    });
+}
+
 function saveToPlatform(key, data)
 {
   let object = {

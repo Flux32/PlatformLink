@@ -50,6 +50,10 @@ mergeInto(LibraryManager.library, {
         purchase(UTF8ToString(id));
     },
     
+    jslib_getCatalog: function() {
+        getCatalog();
+    },
+    
     jslib_setLeaderboardScore: function(leaderboardId, score) {
         setLeaderboardScore(UTF8ToString(leaderboardId), score);
     }

@@ -47,5 +47,31 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Purchases
         {
             Debug.Log("Purchase consumed");
         }
+
+        public void GetCatalog(Action<bool, CatalogProduct[]> onCompleted)
+        {
+            ProductSettings[] products = PlatformLinkSettings.Instance.Editor.Purchases.Products;
+            
+            if (products == null || products.Length == 0)
+            {
+                onCompleted?.Invoke(true, Array.Empty<CatalogProduct>());
+                return;
+            }
+
+            CatalogProduct[] catalog = new CatalogProduct[products.Length];
+            for (int i = 0; i < products.Length; i++)
+            {
+                catalog[i] = new CatalogProduct(
+                    products[i].Id,
+                    string.Empty,
+                    string.Empty,
+                    string.Empty,
+                    string.Empty,
+                    string.Empty,
+                    string.Empty);
+            }
+
+            onCompleted?.Invoke(true, catalog);
+        }
     }
 }
