@@ -11,7 +11,7 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Purchases
         [SerializeField] private bool _loadOnEnable;
     
         [SerializeField] private UnityEvent OnLoadStarted;
-        [SerializeField] private UnityEvent<Texture2D> OnIconLoadFinished;
+        [SerializeField] private UnityEvent<Sprite> OnIconLoadFinished;
         [SerializeField] private UnityEvent OnIconLoadError;
         [SerializeField] private UnityEvent<string> OnPriceLoadFinished;
         [SerializeField] private UnityEvent OnAllLoadOperationsFinished;
@@ -75,7 +75,8 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Purchases
             }
             else
             {
-                OnIconLoadFinished?.Invoke(loadedCurrencyIcon);
+                Sprite sprite = Sprite.Create(loadedCurrencyIcon, new Rect(0, 0, loadedCurrencyIcon.width, loadedCurrencyIcon.height), Vector2.one / 2);
+                OnIconLoadFinished?.Invoke(sprite);
             }
             
             OnPriceLoadFinished?.Invoke(loadedProduct.PriceValue);

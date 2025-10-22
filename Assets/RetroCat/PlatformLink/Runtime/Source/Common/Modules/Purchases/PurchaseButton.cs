@@ -9,7 +9,7 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Purchases
     {
         [SerializeField] private Button _button;
         [SerializeField] private string _id;
-
+        
         private PurchaseInvoker _purchaseInvoker;
 
         private void Awake()
