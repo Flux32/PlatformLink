@@ -102,7 +102,7 @@ function getCatalog() {
           id: p.id || '',
           title: p.title || '',
           description: p.description || '',
-          imageURI: p.imageURI || '',
+          iconUrl: p.imageURI || '',
           price: p.price || '',
           priceValue: p.priceValue || '',
           priceCurrencyCode: p.priceCurrencyCode || ''
@@ -140,7 +140,7 @@ function getProduct(id) {
           id: product.id || '',
           title: product.title || '',
           description: product.description || '',
-          imageURI: product.imageURI || '',
+          iconUrl: product.imageURI || '',
           price: product.price || '',
           priceValue: product.priceValue || '',
           priceCurrencyCode: product.priceCurrencyCode || ''

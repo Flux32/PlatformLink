@@ -65,7 +65,7 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Purchases
                     products[i].Id,
                     string.Empty,
                     string.Empty,
-                    string.Empty,
+                    new ProductIcon(string.Empty),
                     string.Empty,
                     string.Empty,
                     string.Empty);
@@ -88,7 +88,7 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Purchases
                 product.Id,
                 string.Empty,
                 string.Empty,
-                string.Empty,
+                new ProductIcon(string.Empty),
                 string.Empty,
                 string.Empty,
                 string.Empty);
