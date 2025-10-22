@@ -17,7 +17,7 @@ public class PlatformLinkSettingsWindow : EditorWindow
     private VisualElement _selectedTab;
     private int _selectedTabIndex;
 
-    [MenuItem("Window/PlatformLink", false, int.MaxValue)]
+    [MenuItem("Window/PlatformLink/Settings", false, int.MaxValue)]
     private static void Open()
     {
         PlatformLinkSettingsWindow window = (PlatformLinkSettingsWindow)GetWindow(typeof(PlatformLinkSettingsWindow));
@@ -38,6 +38,9 @@ public class PlatformLinkSettingsWindow : EditorWindow
 
     private void CreateGUI()
     {
+        // Ensure a project-local settings asset exists to persist user changes
+        PlatformLinkSettingsUtility.EnsureProjectSettingsAssetExists();
+
         VisualTreeAsset visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(VisualTreePath);
         if (visualTree == null)
         {

@@ -11,7 +11,8 @@ public class PlatformLinkSettings : ScriptableObject
 
     private static PlatformLinkSettings s_instance;
 
-    private const string ConfigFullPath = "Configs/PlatformLinkConfig";
+    private const string DefaultConfigPath = "Configs/PlatformLinkConfig";
+    private const string ProjectConfigPath = "ProjectConfigs/PlatformLinkConfig";
 
     public static PlatformLinkSettings Instance
     {
@@ -19,10 +20,14 @@ public class PlatformLinkSettings : ScriptableObject
         {
             if (s_instance == null)
             {
-                s_instance = Resources.Load<PlatformLinkSettings>(ConfigFullPath);
+                s_instance = Resources.Load<PlatformLinkSettings>(ProjectConfigPath);
+                if (s_instance == null)
+                {
+                    s_instance = Resources.Load<PlatformLinkSettings>(DefaultConfigPath);
+                }
 
                 if (s_instance == null)
-                    throw new InvalidOperationException(); //TODO: exception message
+                    throw new InvalidOperationException("PlatformLinkSettings asset not found. Create it via Window/PlatformLink → Create Project Settings Asset.");
             }
 
             return s_instance;
