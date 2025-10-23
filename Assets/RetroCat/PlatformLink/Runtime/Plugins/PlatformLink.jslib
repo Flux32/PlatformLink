@@ -49,6 +49,14 @@ mergeInto(LibraryManager.library, {
     jslib_purchase: function(id) {
         purchase(UTF8ToString(id));
     },
+
+    jslib_consumePurchase: function(token) {
+        consumePurchase(UTF8ToString(token));
+    },
+
+    jslib_getPurchases: function() {
+        getPurchases();
+    },
     
     jslib_getCatalog: function() {
         getCatalog();

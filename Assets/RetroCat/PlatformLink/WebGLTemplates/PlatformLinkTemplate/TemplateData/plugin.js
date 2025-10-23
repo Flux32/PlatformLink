@@ -103,7 +103,7 @@ function getCatalog() {
           title: p.title || '',
           description: p.description || '',
           iconUrl: p.imageURI || '',
-          currencyIconUrl: (typeof p.getPriceCurrencyImage === 'function') ? p.getPriceCurrencyImage('medium') : '',
+          currencyIconUrl: (typeof p.getPriceCurrencyImage === 'function') ? p.getPriceCurrencyImage('small') : '',
           price: p.price || '',
           priceValue: p.priceValue || '',
           priceCurrencyCode: p.priceCurrencyCode || ''
@@ -142,7 +142,7 @@ function getProduct(id) {
           title: product.title || '',
           description: product.description || '',
           iconUrl: product.imageURI || '',
-          currencyIconUrl: (typeof product.getPriceCurrencyImage === 'function') ? product.getPriceCurrencyImage('medium') : '',
+          currencyIconUrl: (typeof product.getPriceCurrencyImage === 'function') ? product.getPriceCurrencyImage('small') : '',
           price: product.price || '',
           priceValue: product.priceValue || '',
           priceCurrencyCode: product.priceCurrencyCode || ''
@@ -157,6 +157,51 @@ function getProduct(id) {
     .catch(error => {
       console.log('getProduct error:', error);
       sendMessageToUnity('fjs_onGetProductFailed');
+    });
+}
+
+function getPurchases() {
+  if (!ysdk || !ysdk.payments || !ysdk.payments.getPurchases) {
+    console.warn('Yandex SDK payments.getPurchases is not available');
+    sendMessageToUnity('fjs_onGetPurchasesFailed');
+    return;
+  }
+
+  ysdk.payments.getPurchases()
+    .then(purchases => {
+      try {
+        const mapped = (purchases || []).map(p => ({
+          productID: p.productID || '',
+          purchaseToken: p.purchaseToken || '',
+          developerPayload: p.developerPayload || ''
+        }));
+        const payload = JSON.stringify({ items: mapped });
+        sendMessageToUnity('fjs_onGetPurchasesSuccess', payload);
+      } catch (e) {
+        console.error('Error serializing purchases:', e);
+        sendMessageToUnity('fjs_onGetPurchasesFailed');
+      }
+    })
+    .catch(error => {
+      console.log('getPurchases error:', error);
+      sendMessageToUnity('fjs_onGetPurchasesFailed');
+    });
+}
+
+function consumePurchase(token) {
+  if (!ysdk || !ysdk.payments || !ysdk.payments.consumePurchase) {
+    console.warn('Yandex SDK payments.consumePurchase is not available');
+    sendMessageToUnity('fjs_onConsumePurchaseFailed', token || '');
+    return;
+  }
+
+  ysdk.payments.consumePurchase(token)
+    .then(() => {
+      sendMessageToUnity('fjs_onConsumePurchaseSuccess', token || '');
+    })
+    .catch(error => {
+      console.log('consumePurchase error:', error);
+      sendMessageToUnity('fjs_onConsumePurchaseFailed', token || '');
     });
 }
 

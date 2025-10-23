@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Purchases;
 using UnityEngine;
@@ -13,10 +14,16 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.YandexGames.Purchases
         
         private Action<bool, CatalogProduct[]> _getCatalogCompleted;
         private Action<bool, CatalogProduct> _getProductCompleted;
+        private Purchase[] _cachedPurchases = Array.Empty<Purchase>();
+        private bool _isGetPurchasesInProgress;
+        private readonly HashSet<string> _pendingConsumptionTokens = new HashSet<string>();
 
         [DllImport("__Internal")]
         private static extern void jslib_purchase(string id);
+        [DllImport("__Internal")]
         private static extern void jslib_consumePurchase(string token);
+        [DllImport("__Internal")]
+        private static extern void jslib_getPurchases();
         [DllImport("__Internal")]
         private static extern void jslib_getCatalog();
         [DllImport("__Internal")]
@@ -29,12 +36,31 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.YandexGames.Purchases
 
         public Purchase[] GetPurchases()
         {
-            throw new NotImplementedException();
+            RequestPurchasesUpdate();
+            return _cachedPurchases;
         }
 
         public void ConsumePurchase(Purchase purchase)
         {
-            throw new NotImplementedException();
+            if (purchase == null)
+            {
+                Debug.LogWarning("YandexPurchases: ConsumePurchase called with null purchase");
+                return;
+            }
+
+            if (string.IsNullOrEmpty(purchase.Token))
+            {
+                Debug.LogWarning($"YandexPurchases: Purchase {purchase.ProductId} has no token to consume");
+                return;
+            }
+
+            if (_pendingConsumptionTokens.Contains(purchase.Token))
+            {
+                return;
+            }
+
+            _pendingConsumptionTokens.Add(purchase.Token);
+            jslib_consumePurchase(purchase.Token);
         }
 
         public void GetCatalog(Action<bool, CatalogProduct[]> onCompleted)
@@ -49,10 +75,22 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.YandexGames.Purchases
             jslib_getProduct(id);
         }
 
+        private void RequestPurchasesUpdate()
+        {
+            if (_isGetPurchasesInProgress)
+            {
+                return;
+            }
+
+            _isGetPurchasesInProgress = true;
+            jslib_getPurchases();
+        }
+
         #region Called from PlatformLink.js
         private void fjs_onPurchaseSuccess()
         {
             Purchased?.Invoke(new Purchase("", "0", ProductType.Consumable));
+            RequestPurchasesUpdate();
         }
 
         private void fjs_onPurchaseError()
@@ -133,6 +171,82 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.YandexGames.Purchases
         {
             _getProductCompleted?.Invoke(false, null);
         }
+
+        private void fjs_onGetPurchasesSuccess(string json)
+        {
+            try
+            {
+                var wrapper = JsonUtility.FromJson<PurchasesWrapper>(json);
+                if (wrapper?.items == null)
+                {
+                    _cachedPurchases = Array.Empty<Purchase>();
+                    return;
+                }
+
+                Purchase[] result = new Purchase[wrapper.items.Length];
+                for (int i = 0; i < wrapper.items.Length; i++)
+                {
+                    var purchase = wrapper.items[i];
+                    result[i] = new Purchase(
+                        purchase.productID ?? string.Empty,
+                        purchase.purchaseToken ?? string.Empty,
+                        ProductType.Consumable);
+                }
+
+                _cachedPurchases = result;
+            }
+            catch (Exception exception)
+            {
+                Debug.LogWarning($"YandexPurchases: Failed to parse purchases payload. {exception.Message}");
+            }
+            finally
+            {
+                _isGetPurchasesInProgress = false;
+            }
+        }
+
+        private void fjs_onGetPurchasesFailed()
+        {
+            _isGetPurchasesInProgress = false;
+        }
+
+        private void fjs_onConsumePurchaseSuccess(string token)
+        {
+            if (!string.IsNullOrEmpty(token))
+            {
+                _pendingConsumptionTokens.Remove(token);
+
+                if (_cachedPurchases.Length > 0)
+                {
+                    var updated = new List<Purchase>(_cachedPurchases.Length);
+                    for (int i = 0; i < _cachedPurchases.Length; i++)
+                    {
+                        if (string.Equals(_cachedPurchases[i].Token, token, StringComparison.Ordinal))
+                        {
+                            continue;
+                        }
+
+                        updated.Add(_cachedPurchases[i]);
+                    }
+
+                    _cachedPurchases = updated.ToArray();
+                }
+            }
+            else
+            {
+                _pendingConsumptionTokens.Clear();
+            }
+        }
+
+        private void fjs_onConsumePurchaseFailed(string token)
+        {
+            if (!string.IsNullOrEmpty(token))
+            {
+                _pendingConsumptionTokens.Remove(token);
+            }
+
+            Debug.LogWarning($"YandexPurchases: Failed to consume purchase with token {token}");
+        }
         #endregion
 
         [Serializable]
@@ -152,6 +266,20 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.YandexGames.Purchases
             public string price;
             public string priceValue;
             public string priceCurrencyCode;
+        }
+
+        [Serializable]
+        private class PurchasesWrapper
+        {
+            public PurchaseJson[] items;
+        }
+
+        [Serializable]
+        private class PurchaseJson
+        {
+            public string productID;
+            public string purchaseToken;
+            public string developerPayload;
         }
     }
 }
