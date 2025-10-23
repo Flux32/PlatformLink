@@ -5,11 +5,11 @@ using UnityEngine.Networking;
 namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Purchases
 {
     [Serializable]
-    public class PriceCurrencyIcon
+    public class RemoteIcon
     {
         public string Url { get; }
 
-        public PriceCurrencyIcon(string url)
+        public RemoteIcon(string url)
         {
             Url = url;
         }

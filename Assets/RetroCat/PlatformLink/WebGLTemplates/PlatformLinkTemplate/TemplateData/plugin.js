@@ -103,6 +103,7 @@ function getCatalog() {
           title: p.title || '',
           description: p.description || '',
           iconUrl: p.imageURI || '',
+          currencyIconUrl: (typeof p.getPriceCurrencyImage === 'function') ? p.getPriceCurrencyImage('small') : '',
           price: p.price || '',
           priceValue: p.priceValue || '',
           priceCurrencyCode: p.priceCurrencyCode || ''
@@ -141,6 +142,7 @@ function getProduct(id) {
           title: product.title || '',
           description: product.description || '',
           iconUrl: product.imageURI || '',
+          currencyIconUrl: (typeof product.getPriceCurrencyImage === 'function') ? product.getPriceCurrencyImage('small') : '',
           price: product.price || '',
           priceValue: product.priceValue || '',
           priceCurrencyCode: product.priceCurrencyCode || ''

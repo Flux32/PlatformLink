@@ -61,7 +61,7 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Purchases
             isLoaded = false;
             Texture2D loadedCurrencyIcon = null;
         
-            loadedProduct.PriceCurrencyIcon.LoadTexture((isSuccess, currencyIcon ) =>
+            loadedProduct.CurrencyIcon.LoadTexture((isSuccess, currencyIcon ) =>
             {
                 isLoaded = true;
                 loadedCurrencyIcon = currencyIcon;
