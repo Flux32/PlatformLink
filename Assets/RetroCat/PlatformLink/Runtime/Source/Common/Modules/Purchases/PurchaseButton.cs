@@ -1,5 +1,6 @@
 using PlatformLink;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Purchases
@@ -9,6 +10,8 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Purchases
     {
         [SerializeField] private Button _button;
         [SerializeField] private string _id;
+
+        public UnityEvent<Purchase> Purchased;
         
         private PurchaseInvoker _purchaseInvoker;
 
@@ -43,6 +46,7 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Purchases
         private void OnPurchased(Purchase purchase)
         {
             _button.interactable = true;
+            Purchased?.Invoke(purchase);
         }
 
         private void OnPurchaseFailed(string error)
