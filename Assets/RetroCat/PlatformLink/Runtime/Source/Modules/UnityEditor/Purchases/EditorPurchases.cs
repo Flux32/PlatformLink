@@ -38,9 +38,9 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Purchases
             Purchased?.Invoke(new Purchase(productSettings.Id,  "0", productSettings.ProductType));
         }
 
-        public Purchase[] GetPurchases()
+        public void GetPurchases(Action<Purchase[]> onCompleted)
         {
-            return Array.Empty<Purchase>();
+            onCompleted?.Invoke(Array.Empty<Purchase>());
         }
 
         public void ConsumePurchase(Purchase purchase)

@@ -14,8 +14,7 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.YandexGames.Purchases
         
         private Action<bool, CatalogProduct[]> _getCatalogCompleted;
         private Action<bool, CatalogProduct> _getProductCompleted;
-        private Purchase[] _cachedPurchases = Array.Empty<Purchase>();
-        private bool _isGetPurchasesInProgress;
+        private Action<Purchase[]> _getPurchasesCompleted;
         private readonly HashSet<string> _pendingConsumptionTokens = new HashSet<string>();
 
         [DllImport("__Internal")]
@@ -34,10 +33,10 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.YandexGames.Purchases
             jslib_purchase(id);
         }
 
-        public Purchase[] GetPurchases()
+        public void GetPurchases(Action<Purchase[]> onCompleted)
         {
-            RequestPurchasesUpdate();
-            return _cachedPurchases;
+            _getPurchasesCompleted = onCompleted;
+            jslib_getPurchases();
         }
 
         public void ConsumePurchase(Purchase purchase)
@@ -75,22 +74,12 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.YandexGames.Purchases
             jslib_getProduct(id);
         }
 
-        private void RequestPurchasesUpdate()
-        {
-            if (_isGetPurchasesInProgress)
-            {
-                return;
-            }
-
-            _isGetPurchasesInProgress = true;
-            jslib_getPurchases();
-        }
+        
 
         #region Called from PlatformLink.js
         private void fjs_onPurchaseSuccess()
         {
             Purchased?.Invoke(new Purchase("", "0", ProductType.Consumable));
-            RequestPurchasesUpdate();
         }
 
         private void fjs_onPurchaseError()
@@ -177,37 +166,31 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.YandexGames.Purchases
             try
             {
                 var wrapper = JsonUtility.FromJson<PurchasesWrapper>(json);
-                if (wrapper?.items == null)
+                Purchase[] result = Array.Empty<Purchase>();
+                if (wrapper?.items != null)
                 {
-                    _cachedPurchases = Array.Empty<Purchase>();
-                    return;
+                    result = new Purchase[wrapper.items.Length];
+                    for (int i = 0; i < wrapper.items.Length; i++)
+                    {
+                        var purchase = wrapper.items[i];
+                        result[i] = new Purchase(
+                            purchase.productID ?? string.Empty,
+                            purchase.purchaseToken ?? string.Empty,
+                            ProductType.Consumable);
+                    }
                 }
 
-                Purchase[] result = new Purchase[wrapper.items.Length];
-                for (int i = 0; i < wrapper.items.Length; i++)
-                {
-                    var purchase = wrapper.items[i];
-                    result[i] = new Purchase(
-                        purchase.productID ?? string.Empty,
-                        purchase.purchaseToken ?? string.Empty,
-                        ProductType.Consumable);
-                }
-
-                _cachedPurchases = result;
+                _getPurchasesCompleted?.Invoke(result);
             }
             catch (Exception exception)
             {
                 Debug.LogWarning($"YandexPurchases: Failed to parse purchases payload. {exception.Message}");
             }
-            finally
-            {
-                _isGetPurchasesInProgress = false;
-            }
         }
 
         private void fjs_onGetPurchasesFailed()
         {
-            _isGetPurchasesInProgress = false;
+            _getPurchasesCompleted?.Invoke(Array.Empty<Purchase>());
         }
 
         private void fjs_onConsumePurchaseSuccess(string token)
@@ -216,21 +199,7 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.YandexGames.Purchases
             {
                 _pendingConsumptionTokens.Remove(token);
 
-                if (_cachedPurchases.Length > 0)
-                {
-                    var updated = new List<Purchase>(_cachedPurchases.Length);
-                    for (int i = 0; i < _cachedPurchases.Length; i++)
-                    {
-                        if (string.Equals(_cachedPurchases[i].Token, token, StringComparison.Ordinal))
-                        {
-                            continue;
-                        }
-
-                        updated.Add(_cachedPurchases[i]);
-                    }
-
-                    _cachedPurchases = updated.ToArray();
-                }
+                // No caching to update here
             }
             else
             {

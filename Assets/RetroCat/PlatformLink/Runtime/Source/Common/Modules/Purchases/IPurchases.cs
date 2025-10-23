@@ -10,7 +10,7 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Purchases
         
         public void Purchase(string id);
         
-        public Purchase[] GetPurchases();
+        public void GetPurchases(Action<Purchase[]> onCompleted);
         public void ConsumePurchase(Purchase purchase);
         public void GetCatalog(Action<bool, CatalogProduct[]> onCompleted);
         public void GetProduct(string id, Action<bool, CatalogProduct> onCompleted);
