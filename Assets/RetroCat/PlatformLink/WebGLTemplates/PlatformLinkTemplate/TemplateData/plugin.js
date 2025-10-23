@@ -14,7 +14,8 @@ function initializePlugin()
 function initializePlayer() {
   return ysdk.getPlayer({ scopes: false }).then(_player => {
     player = _player;
-    console.log("Yandex SDK player initialized: [player mode = " + player.getMode() + "]");
+    const auth = (typeof player.isAuthorized === 'function') ? player.isAuthorized() : false;
+    console.log("Yandex SDK player initialized: [authorized = " + auth + "]");
     console.log("PlatformLink initialized");
     sendMessageToUnity('fjs_platformLinkInitialized');
   });
