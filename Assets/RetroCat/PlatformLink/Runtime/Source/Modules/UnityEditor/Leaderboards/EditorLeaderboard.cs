@@ -25,6 +25,20 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Leaderboards
         public void GetPlayerEntry(string leaderboardId, System.Action<bool, LeaderboardEntry> onCompleted)
         {
             int score = PlayerPrefs.GetInt(leaderboardId, 0);
+
+            int rank = 1;
+            if (_settings != null && _settings.OtherPlayers != null)
+            {
+                foreach (var mock in _settings.OtherPlayers)
+                {
+                    if (mock == null)
+                        continue;
+
+                    if (mock.Score > score)
+                        rank++;
+                }
+            }
+
             var player = new LeaderboardPlayer(
                 Application.systemLanguage.ToString(),
                 "Editor Player",
@@ -36,7 +50,7 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Leaderboards
             var entry = new LeaderboardEntry(
                 score,
                 string.Empty,
-                0,
+                rank,
                 player,
                 score.ToString());
 
@@ -115,7 +129,19 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Leaderboards
                 }
             }
 
-            var finalEntries = entriesList.ToArray();
+            var finalEntries = new LeaderboardEntry[entriesList.Count];
+            for (int i = 0; i < entriesList.Count; i++)
+            {
+                var entry = entriesList[i];
+                int rank = i + 1;
+
+                finalEntries[i] = new LeaderboardEntry(
+                    entry.Score,
+                    entry.ExtraData,
+                    rank,
+                    entry.Player,
+                    entry.FormattedScore);
+            }
             var ranges = new[]
             {
                 new LeaderboardRange(0, finalEntries.Length)
