@@ -70,7 +70,7 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Factories
 
         public ILeaderboard CreateLeaderboard()
         {
-            return new EditorLeaderboard(_logger);
+            return new EditorLeaderboard(_logger, EditorSettings.Leaderboard);
         }
     }
 }
