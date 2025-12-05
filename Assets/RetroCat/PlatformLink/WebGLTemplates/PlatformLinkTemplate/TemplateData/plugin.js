@@ -264,3 +264,116 @@ function setLeaderboardScore(leaderboardId, score)
 {
   ysdk.leaderboards.setScore(leaderboardId, score);
 }
+
+function getLeaderboardPlayerEntry(leaderboardId) {
+  if (!ysdk || !ysdk.leaderboards || !ysdk.leaderboards.getPlayerEntry) {
+    console.warn('Yandex SDK leaderboards.getPlayerEntry is not available');
+    sendMessageToUnity('fjs_onGetPlayerEntryFailed');
+    return;
+  }
+
+  ysdk.leaderboards.getPlayerEntry(leaderboardId)
+    .then(res => {
+      try {
+        const player = res.player || {};
+        const scope = player.scopePermissions || {};
+        const payload = {
+          score: res.score || 0,
+          extraData: res.extraData || '',
+          rank: res.rank || 0,
+          formattedScore: res.formattedScore || '',
+          player: {
+            lang: player.lang || '',
+            publicName: player.publicName || '',
+            uniqueID: player.uniqueID || '',
+            avatarUrl: (typeof player.getAvatarSrc === 'function') ? player.getAvatarSrc('medium') : '',
+            scopePermissions: {
+              avatar: scope.avatar || '',
+              public_name: scope.public_name || ''
+            }
+          }
+        };
+
+        const json = JSON.stringify(payload);
+        sendMessageToUnity('fjs_onGetPlayerEntrySuccess', json);
+      } catch (e) {
+        console.error('Error serializing player entry:', e);
+        sendMessageToUnity('fjs_onGetPlayerEntryFailed');
+      }
+    })
+    .catch(err => {
+      console.log('getPlayerEntry error:', err);
+      if (err && err.code === 'LEADERBOARD_PLAYER_NOT_PRESENT') {
+        sendMessageToUnity('fjs_onGetPlayerEntryNotPresent');
+      } else {
+        sendMessageToUnity('fjs_onGetPlayerEntryFailed');
+      }
+    });
+}
+
+function getLeaderboardEntries(leaderboardId, includeUser, quantityAround, quantityTop) {
+  if (!ysdk || !ysdk.leaderboards || !ysdk.leaderboards.getEntries) {
+    console.warn('Yandex SDK leaderboards.getEntries is not available');
+    sendMessageToUnity('fjs_onGetLeaderboardEntriesFailed');
+    return;
+  }
+
+  const options = {};
+  if (includeUser) {
+    options.includeUser = true;
+  }
+  if (quantityAround > 0) {
+    options.quantityAround = quantityAround;
+  }
+  if (quantityTop > 0) {
+    options.quantityTop = quantityTop;
+  }
+
+  ysdk.leaderboards.getEntries(leaderboardId, options)
+    .then(res => {
+      try {
+        const entries = (res.entries || []).map(e => {
+          const player = e.player || {};
+          const scope = player.scopePermissions || {};
+          return {
+            score: e.score || 0,
+            extraData: e.extraData || '',
+            rank: e.rank || 0,
+            formattedScore: e.formattedScore || '',
+            player: {
+              lang: player.lang || '',
+              publicName: player.publicName || '',
+              uniqueID: player.uniqueID || '',
+              avatarUrl: (typeof player.getAvatarSrc === 'function') ? player.getAvatarSrc('medium') : '',
+              scopePermissions: {
+                avatar: scope.avatar || '',
+                public_name: scope.public_name || ''
+              }
+            }
+          };
+        });
+
+        const ranges = (res.ranges || []).map(r => ({
+          start: r.start || 0,
+          size: r.size || 0
+        }));
+
+        const payload = {
+          leaderboardId: (res.leaderboard && (res.leaderboard.id || res.leaderboard.name)) || '',
+          userRank: res.userRank || 0,
+          ranges: ranges,
+          entries: entries
+        };
+
+        const json = JSON.stringify(payload);
+        sendMessageToUnity('fjs_onGetLeaderboardEntriesSuccess', json);
+      } catch (e) {
+        console.error('Error serializing leaderboard entries:', e);
+        sendMessageToUnity('fjs_onGetLeaderboardEntriesFailed');
+      }
+    })
+    .catch(err => {
+      console.log('getEntries error:', err);
+      sendMessageToUnity('fjs_onGetLeaderboardEntriesFailed');
+    });
+}

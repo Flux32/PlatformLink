@@ -68,5 +68,13 @@ mergeInto(LibraryManager.library, {
     
     jslib_setLeaderboardScore: function(leaderboardId, score) {
         setLeaderboardScore(UTF8ToString(leaderboardId), score);
+    },
+
+    jslib_getLeaderboardPlayerEntry: function(leaderboardId) {
+        getLeaderboardPlayerEntry(UTF8ToString(leaderboardId));
+    },
+
+    jslib_getLeaderboardEntries: function(leaderboardId, includeUser, quantityAround, quantityTop) {
+        getLeaderboardEntries(UTF8ToString(leaderboardId), includeUser, quantityAround, quantityTop);
     }
 });
