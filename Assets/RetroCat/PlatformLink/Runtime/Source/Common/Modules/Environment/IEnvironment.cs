@@ -4,5 +4,6 @@
     {
         DeviceType DeviceType { get; }
         string Language { get; }
+        string AppURL { get; }
     }
 }

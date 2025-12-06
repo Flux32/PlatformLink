@@ -20,8 +20,9 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Environment
             { SystemLanguage.Russian, "ru"},
             { SystemLanguage.English, "en" },
         };
-        
+
         public DeviceType DeviceType => _deviceTypeMapping[SystemInfo.deviceType];
         public string Language => _languageMapping[Application.systemLanguage];
+        public string AppURL => Application.absoluteURL;
     }
 }
