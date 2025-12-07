@@ -6,6 +6,7 @@ using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Environment;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Leaderboards;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Player;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Purchases;
+using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Social;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Storage;
 using UnityEngine;
 using ILogger = PlatformLink.PluginDebug.ILogger;
@@ -38,6 +39,7 @@ namespace PlatformLink
         public static IPurchases Purchases => Instance._purchases;
         public static IAnalytics Analytics => Instance._analytics;
         public static ILeaderboard Leaderboard => Instance._leaderboard;
+        public static ISocial Social => Instance._social;
         //public static IPlayer Player => Instance._player;
 
         private readonly ILogger _logger = new PLinkLogger();
@@ -62,6 +64,7 @@ namespace PlatformLink
         private IPurchases _purchases;
         private IPlayer _player;
         private ILeaderboard _leaderboard;
+        private ISocial _social;
         
 #if UNITY_WEBGL //TODO: Remove
         [DllImport("__Internal")]
@@ -92,6 +95,7 @@ namespace PlatformLink
             _purchases = moduleFactory.CreatePurchases();
             _analytics = moduleFactory.CreateAnalytics();
             _leaderboard = moduleFactory.CreateLeaderboard();
+            _social = moduleFactory.CreateSocial();
             
 #if UNITY_WEBGL && !UNITY_EDITOR
             YandexCore core = PlatformLinkObject.AddComponent<YandexCore>();
