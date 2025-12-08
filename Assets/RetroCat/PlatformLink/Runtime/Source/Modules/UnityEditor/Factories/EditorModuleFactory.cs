@@ -14,6 +14,7 @@ using RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Purchases;
 using UnityEngine;
 using DeviceType = RetroCat.PlatformLink.Runtime.Source.Common.Modules.Environment.DeviceType;
 using ILogger = PlatformLink.PluginDebug.ILogger;
+using Social = RetroCat.PlatformLink.Runtime.Source.Common.Modules.Social.Social;
 
 namespace RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Factories
 {
