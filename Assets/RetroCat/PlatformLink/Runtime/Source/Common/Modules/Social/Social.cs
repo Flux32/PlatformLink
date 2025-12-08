@@ -28,13 +28,13 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Social
             if (request == null)
                 throw new ArgumentNullException(nameof(request));
 
-            if (!IsNativeShareAvailable())
+            if (!IsShareDialogAvailable())
                 throw new InvalidOperationException("Native share dialog is not available on this platform.");
 
             _shareDialogAdapter.Show(request);
         }
 
-        public bool IsNativeShareAvailable()
+        public bool IsShareDialogAvailable()
         {
             return _shareDialogAdapter.IsAvailable;
         }
