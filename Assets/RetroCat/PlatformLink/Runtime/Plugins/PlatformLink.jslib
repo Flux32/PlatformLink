@@ -76,5 +76,13 @@ mergeInto(LibraryManager.library, {
 
     jslib_getLeaderboardEntries: function(leaderboardId, includeUser, quantityAround, quantityTop) {
         getLeaderboardEntries(UTF8ToString(leaderboardId), includeUser, quantityAround, quantityTop);
+    },
+
+    jslib_isNativeShareAvailable: function() {
+        return isNativeShareAvailable() ? 1 : 0;
+    },
+
+    jslib_showNativeShare: function(payload) {
+        showNativeShare(UTF8ToString(payload));
     }
 });

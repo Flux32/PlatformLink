@@ -260,6 +260,42 @@ function getDeviceInfo()
   return ysdk.deviceInfo.type;
 }
 
+function isNativeShareAvailable() {
+  return typeof navigator !== 'undefined' && typeof navigator.share === 'function';
+}
+
+function showNativeShare(payloadJson) {
+  if (!isNativeShareAvailable()) {
+    console.warn('Native share dialog is not available.');
+    return;
+  }
+
+  let payload = {};
+  if (payloadJson) {
+    try {
+      payload = JSON.parse(payloadJson);
+    } catch (error) {
+      console.error('Failed to parse native share payload:', error);
+      return;
+    }
+  }
+
+  const shareData = {};
+  if (payload.title) {
+    shareData.title = payload.title;
+  }
+  if (payload.text) {
+    shareData.text = payload.text;
+  }
+  if (payload.url) {
+    shareData.url = payload.url;
+  }
+
+  navigator.share(shareData).catch(error => {
+    console.warn('Native share was rejected:', error);
+  });
+}
+
 function setLeaderboardScore(leaderboardId, score)
 {
   ysdk.leaderboards.setScore(leaderboardId, score);

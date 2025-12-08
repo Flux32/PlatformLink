@@ -62,7 +62,8 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.YandexGames.Factories
 
         public ISocial CreateSocial()
         {
-            return new Social();
+            WebShareDialogAdapter shareDialogAdapter = PlatformLinkObject.AddComponent<WebShareDialogAdapter>();
+            return new Social(shareDialogAdapter);
         }
     }
 }

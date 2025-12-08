@@ -11,10 +11,10 @@ using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Storage;
 using RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Analytics;
 using RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Leaderboards;
 using RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Purchases;
+using RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Social;
 using UnityEngine;
 using DeviceType = RetroCat.PlatformLink.Runtime.Source.Common.Modules.Environment.DeviceType;
 using ILogger = PlatformLink.PluginDebug.ILogger;
-using Social = RetroCat.PlatformLink.Runtime.Source.Common.Modules.Social.Social;
 
 namespace RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Factories
 {
@@ -77,7 +77,8 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Factories
 
         public ISocial CreateSocial()
         {
-            return new Social();
+            IShareDialogAdapter shareDialogAdapter = new EditorShareDialogAdapter(_logger);
+            return new Common.Modules.Social.Social(shareDialogAdapter);
         }
     }
 }
