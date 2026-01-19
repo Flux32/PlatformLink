@@ -41,7 +41,9 @@ namespace PlatformLink
         public static ILeaderboard Leaderboard => Instance._leaderboard;
         public static ISocial Social => Instance._social;
         //public static IPlayer Player => Instance._player;
-
+        public static event Action Initilized;
+        public static bool IsInitialized { get; private set; }
+        
         private readonly ILogger _logger = new PLinkLogger();
 
         public static PLink Instance
@@ -99,10 +101,21 @@ namespace PlatformLink
             
 #if UNITY_WEBGL && !UNITY_EDITOR
             YandexCore core = PlatformLinkObject.AddComponent<YandexCore>();
-            core.Initialize(onCompleted);
+            
+            core.Initialize(() =>
+            {
+                OnInitialized(onCompleted);
+            });
 #else
-            onCompleted?.Invoke();
+            OnInitialized(onCompleted);
 #endif
+        }
+
+        private void OnInitialized(Action callback)
+        {
+            IsInitialized = true;
+            Initilized?.Invoke();
+            callback?.Invoke();
         }
         
 #if UNITY_EDITOR        
