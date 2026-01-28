@@ -6,11 +6,13 @@ using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Analytics;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Environment;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Leaderboards;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Purchases;
+using RetroCat.PlatformLink.Runtime.Source.Common.Modules.RemoteConfig;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Social;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Storage;
 using RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Analytics;
 using RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Leaderboards;
 using RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Purchases;
+using RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.RemoteConfig;
 using RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Social;
 using UnityEngine;
 using DeviceType = RetroCat.PlatformLink.Runtime.Source.Common.Modules.Environment.DeviceType;
@@ -79,6 +81,11 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Factories
         {
             IShareDialogAdapter shareDialogAdapter = new EditorShareDialogAdapter(_logger);
             return new Common.Modules.Social.Social(shareDialogAdapter);
+        }
+
+        public IRemoteConfig CreateRemoteConfig()
+        {
+            return new EditorRemoteConfig(_logger);
         }
     }
 }

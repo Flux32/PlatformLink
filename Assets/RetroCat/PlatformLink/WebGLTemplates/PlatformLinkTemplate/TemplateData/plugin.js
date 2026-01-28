@@ -21,6 +21,37 @@ function initializePlayer() {
   });
 }
 
+function loadRemoteConfig() {
+  if (!ysdk || typeof ysdk.getFlags !== 'function') {
+    console.warn('Yandex SDK getFlags is not available');
+    sendMessageToUnity('fjs_onRemoteConfigFailed');
+    return;
+  }
+
+  ysdk.getFlags({ defaultFlags: {} })
+    .then(flags => {
+      try {
+        const items = Object.keys(flags || {}).map(key => {
+          const value = flags[key];
+          return {
+            key: key,
+            value: (value === null || value === undefined) ? null : String(value)
+          };
+        });
+
+        const payload = JSON.stringify({ items: items });
+        sendMessageToUnity('fjs_onRemoteConfigLoaded', payload);
+      } catch (error) {
+        console.error('Error serializing remote config:', error);
+        sendMessageToUnity('fjs_onRemoteConfigFailed');
+      }
+    })
+    .catch(error => {
+      console.log('getFlags error:', error);
+      sendMessageToUnity('fjs_onRemoteConfigFailed');
+    });
+}
+
 function sendMessageToUnity(message, value = undefined) {
   myGameInstance.SendMessage('#!_platform_link_#!', message, value);
 }

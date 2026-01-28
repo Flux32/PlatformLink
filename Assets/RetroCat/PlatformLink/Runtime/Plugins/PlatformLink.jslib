@@ -10,6 +10,10 @@ mergeInto(LibraryManager.library, {
         initializePlugin();
     },
 
+    jslib_loadRemoteConfig: function() {
+        loadRemoteConfig();
+    },
+
     jslib_showInterstitialAd: function() {
         showInterstitialAd();
     },

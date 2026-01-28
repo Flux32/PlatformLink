@@ -2,6 +2,7 @@
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Environment;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Leaderboards;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Purchases;
+using RetroCat.PlatformLink.Runtime.Source.Common.Modules.RemoteConfig;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Social;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Storage;
 
@@ -17,5 +18,6 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules
         IAnalytics CreateAnalytics();
         ILeaderboard CreateLeaderboard();
         ISocial CreateSocial();
+        IRemoteConfig CreateRemoteConfig();
     }
 }

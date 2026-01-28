@@ -6,10 +6,12 @@ using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Environment;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Leaderboards;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Player;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Purchases;
+using RetroCat.PlatformLink.Runtime.Source.Common.Modules.RemoteConfig;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Social;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Storage;
 using UnityEngine;
 using ILogger = PlatformLink.PluginDebug.ILogger;
+using PlatformLink.Lifecycle;
 
 #if UNITY_EDITOR
 using RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Factories;
@@ -40,6 +42,7 @@ namespace PlatformLink
         public static IAnalytics Analytics => Instance._analytics;
         public static ILeaderboard Leaderboard => Instance._leaderboard;
         public static ISocial Social => Instance._social;
+        public static IRemoteConfig RemoteConfig => Instance._remoteConfig;
         //public static IPlayer Player => Instance._player;
         public static event Action Initilized;
         public static bool IsInitialized { get; private set; }
@@ -67,6 +70,7 @@ namespace PlatformLink
         private IPlayer _player;
         private ILeaderboard _leaderboard;
         private ISocial _social;
+        private IRemoteConfig _remoteConfig;
         
 #if UNITY_WEBGL //TODO: Remove
         [DllImport("__Internal")]
@@ -98,16 +102,17 @@ namespace PlatformLink
             _analytics = moduleFactory.CreateAnalytics();
             _leaderboard = moduleFactory.CreateLeaderboard();
             _social = moduleFactory.CreateSocial();
+            _remoteConfig = moduleFactory.CreateRemoteConfig();
             
 #if UNITY_WEBGL && !UNITY_EDITOR
             YandexCore core = PlatformLinkObject.AddComponent<YandexCore>();
             
             core.Initialize(() =>
             {
-                OnInitialized(onCompleted);
+                InitializeRemoteConfig(() => OnInitialized(onCompleted));
             });
 #else
-            OnInitialized(onCompleted);
+            InitializeRemoteConfig(() => OnInitialized(onCompleted));
 #endif
         }
 
@@ -116,6 +121,22 @@ namespace PlatformLink
             IsInitialized = true;
             Initilized?.Invoke();
             callback?.Invoke();
+        }
+
+        private void InitializeRemoteConfig(Action onCompleted)
+        {
+            if (_remoteConfig is IRemoteConfigLoader loader)
+            {
+                loader.Load(_ => onCompleted?.Invoke());
+                return;
+            }
+
+            if (_remoteConfig is IInitializable initializable)
+            {
+                initializable.Initialize();
+            }
+
+            onCompleted?.Invoke();
         }
         
 #if UNITY_EDITOR        
