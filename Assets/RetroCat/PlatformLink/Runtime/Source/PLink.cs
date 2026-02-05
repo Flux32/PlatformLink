@@ -104,6 +104,7 @@ namespace PlatformLink
             _leaderboard = moduleFactory.CreateLeaderboard();
             _social = moduleFactory.CreateSocial();
             _player = moduleFactory.CreatePlayer();
+            
             _remoteConfig = moduleFactory.CreateRemoteConfig();
             
 #if UNITY_WEBGL && !UNITY_EDITOR

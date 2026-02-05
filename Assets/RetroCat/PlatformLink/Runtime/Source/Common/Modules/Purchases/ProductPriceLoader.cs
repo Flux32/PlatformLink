@@ -51,7 +51,7 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Purchases
         
             PLink.Purchases.GetProduct(_productId, (isSuccess, product) =>
             {
-                Debug.Log($"Product {_productId} loaded with result: {isSuccess}");
+                UnityEngine.Debug.Log($"Product {_productId} loaded with result: {isSuccess}");
                 isLoaded = isSuccess;
                 loadedProduct = product;
             });
