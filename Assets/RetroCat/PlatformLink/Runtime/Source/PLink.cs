@@ -12,6 +12,7 @@ using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Storage;
 using UnityEngine;
 using ILogger = PlatformLink.PluginDebug.ILogger;
 using PlatformLink.Lifecycle;
+using RetroCat.PlatformLink.Runtime.Source.Common.Debug;
 
 #if UNITY_EDITOR
 using RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Factories;
@@ -43,7 +44,7 @@ namespace PlatformLink
         public static ILeaderboard Leaderboard => Instance._leaderboard;
         public static ISocial Social => Instance._social;
         public static IRemoteConfig RemoteConfig => Instance._remoteConfig;
-        //public static IPlayer Player => Instance._player;
+        public static IPlayer Player => Instance._player;
         public static event Action Initilized;
         public static bool IsInitialized { get; private set; }
         
@@ -102,6 +103,7 @@ namespace PlatformLink
             _analytics = moduleFactory.CreateAnalytics();
             _leaderboard = moduleFactory.CreateLeaderboard();
             _social = moduleFactory.CreateSocial();
+            _player = moduleFactory.CreatePlayer();
             _remoteConfig = moduleFactory.CreateRemoteConfig();
             
 #if UNITY_WEBGL && !UNITY_EDITOR

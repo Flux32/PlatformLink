@@ -49,6 +49,14 @@ mergeInto(LibraryManager.library, {
     jslib_sendGameReadyMessage: function() {
         sendGameReadyMessage();
     },
+
+    jslib_isPlayerAuthorized: function() {
+        return isPlayerAuthorized() ? 1 : 0;
+    },
+
+    jslib_openAuthDialog: function() {
+        openAuthDialog();
+    },
     
     jslib_purchase: function(id) {
         purchase(UTF8ToString(id));

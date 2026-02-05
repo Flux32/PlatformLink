@@ -1,4 +1,6 @@
-﻿namespace PlatformLink.PluginDebug
+﻿using PlatformLink.PluginDebug;
+
+namespace RetroCat.PlatformLink.Runtime.Source.Common.Debug
 {
     using Debug = UnityEngine.Debug;
 

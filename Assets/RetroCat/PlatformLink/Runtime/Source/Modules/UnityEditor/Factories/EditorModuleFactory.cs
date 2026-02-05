@@ -5,6 +5,7 @@ using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Advertisement;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Analytics;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Environment;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Leaderboards;
+using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Player;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Purchases;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.RemoteConfig;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Social;
@@ -81,6 +82,11 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Factories
         {
             IShareDialogAdapter shareDialogAdapter = new EditorShareDialogAdapter(_logger);
             return new Common.Modules.Social.Social(shareDialogAdapter);
+        }
+
+        public IPlayer CreatePlayer()
+        {
+            return new EditorPlayer(_logger);
         }
 
         public IRemoteConfig CreateRemoteConfig()

@@ -11,14 +11,63 @@ function initializePlugin()
 });
 }
 
-function initializePlayer() {
+function refreshPlayer() {
+  if (!ysdk || typeof ysdk.getPlayer !== 'function') {
+    return Promise.reject('Yandex SDK getPlayer is not available');
+  }
+
   return ysdk.getPlayer({ scopes: false }).then(_player => {
     player = _player;
-    const auth = (typeof player.isAuthorized === 'function') ? player.isAuthorized() : false;
+    return player;
+  });
+}
+
+function initializePlayer() {
+  return refreshPlayer().then(_player => {
+    const auth = (typeof _player.isAuthorized === 'function') ? _player.isAuthorized() : false;
     console.log("Yandex SDK player initialized: [authorized = " + auth + "]");
     console.log("PlatformLink initialized");
     sendMessageToUnity('fjs_platformLinkInitialized');
   });
+}
+
+function isPlayerAuthorized() {
+  if (!player || typeof player.isAuthorized !== 'function') {
+    return false;
+  }
+
+  try {
+    return player.isAuthorized() === true;
+  } catch (error) {
+    console.warn('player.isAuthorized error:', error);
+    return false;
+  }
+}
+
+function openAuthDialog() {
+  if (!ysdk || !ysdk.auth || typeof ysdk.auth.openAuthDialog !== 'function') {
+    console.warn('Yandex SDK auth.openAuthDialog is not available');
+    sendMessageToUnity('fjs_onAuthorizedFailed');
+    return;
+  }
+
+  ysdk.auth.openAuthDialog()
+    .then(() => {
+      return refreshPlayer().catch(error => {
+        console.log('getPlayer after auth error:', error);
+      });
+    })
+    .then(() => {
+      if (isPlayerAuthorized()) {
+        sendMessageToUnity('fjs_onAuthorized');
+      } else {
+        sendMessageToUnity('fjs_onAuthorizedFailed');
+      }
+    })
+    .catch(error => {
+      console.log('openAuthDialog error:', error);
+      sendMessageToUnity('fjs_onAuthorizedFailed');
+    });
 }
 
 function loadRemoteConfig() {

@@ -1,7 +1,7 @@
 ﻿#if UNITY_EDITOR
-using log4net.Core;
 using System;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Player;
+using ILogger = PlatformLink.PluginDebug.ILogger;
 
 namespace PlatformLink.Platform.UnityEditor
 {
@@ -25,8 +25,9 @@ namespace PlatformLink.Platform.UnityEditor
 
         public void Authorize(Action<bool> onCompleted)
         {
-            onCompleted?.Invoke(true);
             Authorized = true;
+            _logger?.Log("Editor player authorized.");
+            onCompleted?.Invoke(true);
         }
     }
 }
