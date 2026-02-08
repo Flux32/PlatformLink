@@ -3,6 +3,7 @@ using PlatformLink.Platform.UnityEditor;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Advertisement;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Analytics;
+using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Device;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Environment;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Leaderboards;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Player;
@@ -92,6 +93,11 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Factories
         public IRemoteConfig CreateRemoteConfig()
         {
             return new EditorRemoteConfig(_logger);
+        }
+
+        public IDevice CreateDevice()
+        {
+            return new DefaultDevice();
         }
     }
 }

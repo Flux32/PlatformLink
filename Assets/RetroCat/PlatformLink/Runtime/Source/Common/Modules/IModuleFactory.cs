@@ -1,5 +1,6 @@
 ﻿using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Advertisement;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Environment;
+using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Device;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Leaderboards;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Player;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Purchases;
@@ -21,5 +22,6 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules
         ISocial CreateSocial();
         IPlayer CreatePlayer();
         IRemoteConfig CreateRemoteConfig();
+        IDevice CreateDevice();
     }
 }

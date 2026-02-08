@@ -2,6 +2,7 @@ using System;
 using PlatformLink.PluginDebug;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Advertisement;
+using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Device;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Environment;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Leaderboards;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Player;
@@ -45,6 +46,7 @@ namespace PlatformLink
         public static ISocial Social => Instance._social;
         public static IRemoteConfig RemoteConfig => Instance._remoteConfig;
         public static IPlayer Player => Instance._player;
+        public static IDevice Device => Instance._device;
         public static event Action Initilized;
         public static bool IsInitialized { get; private set; }
         
@@ -72,6 +74,7 @@ namespace PlatformLink
         private ILeaderboard _leaderboard;
         private ISocial _social;
         private IRemoteConfig _remoteConfig;
+        private IDevice _device;
         
 #if UNITY_WEBGL //TODO: Remove
         [DllImport("__Internal")]
@@ -106,6 +109,7 @@ namespace PlatformLink
             _player = moduleFactory.CreatePlayer();
             
             _remoteConfig = moduleFactory.CreateRemoteConfig();
+            _device = moduleFactory.CreateDevice();
             
 #if UNITY_WEBGL && !UNITY_EDITOR
             YandexCore core = PlatformLinkObject.AddComponent<YandexCore>();
