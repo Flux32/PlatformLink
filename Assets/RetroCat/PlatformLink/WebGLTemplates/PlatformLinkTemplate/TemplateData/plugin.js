@@ -376,6 +376,43 @@ function showNativeShare(payloadJson) {
   });
 }
 
+function isVibrationSupported() {
+  return typeof navigator !== 'undefined' && typeof navigator.vibrate === 'function';
+}
+
+function vibrate(durationMs) {
+  if (!isVibrationSupported()) {
+    return;
+  }
+
+  if (!durationMs || durationMs <= 0) {
+    return;
+  }
+
+  navigator.vibrate(durationMs);
+}
+
+function vibratePattern(patternCsv) {
+  if (!isVibrationSupported()) {
+    return;
+  }
+
+  if (!patternCsv || typeof patternCsv !== 'string') {
+    return;
+  }
+
+  const pattern = patternCsv
+    .split(',')
+    .map(p => parseInt(p, 10))
+    .filter(n => Number.isFinite(n) && n >= 0);
+
+  if (pattern.length === 0) {
+    return;
+  }
+
+  navigator.vibrate(pattern);
+}
+
 function setLeaderboardScore(leaderboardId, score)
 {
   ysdk.leaderboards.setScore(leaderboardId, score);

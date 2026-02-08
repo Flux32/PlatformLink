@@ -96,5 +96,17 @@ mergeInto(LibraryManager.library, {
 
     jslib_showNativeShare: function(payload) {
         showNativeShare(UTF8ToString(payload));
+    },
+
+    jslib_isVibrationSupported: function() {
+        return isVibrationSupported() ? 1 : 0;
+    },
+
+    jslib_vibrate: function(durationMs) {
+        vibrate(durationMs);
+    },
+
+    jslib_vibratePattern: function(patternCsv) {
+        vibratePattern(UTF8ToString(patternCsv));
     }
 });
