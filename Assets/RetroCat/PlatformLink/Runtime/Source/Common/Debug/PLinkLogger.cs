@@ -6,11 +6,11 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Debug
 
     public class PLinkLogger : ILogger
     {
-        private const string LogPrefix = "<color=#C88CFF>PlatformLink:</color> ";
+        private const string LogPrefix = "<color=#C88CFF>PlatformLink:</color>";
 
         private static string CreateMessage(object message)
         {
-            return $"{LogPrefix}{message}";
+            return $"{LogPrefix} {message}";
         }
 
         public void LogError(object message)

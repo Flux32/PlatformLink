@@ -1,5 +1,7 @@
-using System;
+using System; //don't remove
 using UnityEngine;
+
+using ILogger = PlatformLink.PluginDebug.ILogger; 
 
 namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Device
 {
@@ -9,6 +11,13 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Device
         private const int MediumDurationMs = 40;
         private const int StrongDurationMs = 80;
 
+        private readonly ILogger _logger;
+
+        public DefaultDevice(ILogger logger)
+        {
+            _logger = logger;
+        }
+        
         public bool IsVibrationSupported()
         {
 #if UNITY_WEBGL && !UNITY_EDITOR
@@ -36,7 +45,10 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Device
         public void Vibrate(VibrationSettings settings)
         {
             if (IsVibrationSupported() == false)
+            {
+                _logger.LogWarning($"Can't vibrate, because vibration is not supported");
                 return;
+            }
 
 #if UNITY_WEBGL && !UNITY_EDITOR
             if (settings.HasPattern)
@@ -53,6 +65,7 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Device
 #elif UNITY_ANDROID || UNITY_IOS
             Handheld.Vibrate();
 #endif
+            _logger.LogWarning($"Vibrate");
         }
 
 #if UNITY_WEBGL && !UNITY_EDITOR
