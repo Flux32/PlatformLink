@@ -83,7 +83,7 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.YandexGames.Factories
 
         public IDevice CreateDevice()
         {
-            return new DefaultDevice();
+            return new DefaultDevice(_logger);
         }
     }
 }
