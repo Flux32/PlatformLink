@@ -97,7 +97,7 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Factories
 
         public IDevice CreateDevice()
         {
-            return new DefaultDevice();
+            return new DefaultDevice(_logger);
         }
     }
 }
