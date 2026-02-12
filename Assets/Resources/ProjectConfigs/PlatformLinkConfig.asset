@@ -20,6 +20,51 @@ MonoBehaviour:
       _saveFilePath: 
     _purchases:
       _products: []
+    _leaderboard:
+      _otherPlayers:
+      - _publicName: Alice
+        _score: 1500
+        _lang: En
+        _uniqueId: mock_alice
+        _extraData: 
+      - _publicName: Bob
+        _score: 1200
+        _lang: En
+        _uniqueId: mock_bob
+        _extraData: 
+      - _publicName: Charlie
+        _score: 900
+        _lang: En
+        _uniqueId: mock_charlie
+        _extraData: 
+    _platformGames:
+      _developerUrl: www.google.com
+      _games:
+      - _appId: puzzle
+        _title: Puzzle
+        _url: 
+        _coverUrl: 
+        _iconUrl: 
+      - _appId: match3
+        _title: Match 3
+        _url: 
+        _coverUrl: 
+        _iconUrl: 
+      - _appId: race
+        _title: Race
+        _url: 
+        _coverUrl: 
+        _iconUrl: 
+      - _appId: zombie
+        _title: Zombie
+        _url: 
+        _coverUrl: 
+        _iconUrl: 
+      - _appId: card
+        _title: Card
+        _url: 
+        _coverUrl: 
+        _iconUrl: 
   _android:
     _admobSettings:
       _appID: 

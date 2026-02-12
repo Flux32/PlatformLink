@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class PlatformLinkSettings : ScriptableObject
 { 
-    [SerializeField] private EditorSettings _editor;
-    [SerializeField] private AndroidSettings _android;
+    [SerializeField] private EditorSettings _editor = new EditorSettings();
+    [SerializeField] private AndroidSettings _android = new AndroidSettings();
 
     public AndroidSettings Android => _android;
     public EditorSettings Editor => _editor;

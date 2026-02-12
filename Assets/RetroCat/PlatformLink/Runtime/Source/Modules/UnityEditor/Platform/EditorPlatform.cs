@@ -11,6 +11,14 @@ namespace PlatformLink.Platform.UnityEditor
         public string Name { get; private set; }
 
         private readonly ILogger _logger;
+        private static readonly AvailableGame[] DefaultGames =
+        {
+            new AvailableGame("puzzle", "Puzzle", string.Empty, string.Empty, string.Empty),
+            new AvailableGame("match3", "Match 3", string.Empty, string.Empty, string.Empty),
+            new AvailableGame("race", "Race", string.Empty, string.Empty, string.Empty),
+            new AvailableGame("zombie", "Zombie", string.Empty, string.Empty, string.Empty),
+            new AvailableGame("card", "Card", string.Empty, string.Empty, string.Empty),
+        };
 
         public EditorPlatform(ILogger logger)
         {
@@ -32,8 +40,37 @@ namespace PlatformLink.Platform.UnityEditor
 
         public void GetAllGames(Action<bool, AvailableGames> onCompleted)
         {
-            _logger?.Log("Editor platform GetAllGames requested. Returning empty list.");
-            onCompleted?.Invoke(true, new AvailableGames(Array.Empty<AvailableGame>(), string.Empty));
+            try
+            {
+                var settings = PlatformLinkSettings.Instance.Editor?.PlatformGames;
+                var developerUrl = settings?.DeveloperUrl ?? string.Empty;
+
+                var configuredGames = settings?.Games;
+                if (configuredGames == null || configuredGames.Length == 0)
+                {
+                    onCompleted?.Invoke(true, new AvailableGames(DefaultGames, developerUrl));
+                    return;
+                }
+
+                var games = new AvailableGame[configuredGames.Length];
+                for (int i = 0; i < configuredGames.Length; i++)
+                {
+                    var g = configuredGames[i];
+                    games[i] = new AvailableGame(
+                        g?.AppId ?? string.Empty,
+                        g?.Title ?? string.Empty,
+                        g?.Url ?? string.Empty,
+                        g?.CoverUrl ?? string.Empty,
+                        g?.IconUrl ?? string.Empty);
+                }
+
+                onCompleted?.Invoke(true, new AvailableGames(games, developerUrl));
+            }
+            catch (Exception exception)
+            {
+                _logger?.Log($"Editor platform GetAllGames failed, using defaults. {exception.Message}");
+                onCompleted?.Invoke(true, new AvailableGames(DefaultGames, string.Empty));
+            }
         }
     }
 }

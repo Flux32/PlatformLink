@@ -64,6 +64,7 @@ public class PlatformLinkSettingsWindow : EditorWindow
         PropertyField yandexGamesTab = _settingsScroll.Q<PropertyField>("properly-yandex-games");
 
         editorTab.BindProperty(so.FindProperty("_editor"));
+        editorTab.Add(new HelpBox("Editor Platform Games: this list controls which games are returned by PLink.Platform.GetAllGames() while running in the Unity Editor.", HelpBoxMessageType.Info));
         
         androidTab.BindProperty(so.FindProperty("_android").FindPropertyRelative("_admobSettings"));
         androidTab.Add(new HelpBox("Google Mobile Ads App ID will look similar to this sample ID: ca-app-pub-3940256099942544~3347511713", HelpBoxMessageType.Info));

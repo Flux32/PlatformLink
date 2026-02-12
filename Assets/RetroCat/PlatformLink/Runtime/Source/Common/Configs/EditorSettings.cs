@@ -9,11 +9,64 @@ public class EditorSettings
     [SerializeField] private StorageEditorSettings _storage;
     [SerializeField] private PurchasesEditorSettings _purchases;
     [SerializeField] private LeaderboardEditorSettings _leaderboard = new LeaderboardEditorSettings();
+    [SerializeField] private PlatformGamesEditorSettings _platformGames = new PlatformGamesEditorSettings();
     
     public EnvironmentEditorSettings Environment => _environment;
     public StorageEditorSettings Storage => _storage;
     public PurchasesEditorSettings Purchases => _purchases;
     public LeaderboardEditorSettings Leaderboard => _leaderboard;
+    public PlatformGamesEditorSettings PlatformGames => _platformGames;
+}
+
+[Serializable]
+public class PlatformGamesEditorSettings
+{
+    [SerializeField] private string _developerUrl = string.Empty;
+    [SerializeField] private EditorGameSettings[] _games = CreateDefaultGames();
+
+    public string DeveloperUrl => _developerUrl;
+    public EditorGameSettings[] Games => _games;
+
+    public static EditorGameSettings[] CreateDefaultGames()
+    {
+        return new[]
+        {
+            new EditorGameSettings("puzzle", "Puzzle", string.Empty, string.Empty, string.Empty),
+            new EditorGameSettings("match3", "Match 3", string.Empty, string.Empty, string.Empty),
+            new EditorGameSettings("race", "Race", string.Empty, string.Empty, string.Empty),
+            new EditorGameSettings("zombie", "Zombie", string.Empty, string.Empty, string.Empty),
+            new EditorGameSettings("card", "Card", string.Empty, string.Empty, string.Empty),
+        };
+    }
+}
+
+[Serializable]
+public class EditorGameSettings
+{
+    [SerializeField] private string _appId = string.Empty;
+    [SerializeField] private string _title = string.Empty;
+    [SerializeField] private string _url = string.Empty;
+    [SerializeField] private string _coverUrl = string.Empty;
+    [SerializeField] private string _iconUrl = string.Empty;
+
+    public string AppId => _appId;
+    public string Title => _title;
+    public string Url => _url;
+    public string CoverUrl => _coverUrl;
+    public string IconUrl => _iconUrl;
+
+    public EditorGameSettings()
+    {
+    }
+
+    public EditorGameSettings(string appId, string title, string url, string coverUrl, string iconUrl)
+    {
+        _appId = appId;
+        _title = title;
+        _url = url;
+        _coverUrl = coverUrl;
+        _iconUrl = iconUrl;
+    }
 }
 
 [Serializable]
