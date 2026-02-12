@@ -2,7 +2,7 @@
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Environment;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Device;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Leaderboards;
-using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Player;
+using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Platform;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Purchases;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.RemoteConfig;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Social;
@@ -20,7 +20,7 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules
         IAnalytics CreateAnalytics();
         ILeaderboard CreateLeaderboard();
         ISocial CreateSocial();
-        IPlayer CreatePlayer();
+        IPlatform CreatePlatform();
         IRemoteConfig CreateRemoteConfig();
         IDevice CreateDevice();
     }

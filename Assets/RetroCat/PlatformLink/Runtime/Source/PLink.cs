@@ -5,7 +5,7 @@ using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Advertisement;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Device;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Environment;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Leaderboards;
-using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Player;
+using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Platform;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Purchases;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.RemoteConfig;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Social;
@@ -45,7 +45,7 @@ namespace PlatformLink
         public static ILeaderboard Leaderboard => Instance._leaderboard;
         public static ISocial Social => Instance._social;
         public static IRemoteConfig RemoteConfig => Instance._remoteConfig;
-        public static IPlayer Player => Instance._player;
+        public static IPlatform Platform => Instance._platform;
         public static IDevice Device => Instance._device;
         public static event Action Initilized;
         public static bool IsInitialized { get; private set; }
@@ -70,7 +70,7 @@ namespace PlatformLink
         private IStorage _storage;
         private IAnalytics _analytics;
         private IPurchases _purchases;
-        private IPlayer _player;
+        private IPlatform _platform;
         private ILeaderboard _leaderboard;
         private ISocial _social;
         private IRemoteConfig _remoteConfig;
@@ -106,7 +106,7 @@ namespace PlatformLink
             _analytics = moduleFactory.CreateAnalytics();
             _leaderboard = moduleFactory.CreateLeaderboard();
             _social = moduleFactory.CreateSocial();
-            _player = moduleFactory.CreatePlayer();
+            _platform = moduleFactory.CreatePlatform();
             
             _remoteConfig = moduleFactory.CreateRemoteConfig();
             _device = moduleFactory.CreateDevice();

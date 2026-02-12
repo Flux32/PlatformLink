@@ -70,6 +70,38 @@ function openAuthDialog() {
     });
 }
 
+function getAllGames() {
+  const api = ysdk?.features?.GamesAPI;
+  if (!api || typeof api.getAllGames !== 'function') {
+    console.warn('Yandex SDK features.GamesAPI.getAllGames is not available');
+    sendMessageToUnity('fjs_onGetAllGamesFailed');
+    return;
+  }
+
+  api.getAllGames()
+    .then(({ games, developerURL }) => {
+      try {
+        const mapped = (games || []).map(g => ({
+          appID: g?.appID || '',
+          title: g?.title || '',
+          url: g?.url || '',
+          coverURL: g?.coverURL || '',
+          iconURL: g?.iconURL || ''
+        }));
+
+        const payload = JSON.stringify({ games: mapped, developerURL: developerURL || '' });
+        sendMessageToUnity('fjs_onGetAllGamesSuccess', payload);
+      } catch (error) {
+        console.error('Error serializing games list:', error);
+        sendMessageToUnity('fjs_onGetAllGamesFailed');
+      }
+    })
+    .catch(err => {
+      console.log('getAllGames error:', err);
+      sendMessageToUnity('fjs_onGetAllGamesFailed');
+    });
+}
+
 function loadRemoteConfig() {
   if (!ysdk || typeof ysdk.getFlags !== 'function') {
     console.warn('Yandex SDK getFlags is not available');

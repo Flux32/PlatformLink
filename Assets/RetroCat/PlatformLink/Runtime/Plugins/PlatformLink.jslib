@@ -57,6 +57,10 @@ mergeInto(LibraryManager.library, {
     jslib_openAuthDialog: function() {
         openAuthDialog();
     },
+
+    jslib_getAllGames: function() {
+        getAllGames();
+    },
     
     jslib_purchase: function(id) {
         purchase(UTF8ToString(id));

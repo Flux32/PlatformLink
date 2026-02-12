@@ -1,23 +1,23 @@
 ﻿#if UNITY_EDITOR
 using System;
-using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Player;
+using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Platform;
 using ILogger = PlatformLink.PluginDebug.ILogger;
 
 namespace PlatformLink.Platform.UnityEditor
 {
-    public class EditorPlayer : IPlayer
+    public class EditorPlatform : IPlatform
     {
         public bool Authorized { get; private set; }
         public string Name { get; private set; }
 
         private readonly ILogger _logger;
 
-        public EditorPlayer(ILogger logger)
+        public EditorPlatform(ILogger logger)
         {
             _logger = logger;
         }
 
-        public EditorPlayer(string name, bool autorized)
+        public EditorPlatform(string name, bool autorized)
         {
             Name = name;
             Authorized = autorized;
@@ -26,8 +26,14 @@ namespace PlatformLink.Platform.UnityEditor
         public void Authorize(Action<bool> onCompleted)
         {
             Authorized = true;
-            _logger?.Log("Editor player authorized.");
+            _logger?.Log("Editor platform authorized.");
             onCompleted?.Invoke(true);
+        }
+
+        public void GetAllGames(Action<bool, AvailableGames> onCompleted)
+        {
+            _logger?.Log("Editor platform GetAllGames requested. Returning empty list.");
+            onCompleted?.Invoke(true, new AvailableGames(Array.Empty<AvailableGame>(), string.Empty));
         }
     }
 }

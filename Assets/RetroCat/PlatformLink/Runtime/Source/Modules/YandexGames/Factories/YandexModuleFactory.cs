@@ -7,14 +7,14 @@ using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Analytics;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Device;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Environment;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Leaderboards;
-using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Player;
+using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Platform;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Purchases;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.RemoteConfig;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Social;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Storage;
 using RetroCat.PlatformLink.Runtime.Source.Modules.YandexGames.Analytics;
 using RetroCat.PlatformLink.Runtime.Source.Modules.YandexGames.Leaderboards;
-using RetroCat.PlatformLink.Runtime.Source.Modules.YandexGames.Player;
+using RetroCat.PlatformLink.Runtime.Source.Modules.YandexGames.Platform;
 using RetroCat.PlatformLink.Runtime.Source.Modules.YandexGames.Purchases;
 using RetroCat.PlatformLink.Runtime.Source.Modules.YandexGames.RemoteConfig;
 
@@ -71,9 +71,9 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.YandexGames.Factories
             return new Social(shareDialogAdapter);
         }
 
-        public IPlayer CreatePlayer()
+        public IPlatform CreatePlatform()
         {
-            return PlatformLinkObject.AddComponent<YandexPlayer>();
+            return PlatformLinkObject.AddComponent<YandexPlatform>();
         }
 
         public IRemoteConfig CreateRemoteConfig()
