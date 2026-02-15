@@ -55,7 +55,7 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Factories
 
         public IEnvironment CreateEnvironment()
         {
-            return new EditorEnvironment(EditorSettings.Environment.Language, DeviceType.Mobile);
+            return new EditorEnvironment(EditorSettings.Environment);
         }
 
         public IStorage CreateStorage()
@@ -65,7 +65,7 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Factories
 
         public IPurchases CreatePurchases()
         {
-            return new EditorPurchases(_logger);
+            return new EditorPurchases(_logger, EditorSettings.Purchases);
         }
 
         public IAnalytics CreateAnalytics()

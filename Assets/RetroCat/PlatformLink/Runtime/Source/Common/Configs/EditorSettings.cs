@@ -90,8 +90,11 @@ public class ProductSettings
 [Serializable]
 public class LeaderboardEditorSettings
 {
+    [Min(0f)]
+    [SerializeField] private float _fakeLoadingTimeSeconds = 0f;
     [SerializeField] private LeaderboardMockEntry[] _otherPlayers;
 
+    public float FakeLoadingTimeSeconds => _fakeLoadingTimeSeconds;
     public LeaderboardMockEntry[] OtherPlayers => _otherPlayers;
 
     public LeaderboardEditorSettings()

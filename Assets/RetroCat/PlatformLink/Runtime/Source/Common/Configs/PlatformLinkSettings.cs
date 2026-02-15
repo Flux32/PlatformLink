@@ -8,6 +8,7 @@ public class PlatformLinkSettings : ScriptableObject
 
     public AndroidSettings Android => _android;
     public EditorSettings Editor => _editor;
+    public LeaderboardEditorSettings EditorLeaderboard => _editor.Leaderboard;
 
     private static PlatformLinkSettings s_instance;
 

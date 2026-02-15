@@ -11,10 +11,10 @@ namespace PlatformLink.Platform.UnityEditor
         public DeviceType DeviceType { get; private set; }
         public string AppURL => Application.absoluteURL;
 
-        public EditorEnvironment(string language, DeviceType deviceType)
+        public EditorEnvironment(EnvironmentEditorSettings settings)
         {
-            DeviceType = deviceType;
-            Language = language;
+            DeviceType = settings.DeviceType;
+            Language = settings.Language;
         }
     }
 }

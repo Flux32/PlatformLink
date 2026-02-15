@@ -21,6 +21,7 @@ MonoBehaviour:
     _purchases:
       _products: []
     _leaderboard:
+      _fakeLoadingTimeSeconds: 1.5
       _otherPlayers:
       - _publicName: Alice
         _score: 1500

@@ -13,10 +13,12 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Purchases
         public event Action<string> PurchaseFailed;
 
         private readonly ILogger _logger;
-    
-        public EditorPurchases(ILogger logger)
+        private PurchasesEditorSettings _editorSettings;
+        
+        public EditorPurchases(ILogger logger, PurchasesEditorSettings editorSettings)
         {
             _logger = logger;
+            _editorSettings = editorSettings;
         }
     
         public void Purchase(string id)
@@ -25,8 +27,7 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Purchases
             PurchaseStarted?.Invoke();
         
             _logger.Log("Purchased");
-            ProductSettings productSettings
-                = PlatformLinkSettings.Instance.Editor.Purchases.Products.FirstOrDefault(product => product.Id == id);
+            ProductSettings productSettings = _editorSettings.Products.FirstOrDefault(product => product.Id == id);
 
             if (productSettings == null)
             {
