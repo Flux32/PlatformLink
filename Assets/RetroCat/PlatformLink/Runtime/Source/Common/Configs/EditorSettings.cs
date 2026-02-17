@@ -8,14 +8,24 @@ public class EditorSettings
     [SerializeField] private EnvironmentEditorSettings _environment;
     [SerializeField] private StorageEditorSettings _storage;
     [SerializeField] private PurchasesEditorSettings _purchases;
+    [SerializeField] private PlatformEditorSettings _platform = new PlatformEditorSettings();
     [SerializeField] private LeaderboardEditorSettings _leaderboard = new LeaderboardEditorSettings();
     [SerializeField] private PlatformGamesEditorSettings _platformGames = new PlatformGamesEditorSettings();
     
     public EnvironmentEditorSettings Environment => _environment;
     public StorageEditorSettings Storage => _storage;
     public PurchasesEditorSettings Purchases => _purchases;
+    public PlatformEditorSettings Platform => _platform;
     public LeaderboardEditorSettings Leaderboard => _leaderboard;
     public PlatformGamesEditorSettings PlatformGames => _platformGames;
+}
+
+[Serializable]
+public class PlatformEditorSettings
+{
+    [SerializeField] private bool _authorized;
+
+    public bool Authorized => _authorized;
 }
 
 [Serializable]

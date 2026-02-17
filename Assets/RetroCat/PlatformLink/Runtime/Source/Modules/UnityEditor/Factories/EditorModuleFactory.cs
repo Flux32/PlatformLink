@@ -87,7 +87,7 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Factories
 
         public IPlatform CreatePlatform()
         {
-            return new EditorPlatform(_logger);
+            return new EditorPlatform(_logger, EditorSettings.Platform);
         }
 
         public IRemoteConfig CreateRemoteConfig()

@@ -20,15 +20,16 @@ namespace PlatformLink.Platform.UnityEditor
             new AvailableGame("card", "Card", string.Empty, string.Empty, string.Empty),
         };
 
-        public EditorPlatform(ILogger logger)
+        public EditorPlatform(ILogger logger, PlatformEditorSettings settings)
         {
             _logger = logger;
+            Authorized = settings.Authorized;
         }
 
-        public EditorPlatform(string name, bool autorized)
+        public EditorPlatform(string name, bool authorized)
         {
             Name = name;
-            Authorized = autorized;
+            Authorized = authorized;
         }
 
         public void Authorize(Action<bool> onCompleted)
