@@ -173,16 +173,57 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Leaderboards
                         entry.Player,
                         entry.FormattedScore);
                 }
-                var ranges = new[]
+
+                int topCount = Mathf.Max(0, quantityTop);
+                int aroundCount = Mathf.Max(0, quantityAround);
+
+                var rangesList = new System.Collections.Generic.List<LeaderboardRange>();
+                var selectedEntries = new System.Collections.Generic.List<LeaderboardEntry>();
+                var included = new bool[finalEntries.Length];
+
+                void AddRange(int start, int size)
                 {
-                    new LeaderboardRange(0, finalEntries.Length)
-                };
+                    if (size <= 0)
+                        return;
+
+                    int clampedStart = Mathf.Clamp(start, 0, finalEntries.Length);
+                    int clampedEnd = Mathf.Clamp(start + size, 0, finalEntries.Length);
+                    int clampedSize = clampedEnd - clampedStart;
+                    if (clampedSize <= 0)
+                        return;
+
+                    rangesList.Add(new LeaderboardRange(clampedStart, clampedSize));
+                    for (int i = clampedStart; i < clampedEnd; i++)
+                    {
+                        if (included[i])
+                            continue;
+
+                        selectedEntries.Add(finalEntries[i]);
+                        included[i] = true;
+                    }
+                }
+
+                if (topCount > 0)
+                {
+                    AddRange(0, Mathf.Min(topCount, finalEntries.Length));
+                }
+
+                if (aroundCount > 0 && includeUser && userRank > 0)
+                {
+                    int userIndex = userRank - 1;
+                    int aroundStart = Mathf.Max(0, userIndex - aroundCount);
+                    int aroundEnd = Mathf.Min(finalEntries.Length - 1, userIndex + aroundCount);
+                    AddRange(aroundStart, aroundEnd - aroundStart + 1);
+                }
+
+                var ranges = rangesList.ToArray();
+                var entries = selectedEntries.ToArray();
 
                 var result = new LeaderboardEntries(
                     leaderboardId,
                     userRank,
                     ranges,
-                    finalEntries);
+                    entries);
 
                 onCompleted?.Invoke(true, result);
             });
