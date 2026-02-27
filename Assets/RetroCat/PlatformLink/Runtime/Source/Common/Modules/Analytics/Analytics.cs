@@ -21,7 +21,7 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Analytics
         {
             if (_isGameReadySent)
             {
-                _logger.LogError("Game ready had already been sent.");
+                _logger.LogError("game ready had already been sent.");
                 return;
             }
                 

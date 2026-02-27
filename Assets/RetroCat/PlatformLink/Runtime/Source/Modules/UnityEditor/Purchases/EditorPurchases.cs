@@ -13,7 +13,7 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Purchases
         public event Action<string> PurchaseFailed;
 
         private readonly ILogger _logger;
-        private PurchasesEditorSettings _editorSettings;
+        private readonly PurchasesEditorSettings _editorSettings;
         
         public EditorPurchases(ILogger logger, PurchasesEditorSettings editorSettings)
         {
@@ -23,15 +23,15 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Purchases
     
         public void Purchase(string id)
         {
-            _logger.Log("Purchase started");
+            _logger.Log("purchase started");
             PurchaseStarted?.Invoke();
         
-            _logger.Log("Purchased");
+            _logger.Log("purchased");
             ProductSettings productSettings = _editorSettings.Products.FirstOrDefault(product => product.Id == id);
 
             if (productSettings == null)
             {
-                _logger.LogError($"Product with id {id} not registered");
+                _logger.LogError($"product with id {id} not registered");
                 PurchaseFailed?.Invoke(id);
                 return;
             }
@@ -46,7 +46,7 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Purchases
 
         public void ConsumePurchase(Purchase purchase)
         {
-            Debug.Log("Purchase consumed");
+            _logger.Log("purchase consumed");
         }
 
         public void GetCatalog(Action<bool, CatalogProduct[]> onCompleted)

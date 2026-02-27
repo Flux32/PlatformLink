@@ -13,8 +13,8 @@ namespace PlatformLink
 
         private readonly ILogger _logger = new PLinkLogger(); //TODO: Inject;
 
-        private const string GamePausedMessage = "Game paused";
-        private const string GameResumedMessage = "Game resumed";
+        private const string GamePausedMessage = "game paused";
+        private const string GameResumedMessage = "game resumed";
 
         private float _pausedTimeScaleValue;
         private bool _pausedAudioListenerValue;

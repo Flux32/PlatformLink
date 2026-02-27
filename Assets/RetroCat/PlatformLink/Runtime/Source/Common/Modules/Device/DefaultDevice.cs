@@ -38,6 +38,7 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Device
 #else
             GUIUtility.systemCopyBuffer = safeText;
 #endif
+            _logger.Log($"copy to clipboard {text}");
         }
 
         public void Vibrate(VibrationPreset preset)
@@ -57,7 +58,7 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Device
         {
             if (IsVibrationSupported() == false)
             {
-                _logger.LogWarning($"Can't vibrate, because vibration is not supported");
+                _logger.LogWarning($"can't vibrate, because vibration is not supported");
                 return;
             }
 
@@ -76,7 +77,7 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Device
 #elif UNITY_ANDROID || UNITY_IOS
             Handheld.Vibrate();
 #endif
-            _logger.LogWarning($"Vibrate");
+            _logger.Log($"vibrate");
         }
 
 #if UNITY_WEBGL && !UNITY_EDITOR

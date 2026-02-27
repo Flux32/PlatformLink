@@ -14,7 +14,7 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Analytics
         
         public void SendGameReady()
         {
-            _logger.Log("Game ready has been sent");
+            _logger.Log("game ready has been sent");
         }
     }
 }

@@ -11,7 +11,7 @@ namespace PlatformLink.Platform.UnityEditor
 {
     public class EditorStorage : IStorage
     {
-        private const string DirectoryErrorMessage = "Unable to save file. Directory {0} not found.";
+        private const string DirectoryErrorMessage = "unable to save file. Directory {0} not found.";
         private const string FileExtension = ".txt";
         private const string SavedMessage = "data saved in editor mode";
         private const string LoadedMessage = "data loaded in editor mode";

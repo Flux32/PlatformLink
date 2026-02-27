@@ -45,7 +45,7 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Leaderboards
         public void SetScore(string leaderboardId, int score)
         {
             PlayerPrefs.SetInt(leaderboardId, score);
-            _logger.Log($"Set score: {score}");
+            _logger.Log($"set score: {score}");
         }
 
         public void GetPlayerEntry(string leaderboardId, System.Action<bool, LeaderboardEntry> onCompleted)
