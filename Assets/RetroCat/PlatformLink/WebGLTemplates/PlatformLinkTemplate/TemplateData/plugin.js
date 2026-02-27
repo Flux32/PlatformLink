@@ -445,6 +445,49 @@ function vibratePattern(patternCsv) {
   navigator.vibrate(pattern);
 }
 
+function copyToClipboard(text) {
+  const value = (typeof text === 'string') ? text : '';
+
+  if (typeof navigator !== 'undefined' &&
+      navigator.clipboard &&
+      typeof navigator.clipboard.writeText === 'function') {
+    navigator.clipboard.writeText(value).catch(error => {
+      console.warn('Clipboard API write failed:', error);
+      fallbackCopyToClipboard(value);
+    });
+    return;
+  }
+
+  fallbackCopyToClipboard(value);
+}
+
+function fallbackCopyToClipboard(text) {
+  if (typeof document === 'undefined' || !document.body) {
+    console.warn('Clipboard copy is not available in this environment.');
+    return;
+  }
+
+  const textArea = document.createElement('textarea');
+  textArea.value = text;
+  textArea.setAttribute('readonly', '');
+  textArea.style.position = 'fixed';
+  textArea.style.top = '-1000px';
+  textArea.style.left = '-1000px';
+  textArea.style.opacity = '0';
+
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+
+  try {
+    document.execCommand('copy');
+  } catch (error) {
+    console.warn('Fallback clipboard copy failed:', error);
+  } finally {
+    document.body.removeChild(textArea);
+  }
+}
+
 function setLeaderboardScore(leaderboardId, score)
 {
   ysdk.leaderboards.setScore(leaderboardId, score);

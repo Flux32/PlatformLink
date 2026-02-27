@@ -112,5 +112,9 @@ mergeInto(LibraryManager.library, {
 
     jslib_vibratePattern: function(patternCsv) {
         vibratePattern(UTF8ToString(patternCsv));
+    },
+
+    jslib_copyToClipboard: function(text) {
+        copyToClipboard(UTF8ToString(text));
     }
 });

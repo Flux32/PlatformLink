@@ -29,6 +29,17 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Device
 #endif
         }
 
+        public void CopyToClipboard(string text)
+        {
+            string safeText = text ?? string.Empty;
+
+#if UNITY_WEBGL && !UNITY_EDITOR
+            jslib_copyToClipboard(safeText);
+#else
+            GUIUtility.systemCopyBuffer = safeText;
+#endif
+        }
+
         public void Vibrate(VibrationPreset preset)
         {
             int durationMs = preset switch
@@ -77,6 +88,9 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Device
 
         [System.Runtime.InteropServices.DllImport("__Internal")]
         private static extern void jslib_vibratePattern(string patternCsv);
+
+        [System.Runtime.InteropServices.DllImport("__Internal")]
+        private static extern void jslib_copyToClipboard(string text);
 #endif
     }
 }
