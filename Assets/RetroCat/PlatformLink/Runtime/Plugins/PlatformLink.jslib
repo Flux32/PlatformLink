@@ -42,6 +42,10 @@ mergeInto(LibraryManager.library, {
         return _jslib_convertString(getLanguage());
     },
 
+    jslib_getAppId: function() {
+        return _jslib_convertString(getAppId());
+    },
+
     jslib_getDeviceType: function() {
         return _jslib_convertString(getDeviceInfo());
     },

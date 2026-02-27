@@ -141,6 +141,10 @@ function getLanguage() {
   return ysdk.environment.i18n.lang;
 }
 
+function getAppId() {
+  return ysdk?.environment?.app?.id || '';
+}
+
 function sendGameReadyMessage() {
   ysdk.features.LoadingAPI?.ready();
 }

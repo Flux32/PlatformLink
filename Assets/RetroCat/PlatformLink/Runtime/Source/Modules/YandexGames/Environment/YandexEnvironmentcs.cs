@@ -9,7 +9,8 @@ namespace PlatformLink.Platform.YandexGames
     {
         public DeviceType DeviceType => GetDeviceType();
         public string Language => GetLanguage();
-        public string AppURL => Application.absoluteURL;
+        public string AppId => GetAppId();
+        public string AppUrl => $"https://yandex.ru/games/app/{AppId}";
         
         [DllImport("__Internal")]
         private static extern string jslib_getDeviceType();
@@ -32,5 +33,10 @@ namespace PlatformLink.Platform.YandexGames
         private static extern string jslib_getLanguage();
 
         private string GetLanguage() => jslib_getLanguage();
+
+        [DllImport("__Internal")]
+        private static extern string jslib_getAppId();
+
+        private string GetAppId() => jslib_getAppId();
     }
 }

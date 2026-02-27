@@ -9,7 +9,8 @@ namespace PlatformLink.Platform.UnityEditor
     {
         public string Language { get; private set; }
         public DeviceType DeviceType { get; private set; }
-        public string AppURL => Application.absoluteURL;
+        public string AppId => "";
+        public string AppUrl => Application.absoluteURL;
 
         public EditorEnvironment(EnvironmentEditorSettings settings)
         {
