@@ -38,7 +38,7 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Device
 #else
             GUIUtility.systemCopyBuffer = safeText;
 #endif
-            _logger.Log($"copy to clipboard {text}");
+            _logger.Log($"copy to clipboard '{text}'");
         }
 
         public void Vibrate(VibrationPreset preset)

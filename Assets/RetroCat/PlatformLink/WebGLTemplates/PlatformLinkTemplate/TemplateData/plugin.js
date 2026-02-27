@@ -373,7 +373,28 @@ function getDeviceInfo()
 }
 
 function isNativeShareAvailable() {
-  return typeof navigator !== 'undefined' && typeof navigator.share === 'function';
+  if (typeof navigator === 'undefined' || typeof navigator.share !== 'function') {
+    return false;
+  }
+
+  if (typeof window !== 'undefined' && window.isSecureContext === false) {
+    return false;
+  }
+
+  if (typeof document !== 'undefined') {
+    const permissionsPolicy = document.permissionsPolicy || document.featurePolicy;
+    if (permissionsPolicy && typeof permissionsPolicy.allowsFeature === 'function') {
+      try {
+        if (!permissionsPolicy.allowsFeature('web-share')) {
+          return false;
+        }
+      } catch (error) {
+        console.warn('Failed to check web-share permissions policy:', error);
+      }
+    }
+  }
+
+  return true;
 }
 
 function showNativeShare(payloadJson) {
@@ -403,7 +424,24 @@ function showNativeShare(payloadJson) {
     shareData.url = payload.url;
   }
 
+  if (typeof navigator.canShare === 'function') {
+    try {
+      if (!navigator.canShare(shareData)) {
+        console.warn('Native share payload is not supported in this environment.');
+        return;
+      }
+    } catch (error) {
+      console.warn('Failed to validate native share payload:', error);
+      return;
+    }
+  }
+
   navigator.share(shareData).catch(error => {
+    if (error && error.name === 'NotAllowedError') {
+      console.warn('Native share blocked: call must be from direct user interaction and web-share must be allowed by host permissions policy.');
+      return;
+    }
+
     console.warn('Native share was rejected:', error);
   });
 }
