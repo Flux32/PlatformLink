@@ -1,4 +1,6 @@
 let player;
+let lastOpenedUrl = '';
+let lastOpenTimestamp = 0;
 
 function initializePlugin()
 {
@@ -77,17 +79,14 @@ function openLink(url) {
   }
 
   const normalizedUrl = url.trim();
-
-  if (typeof window === 'undefined' || typeof window.open !== 'function') {
-    console.warn('Open link failed: window.open is not available.');
+  const now = Date.now();
+  if (normalizedUrl === lastOpenedUrl && now - lastOpenTimestamp < 1000) {
+    console.warn('Open link skipped: duplicate call detected.');
     return;
   }
 
-  const popup = window.open(normalizedUrl, '_blank', 'noopener,noreferrer');
-  if (popup) {
-    popup.opener = null;
-    return;
-  }
+  lastOpenedUrl = normalizedUrl;
+  lastOpenTimestamp = now;
 
   if (typeof document !== 'undefined' && document.body) {
     const link = document.createElement('a');
@@ -101,7 +100,15 @@ function openLink(url) {
     return;
   }
 
-  console.warn('Open link blocked by browser policy. Call must happen from direct user interaction.');
+  if (typeof window !== 'undefined' && typeof window.open === 'function') {
+    const popup = window.open(normalizedUrl, '_blank', 'noopener,noreferrer');
+    if (popup) {
+      popup.opener = null;
+    }
+    return;
+  }
+
+  console.warn('Open link failed: browser open APIs are not available.');
 }
 
 function getAllGames() {
