@@ -70,6 +70,28 @@ function openAuthDialog() {
     });
 }
 
+function openLink(url) {
+  if (typeof url !== 'string' || url.trim().length === 0) {
+    console.warn('Open link failed: url is empty.');
+    return;
+  }
+
+  const normalizedUrl = url.trim();
+
+  if (typeof window === 'undefined' || typeof window.open !== 'function') {
+    console.warn('Open link failed: window.open is not available.');
+    return;
+  }
+
+  const popup = window.open(normalizedUrl, '_blank', 'noopener,noreferrer');
+  if (popup) {
+    popup.opener = null;
+    return;
+  }
+
+  window.location.href = normalizedUrl;
+}
+
 function getAllGames() {
   const api = ysdk?.features?.GamesAPI;
   if (!api || typeof api.getAllGames !== 'function') {

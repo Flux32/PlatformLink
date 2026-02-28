@@ -14,7 +14,7 @@ namespace PlatformLink.Platform.YandexGames
         
         [DllImport("__Internal")]
         private static extern string jslib_getDeviceType();
-
+        
         private DeviceType GetDeviceType()
         {
             string stringDeviceType = jslib_getDeviceType();

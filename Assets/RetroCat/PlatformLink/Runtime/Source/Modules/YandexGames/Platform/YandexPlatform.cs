@@ -19,6 +19,9 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.YandexGames.Platform
         [DllImport("__Internal")]
         private static extern void jslib_getAllGames();
 
+        [DllImport("__Internal")]
+        private static extern void jslib_openLink(string url);
+
         public bool Authorized => IsAuthorizedInternal();
 
         public void Authorize(Action<bool> onCompleted)
@@ -34,15 +37,21 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.YandexGames.Platform
             jslib_openAuthDialog();
         }
 
-        //[DllImport("__Internal")]
-        //private static extern string jslib_getPlayerName();
-
-        public string Name => string.Empty; //jslib_getPlayerName();
-
         public void GetAllGames(Action<bool, AvailableGames> onCompleted)
         {
             _getAllGamesCompleted = onCompleted;
             jslib_getAllGames();
+        }
+
+        public void OpenLink(string url)
+        {
+            if (string.IsNullOrWhiteSpace(url))
+            {
+                Debug.LogWarning("YandexPlatform: OpenLink failed. Url is empty.");
+                return;
+            }
+
+            jslib_openLink(url);
         }
 
         private bool IsAuthorizedInternal()

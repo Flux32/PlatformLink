@@ -1,6 +1,7 @@
 ﻿#if UNITY_EDITOR
 using System;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Platform;
+using UnityEngine;
 using ILogger = PlatformLink.PluginDebug.ILogger;
 
 namespace PlatformLink.Platform.UnityEditor
@@ -8,7 +9,6 @@ namespace PlatformLink.Platform.UnityEditor
     public class EditorPlatform : IPlatform
     {
         public bool Authorized { get; private set; }
-        public string Name { get; private set; }
 
         private readonly ILogger _logger;
         private static readonly AvailableGame[] DefaultGames =
@@ -26,10 +26,15 @@ namespace PlatformLink.Platform.UnityEditor
             Authorized = settings.Authorized;
         }
 
-        public EditorPlatform(string name, bool authorized)
+        public void OpenLink(string url)
         {
-            Name = name;
-            Authorized = authorized;
+            if (string.IsNullOrWhiteSpace(url))
+            {
+                _logger.LogWarning("editor platform open link failed. Url is empty.");
+                return;
+            }
+
+            Application.OpenURL(url);
         }
 
         public void Authorize(Action<bool> onCompleted)

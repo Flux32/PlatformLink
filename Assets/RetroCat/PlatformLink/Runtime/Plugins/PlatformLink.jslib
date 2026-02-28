@@ -62,6 +62,10 @@ mergeInto(LibraryManager.library, {
         openAuthDialog();
     },
 
+    jslib_openLink: function(url) {
+        openLink(UTF8ToString(url));
+    },
+
     jslib_getAllGames: function() {
         getAllGames();
     },
