@@ -14,18 +14,20 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Social
 
         public string CreateShareLink(SocialPlatform platform, ShareRequest request)
         {
+            string normalizedText = NormalizeText(request.Text);
+            
             switch (platform)
             {
                 case SocialPlatform.VK:
-                    return BuildVkShareLink(request.Url, request.Text);
+                    return BuildVkShareLink(request.Url, normalizedText);
                 case SocialPlatform.OK:
-                    return BuildOdnoklassnikiShareLink(request.Url, request.Text);
+                    return BuildOdnoklassnikiShareLink(request.Url, normalizedText);
                 case SocialPlatform.Telegram:
-                    return BuildTelegramShareLink(request.Url, request.Text);
+                    return BuildTelegramShareLink(request.Url, normalizedText);
                 case SocialPlatform.WhatsApp:
-                    return BuildWhatsAppShareLink(request.Url, request.Text);
+                    return BuildWhatsAppShareLink(request.Url, normalizedText);
                 case SocialPlatform.Facebook:
-                    return BuildFacebookShareLink(request.Url, request.Text);
+                    return BuildFacebookShareLink(request.Url, normalizedText);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(platform), platform, "Unsupported social platform");
             }
@@ -47,6 +49,15 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Social
             return _shareDialogAdapter.IsAvailable;
         }
 
+        private string NormalizeText(string s)
+        {
+            if (string.IsNullOrEmpty(s)) 
+                return string.Empty;
+
+            s = s.Replace("\r\n", "\n").Replace("\r", "\n");
+            return s.Replace("\n", "\r\n");
+        }
+        
         private static string BuildVkShareLink(string url, string comment)
         {
             string encodedUrl = UnityWebRequest.EscapeURL(url ?? string.Empty);
