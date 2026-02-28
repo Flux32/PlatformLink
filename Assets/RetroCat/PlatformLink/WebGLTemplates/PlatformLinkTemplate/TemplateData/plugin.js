@@ -89,7 +89,19 @@ function openLink(url) {
     return;
   }
 
-  window.location.href = normalizedUrl;
+  if (typeof document !== 'undefined' && document.body) {
+    const link = document.createElement('a');
+    link.href = normalizedUrl;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    return;
+  }
+
+  console.warn('Open link blocked by browser policy. Call must happen from direct user interaction.');
 }
 
 function getAllGames() {
