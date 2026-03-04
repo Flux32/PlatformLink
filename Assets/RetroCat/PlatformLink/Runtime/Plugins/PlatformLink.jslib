@@ -111,19 +111,7 @@ mergeInto(LibraryManager.library, {
     },
 
     jslib_isVibrationSupported: function() {
-        var supportInfo = getVibrationSupportInfo();
-        if (supportInfo.supported) {
-            var attemptBlockReason = getVibrationAttemptBlockReason();
-            if (attemptBlockReason) {
-                console.log('[PlatformLink] Vibration API supported, but calls may be rejected now: ' + attemptBlockReason);
-            } else {
-                console.log('[PlatformLink] Vibration API supported: ' + supportInfo.reason);
-            }
-        } else {
-            console.warn('[PlatformLink] Vibration API not supported: ' + supportInfo.reason);
-        }
-
-        return supportInfo.supported ? 1 : 0;
+        return isVibrationSupported() ? 1 : 0;
     },
 
     jslib_vibrate: function(durationMs) {

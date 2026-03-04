@@ -491,24 +491,85 @@ function showNativeShare(payloadJson) {
   });
 }
 
+function getVibrationNavigator() {
+  if (typeof navigator !== 'undefined') {
+    return navigator;
+  }
+
+  if (typeof window !== 'undefined' && window.navigator) {
+    return window.navigator;
+  }
+
+  if (typeof globalThis !== 'undefined' && globalThis.navigator) {
+    return globalThis.navigator;
+  }
+
+  return null;
+}
+
+function resolveVibrationFunction() {
+  const nav = getVibrationNavigator();
+  if (!nav) {
+    return {
+      fn: null,
+      source: ''
+    };
+  }
+
+  if (typeof nav.vibrate === 'function') {
+    return {
+      fn: nav.vibrate.bind(nav),
+      source: 'navigator.vibrate'
+    };
+  }
+
+  if (typeof nav.webkitVibrate === 'function') {
+    return {
+      fn: nav.webkitVibrate.bind(nav),
+      source: 'navigator.webkitVibrate'
+    };
+  }
+
+  if (typeof nav.mozVibrate === 'function') {
+    return {
+      fn: nav.mozVibrate.bind(nav),
+      source: 'navigator.mozVibrate'
+    };
+  }
+
+  if (typeof nav.msVibrate === 'function') {
+    return {
+      fn: nav.msVibrate.bind(nav),
+      source: 'navigator.msVibrate'
+    };
+  }
+
+  return {
+    fn: null,
+    source: ''
+  };
+}
+
 function getVibrationSupportInfo() {
-  if (typeof navigator === 'undefined') {
+  const nav = getVibrationNavigator();
+  if (!nav) {
     return {
       supported: false,
       reason: 'navigator is undefined in this environment'
     };
   }
 
-  if (typeof navigator.vibrate !== 'function') {
+  const vibration = resolveVibrationFunction();
+  if (!vibration.fn) {
     return {
       supported: false,
-      reason: 'navigator.vibrate is not available'
+      reason: 'no vibration method found (vibrate/webkitVibrate/mozVibrate/msVibrate)'
     };
   }
 
   return {
     supported: true,
-    reason: 'navigator.vibrate is available'
+    reason: `${vibration.source} is available`
   };
 }
 
@@ -521,8 +582,10 @@ function getVibrationAttemptBlockReason() {
     return 'document.visibilityState is not visible';
   }
 
+  const nav = getVibrationNavigator();
+
   // navigator.userActivation is not available in all browsers.
-  if (navigator.userActivation && navigator.userActivation.hasBeenActive === false) {
+  if (nav && nav.userActivation && nav.userActivation.hasBeenActive === false) {
     return 'no user activation has occurred yet';
   }
 
@@ -550,8 +613,13 @@ function vibrate(durationMs) {
     return false;
   }
 
+  const vibration = resolveVibrationFunction();
+  if (!vibration.fn) {
+    return false;
+  }
+
   try {
-    return navigator.vibrate(durationMs) === true;
+    return vibration.fn(durationMs) === true;
   } catch (error) {
     console.warn('Vibration call failed:', error);
     return false;
@@ -576,8 +644,13 @@ function vibratePattern(patternCsv) {
     return false;
   }
 
+  const vibration = resolveVibrationFunction();
+  if (!vibration.fn) {
+    return false;
+  }
+
   try {
-    return navigator.vibrate(pattern) === true;
+    return vibration.fn(pattern) === true;
   } catch (error) {
     console.warn('Vibration pattern call failed:', error);
     return false;
