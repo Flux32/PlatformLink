@@ -56,12 +56,6 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Device
 
         public void Vibrate(VibrationSettings settings)
         {
-            if (IsVibrationSupported() == false)
-            {
-                _logger.LogWarning($"can't vibrate, because vibration is not supported");
-                return;
-            }
-
 #if UNITY_WEBGL && !UNITY_EDITOR
             if (settings.HasPattern)
             {
@@ -81,10 +75,21 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Device
                 _logger.LogWarning($"vibrate rejected by browser: {settings.DurationMs}ms");
                 return;
             }
-#elif UNITY_ANDROID || UNITY_IOS
-            Handheld.Vibrate();
-#endif
             _logger.Log($"vibrate");
+            return;
+#elif UNITY_ANDROID || UNITY_IOS
+            if (IsVibrationSupported() == false)
+            {
+                _logger.LogWarning($"can't vibrate, because vibration is not supported");
+                return;
+            }
+
+            Handheld.Vibrate();
+            _logger.Log($"vibrate");
+            return;
+#endif
+
+            _logger.LogWarning($"can't vibrate, because vibration is not supported");
         }
 
 #if UNITY_WEBGL && !UNITY_EDITOR
