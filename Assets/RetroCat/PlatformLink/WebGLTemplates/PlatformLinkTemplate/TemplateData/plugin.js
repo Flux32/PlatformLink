@@ -491,29 +491,80 @@ function showNativeShare(payloadJson) {
   });
 }
 
+function getVibrationSupportInfo() {
+  if (typeof navigator === 'undefined') {
+    return {
+      supported: false,
+      reason: 'navigator is undefined in this environment'
+    };
+  }
+
+  if (typeof navigator.vibrate !== 'function') {
+    return {
+      supported: false,
+      reason: 'navigator.vibrate is not available'
+    };
+  }
+
+  return {
+    supported: true,
+    reason: 'navigator.vibrate is available'
+  };
+}
+
 function isVibrationSupported() {
-  return typeof navigator !== 'undefined' && typeof navigator.vibrate === 'function';
+  return getVibrationSupportInfo().supported;
+}
+
+function getVibrationAttemptBlockReason() {
+  if (typeof document !== 'undefined' && document.visibilityState !== 'visible') {
+    return 'document.visibilityState is not visible';
+  }
+
+  // navigator.userActivation is not available in all browsers.
+  if (navigator.userActivation && navigator.userActivation.hasBeenActive === false) {
+    return 'no user activation has occurred yet';
+  }
+
+  return '';
+}
+
+function canAttemptVibration() {
+  if (!isVibrationSupported()) {
+    return false;
+  }
+
+  if (getVibrationAttemptBlockReason()) {
+    return false;
+  }
+
+  return true;
 }
 
 function vibrate(durationMs) {
-  if (!isVibrationSupported()) {
-    return;
+  if (!canAttemptVibration()) {
+    return false;
   }
 
   if (!durationMs || durationMs <= 0) {
-    return;
+    return false;
   }
 
-  navigator.vibrate(durationMs);
+  try {
+    return navigator.vibrate(durationMs) === true;
+  } catch (error) {
+    console.warn('Vibration call failed:', error);
+    return false;
+  }
 }
 
 function vibratePattern(patternCsv) {
-  if (!isVibrationSupported()) {
-    return;
+  if (!canAttemptVibration()) {
+    return false;
   }
 
   if (!patternCsv || typeof patternCsv !== 'string') {
-    return;
+    return false;
   }
 
   const pattern = patternCsv
@@ -522,10 +573,15 @@ function vibratePattern(patternCsv) {
     .filter(n => Number.isFinite(n) && n >= 0);
 
   if (pattern.length === 0) {
-    return;
+    return false;
   }
 
-  navigator.vibrate(pattern);
+  try {
+    return navigator.vibrate(pattern) === true;
+  } catch (error) {
+    console.warn('Vibration pattern call failed:', error);
+    return false;
+  }
 }
 
 function copyToClipboard(text) {

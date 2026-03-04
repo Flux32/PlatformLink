@@ -66,14 +66,21 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Device
             if (settings.HasPattern)
             {
                 string patternCsv = string.Join(",", settings.PatternMs);
-                jslib_vibratePattern(patternCsv);
+                bool accepted = jslib_vibratePattern(patternCsv);
+                if (accepted == false)
+                    _logger.LogWarning($"vibrate pattern rejected by browser: [{patternCsv}]");
                 return;
             }
 
             if (settings.DurationMs <= 0)
                 return;
 
-            jslib_vibrate(settings.DurationMs);
+            bool singleAccepted = jslib_vibrate(settings.DurationMs);
+            if (singleAccepted == false)
+            {
+                _logger.LogWarning($"vibrate rejected by browser: {settings.DurationMs}ms");
+                return;
+            }
 #elif UNITY_ANDROID || UNITY_IOS
             Handheld.Vibrate();
 #endif
@@ -85,10 +92,10 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Device
         private static extern bool jslib_isVibrationSupported();
 
         [System.Runtime.InteropServices.DllImport("__Internal")]
-        private static extern void jslib_vibrate(int durationMs);
+        private static extern bool jslib_vibrate(int durationMs);
 
         [System.Runtime.InteropServices.DllImport("__Internal")]
-        private static extern void jslib_vibratePattern(string patternCsv);
+        private static extern bool jslib_vibratePattern(string patternCsv);
 
         [System.Runtime.InteropServices.DllImport("__Internal")]
         private static extern void jslib_copyToClipboard(string text);
