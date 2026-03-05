@@ -71,11 +71,14 @@ public class PlatformLinkSettingsWindow : EditorWindow
         androidTab.BindProperty(so.FindProperty("_android").FindPropertyRelative("_admobSettings"));
         androidTab.Add(new HelpBox("Google Mobile Ads App ID will look similar to this sample ID: ca-app-pub-3940256099942544~3347511713", HelpBoxMessageType.Info));
 
+        yandexGamesTab.BindProperty(so.FindProperty("_yandex"));
+        yandexGamesTab.Add(new HelpBox("Enable Yandex Metrika to inject counter code into every HTML file of the WebGL build.", HelpBoxMessageType.Info));
+        yandexGamesTab.Add(new HelpBox("Counter ID is the numeric value from Metrika. It is used in all places of the counter snippet (tag.js?id=..., ym(...), /watch/...).", HelpBoxMessageType.Info));
+
         _selectedTab = editorTab;
 
         androidTab.style.display = DisplayStyle.None;
         yandexGamesTab.style.display = DisplayStyle.None;
-        yandexGamesTab.Add(new HelpBox("Soon))))", HelpBoxMessageType.Info));
 
         List<Tab> tabs = new List<Tab>()
         {

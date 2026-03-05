@@ -71,3 +71,6 @@ MonoBehaviour:
       _appID: 
       _interstitialUnitID: 
       _rewardedUnitID: 
+  _yandex:
+    _enableYandexMetrika: 0
+    _yandexMetrikaId: 

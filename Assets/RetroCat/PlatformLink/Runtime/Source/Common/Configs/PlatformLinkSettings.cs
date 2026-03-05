@@ -5,9 +5,11 @@ public class PlatformLinkSettings : ScriptableObject
 { 
     [SerializeField] private EditorSettings _editor = new EditorSettings();
     [SerializeField] private AndroidSettings _android = new AndroidSettings();
+    [SerializeField] private YandexSettings _yandex = new YandexSettings();
 
     public AndroidSettings Android => _android;
     public EditorSettings Editor => _editor;
+    public YandexSettings Yandex => _yandex;
     public LeaderboardEditorSettings EditorLeaderboard => _editor.Leaderboard;
     public PlatformEditorSettings EditorPlatform => _editor.Platform;
 
