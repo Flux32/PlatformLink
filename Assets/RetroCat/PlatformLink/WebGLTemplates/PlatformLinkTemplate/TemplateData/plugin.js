@@ -186,6 +186,90 @@ function getAppId() {
   return ysdk?.environment?.app?.id || '';
 }
 
+function getMetrikaCounterId() {
+  const rawCounterId = window.__platformLinkMetrikaCounterId;
+  const counterId = Number(rawCounterId);
+
+  if (!Number.isFinite(counterId) || counterId <= 0) {
+    return null;
+  }
+
+  return counterId;
+}
+
+function sendAnalyticsEvent(eventName) {
+  if (!eventName || typeof eventName !== 'string') {
+    console.warn('Yandex Metrika event name is empty.');
+    return;
+  }
+
+  const normalizedEventName = eventName.trim();
+  if (normalizedEventName.length === 0) {
+    console.warn('Yandex Metrika event name is empty.');
+    return;
+  }
+
+  if (typeof window.ym !== 'function') {
+    console.warn('Yandex Metrika is not initialized.');
+    return;
+  }
+
+  const counterId = getMetrikaCounterId();
+  if (counterId === null) {
+    console.warn('Yandex Metrika counter id is not configured.');
+    return;
+  }
+
+  try {
+    window.ym(counterId, 'reachGoal', normalizedEventName);
+  } catch (error) {
+    console.warn('Yandex Metrika event send failed:', error);
+  }
+}
+
+function sendAnalyticsEventWithData(eventName, eventDataJson) {
+  if (!eventName || typeof eventName !== 'string') {
+    console.warn('Yandex Metrika event name is empty.');
+    return;
+  }
+
+  const normalizedEventName = eventName.trim();
+  if (normalizedEventName.length === 0) {
+    console.warn('Yandex Metrika event name is empty.');
+    return;
+  }
+
+  if (!eventDataJson || typeof eventDataJson !== 'string') {
+    sendAnalyticsEvent(normalizedEventName);
+    return;
+  }
+
+  if (typeof window.ym !== 'function') {
+    console.warn('Yandex Metrika is not initialized.');
+    return;
+  }
+
+  const counterId = getMetrikaCounterId();
+  if (counterId === null) {
+    console.warn('Yandex Metrika counter id is not configured.');
+    return;
+  }
+
+  let eventData;
+  try {
+    eventData = JSON.parse(eventDataJson);
+  } catch (error) {
+    console.warn('Yandex Metrika event data JSON parse failed:', error);
+    return;
+  }
+
+  try {
+    window.ym(counterId, 'reachGoal', normalizedEventName, eventData);
+  } catch (error) {
+    console.warn('Yandex Metrika event send with data failed:', error);
+  }
+}
+
 function sendGameReadyMessage() {
   ysdk.features.LoadingAPI?.ready();
 }

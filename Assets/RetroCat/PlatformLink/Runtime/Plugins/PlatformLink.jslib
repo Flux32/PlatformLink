@@ -54,6 +54,14 @@ mergeInto(LibraryManager.library, {
         sendGameReadyMessage();
     },
 
+    jslib_sendAnalyticsEvent: function(eventName) {
+        sendAnalyticsEvent(UTF8ToString(eventName));
+    },
+
+    jslib_sendAnalyticsEventWithData: function(eventName, eventDataJson) {
+        sendAnalyticsEventWithData(UTF8ToString(eventName), UTF8ToString(eventDataJson));
+    },
+
     jslib_isPlayerAuthorized: function() {
         return isPlayerAuthorized() ? 1 : 0;
     },

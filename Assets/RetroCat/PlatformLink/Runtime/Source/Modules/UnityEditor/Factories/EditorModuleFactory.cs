@@ -70,8 +70,8 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Factories
 
         public IAnalytics CreateAnalytics()
         {
-            return new Common.Modules.Analytics.Analytics(_logger, new IAnalyticsService[]
-                { new EditorAnalyticsService(_logger) });
+            return new Common.Modules.Analytics.Analytics(_logger, new IAnalyticsAdapter[]
+                { new EditorAnalyticsAdapter(_logger) });
         }
 
         public ILeaderboard CreateLeaderboard()

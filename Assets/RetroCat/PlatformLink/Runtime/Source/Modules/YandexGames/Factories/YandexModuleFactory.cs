@@ -56,8 +56,8 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.YandexGames.Factories
         
         public IAnalytics CreateAnalytics()
         {
-            YandexAnalyticsService yandexAnalyticsService = PlatformLinkObject.AddComponent<YandexAnalyticsService>();
-            return new Common.Modules.Analytics.Analytics(_logger, new IAnalyticsService[] { yandexAnalyticsService });
+            YandexAnalyticsAdapter yandexAnalyticsAdapter = PlatformLinkObject.AddComponent<YandexAnalyticsAdapter>();
+            return new Common.Modules.Analytics.Analytics(_logger, new IAnalyticsAdapter[] { yandexAnalyticsAdapter });
         }
         
         public ILeaderboard CreateLeaderboard()

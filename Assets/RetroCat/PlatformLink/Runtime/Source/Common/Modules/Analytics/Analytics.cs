@@ -12,14 +12,14 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Analytics
         private const string MetrikaTagUrl = "mc.yandex.ru/metrika/tag.js";
 
         private readonly ILogger _logger;
-        private readonly IAnalyticsService[] _analyticsServices;
+        private readonly IAnalyticsAdapter[] _analyticsAdapters;
         
         private bool _isGameReadySent;
         
-        public Analytics(ILogger logger, IEnumerable<IAnalyticsService> analyticsService)
+        public Analytics(ILogger logger, IEnumerable<IAnalyticsAdapter> analyticsService)
         {
             _logger = logger;
-            _analyticsServices = analyticsService.ToArray();
+            _analyticsAdapters = analyticsService.ToArray();
         }
         
         public void SendGameReady()
@@ -31,9 +31,46 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Analytics
             }
                 
             _isGameReadySent = true;
-            foreach (IAnalyticsService analyticsService in _analyticsServices)
+            foreach (IAnalyticsAdapter analyticsService in _analyticsAdapters)
             {
                 analyticsService.SendGameReady();
+            }
+        }
+
+        public void SendEvent(string eventName)
+        {
+            if (string.IsNullOrWhiteSpace(eventName))
+            {
+                _logger.LogError("event name is empty.");
+                return;
+            }
+
+            string normalizedEventName = eventName.Trim();
+            foreach (IAnalyticsAdapter analyticsService in _analyticsAdapters)
+            {
+                analyticsService.SendEvent(normalizedEventName);
+            }
+        }
+
+        public void SendEvent(string eventName, string eventDataJson)
+        {
+            if (string.IsNullOrWhiteSpace(eventDataJson))
+            {
+                SendEvent(eventName);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(eventName))
+            {
+                _logger.LogError("event name is empty.");
+                return;
+            }
+
+            string normalizedEventName = eventName.Trim();
+            string normalizedEventDataJson = eventDataJson.Trim();
+            foreach (IAnalyticsAdapter analyticsService in _analyticsAdapters)
+            {
+                analyticsService.SendEvent(normalizedEventName, normalizedEventDataJson);
             }
         }
 
@@ -99,6 +136,8 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Analytics
             return
 $@"{MetrikaStartMarker}
 <script type=""text/javascript"">
+    window.__platformLinkMetrikaCounterId = {counterId};
+
     (function(m,e,t,r,i,k,a){{
         m[i]=m[i]||function(){{(m[i].a=m[i].a||[]).push(arguments)}};
         m[i].l=1*new Date();
