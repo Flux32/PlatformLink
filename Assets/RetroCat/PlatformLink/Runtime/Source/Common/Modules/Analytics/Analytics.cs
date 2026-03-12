@@ -16,10 +16,10 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Analytics
         
         private bool _isGameReadySent;
         
-        public Analytics(ILogger logger, IEnumerable<IAnalyticsAdapter> analyticsService)
+        public Analytics(ILogger logger, IEnumerable<IAnalyticsAdapter> analyticsAdapters)
         {
             _logger = logger;
-            _analyticsAdapters = analyticsService.ToArray();
+            _analyticsAdapters = analyticsAdapters.ToArray();
         }
         
         public void SendGameReady()
@@ -31,9 +31,9 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Analytics
             }
                 
             _isGameReadySent = true;
-            foreach (IAnalyticsAdapter analyticsService in _analyticsAdapters)
+            foreach (IAnalyticsAdapter analyticsAdapter in _analyticsAdapters)
             {
-                analyticsService.SendGameReady();
+                analyticsAdapter.SendGameReady();
             }
         }
 
@@ -46,9 +46,9 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Analytics
             }
 
             string normalizedEventName = eventName.Trim();
-            foreach (IAnalyticsAdapter analyticsService in _analyticsAdapters)
+            foreach (IAnalyticsAdapter analyticsAdapter in _analyticsAdapters)
             {
-                analyticsService.SendEvent(normalizedEventName);
+                analyticsAdapter.SendEvent(normalizedEventName);
             }
         }
 
@@ -68,9 +68,10 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Analytics
 
             string normalizedEventName = eventName.Trim();
             string normalizedEventDataJson = eventDataJson.Trim();
-            foreach (IAnalyticsAdapter analyticsService in _analyticsAdapters)
+            
+            foreach (IAnalyticsAdapter analyticsAdapter in _analyticsAdapters)
             {
-                analyticsService.SendEvent(normalizedEventName, normalizedEventDataJson);
+                analyticsAdapter.SendEvent(normalizedEventName, normalizedEventDataJson);
             }
         }
 
@@ -103,6 +104,7 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Analytics
 
             int startIndex = html.IndexOf(MetrikaStartMarker, System.StringComparison.Ordinal);
             int endIndex = html.IndexOf(MetrikaEndMarker, System.StringComparison.Ordinal);
+            
             if (startIndex >= 0 && endIndex > startIndex)
             {
                 int removeLength = endIndex + MetrikaEndMarker.Length - startIndex;
@@ -115,6 +117,7 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Analytics
             }
 
             Match headMatch = Regex.Match(html, "<head\\b[^>]*>", RegexOptions.IgnoreCase);
+            
             if (headMatch.Success)
             {
                 int insertIndex = headMatch.Index + headMatch.Length;
@@ -122,6 +125,7 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Analytics
             }
 
             Match bodyMatch = Regex.Match(html, "<body\\b[^>]*>", RegexOptions.IgnoreCase);
+            
             if (bodyMatch.Success)
             {
                 int insertIndex = bodyMatch.Index + bodyMatch.Length;
@@ -131,6 +135,7 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules.Analytics
             return snippet + "\n" + html;
         }
 
+        //TODO: reflex or another module
         public static string BuildYandexMetrikaCounterHtml(string counterId)
         {
             return
