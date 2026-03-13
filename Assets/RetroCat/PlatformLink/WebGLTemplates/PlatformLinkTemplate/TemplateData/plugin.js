@@ -187,22 +187,16 @@ function getAppId() {
 }
 
 function getMetrikaCounterId() {
-  for (let i = 0; i < document.scripts.length; i++) {
-    const scriptSrc = document.scripts[i]?.src || '';
-    const match = scriptSrc.match(/mc\.yandex\.ru\/metrika\/tag\.js\?id=(\d+)/);
-    if (!match || !match[1]) {
-      continue;
-    }
+  const rawCounterId = (typeof window !== 'undefined')
+    ? window.__platformLinkYandexMetrikaCounterId
+    : null;
 
-    const counterId = Number(match[1]);
-    if (!Number.isFinite(counterId) || counterId <= 0) {
-      continue;
-    }
-
-    return counterId;
+  const counterId = Number(rawCounterId);
+  if (!Number.isFinite(counterId) || counterId <= 0) {
+    return null;
   }
 
-  return null;
+  return counterId;
 }
 
 function sendAnalyticsEvent(eventName) {

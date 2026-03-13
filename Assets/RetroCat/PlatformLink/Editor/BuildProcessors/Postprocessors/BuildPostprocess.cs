@@ -3,6 +3,7 @@ using UnityEditor.Callbacks;
 using PlatformLink.PluginDebug;
 using RetroCat.PlatformLink.Runtime.Source.Common.Debug;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Analytics;
+using System.Collections.Generic;
 using System.IO;
 
 public class BuildPostprocess
@@ -42,13 +43,30 @@ public class BuildPostprocess
             return;
         }
 
+        string metrikaScript = Analytics.BuildYandexMetrikaScript(counterId);
+        HashSet<string> generatedScriptPaths = new HashSet<string>();
+
         int injectedFiles = 0;
         foreach (string htmlPath in htmlPaths)
         {
             try
             {
+                string htmlDirectory = Path.GetDirectoryName(htmlPath);
+                if (string.IsNullOrEmpty(htmlDirectory))
+                {
+                    logger.LogWarning($"Cannot resolve HTML directory for '{htmlPath}'.");
+                    continue;
+                }
+
+                string metrikaScriptPath = Path.Combine(htmlDirectory, Analytics.YandexMetrikaScriptFileName);
+                if (generatedScriptPaths.Contains(metrikaScriptPath) == false)
+                {
+                    File.WriteAllText(metrikaScriptPath, metrikaScript);
+                    generatedScriptPaths.Add(metrikaScriptPath);
+                }
+
                 string html = File.ReadAllText(htmlPath);
-                string updatedHtml = Analytics.InjectYandexMetrikaCounter(html, counterId);
+                string updatedHtml = Analytics.InjectYandexMetrikaScriptReference(html, "./" + Analytics.YandexMetrikaScriptFileName);
                 if (updatedHtml == html)
                 {
                     continue;
@@ -63,6 +81,6 @@ public class BuildPostprocess
             }
         }
 
-        logger.Log($"Yandex Metrika counter injected into {injectedFiles}/{htmlPaths.Length} HTML file(s). Counter ID: {counterId}");
+        logger.Log($"Yandex Metrika script generated in {generatedScriptPaths.Count} folder(s) and injected into {injectedFiles}/{htmlPaths.Length} HTML file(s). Counter ID: {counterId}");
     }
 }
