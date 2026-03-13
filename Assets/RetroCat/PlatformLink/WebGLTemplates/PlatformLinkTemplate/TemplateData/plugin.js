@@ -187,30 +187,22 @@ function getAppId() {
 }
 
 function getMetrikaCounterId() {
-  const rawCounterId = window.__platformLinkMetrikaCounterId;
-  const counterId = Number(rawCounterId);
-
-  if (!Number.isFinite(counterId) || counterId <= 0) {
-    for (let i = 0; i < document.scripts.length; i++) {
-      const scriptSrc = document.scripts[i]?.src || '';
-      const match = scriptSrc.match(/mc\.yandex\.ru\/metrika\/tag\.js\?id=(\d+)/);
-      if (!match || !match[1]) {
-        continue;
-      }
-
-      const parsedCounterId = Number(match[1]);
-      if (!Number.isFinite(parsedCounterId) || parsedCounterId <= 0) {
-        continue;
-      }
-
-      window.__platformLinkMetrikaCounterId = parsedCounterId;
-      return parsedCounterId;
+  for (let i = 0; i < document.scripts.length; i++) {
+    const scriptSrc = document.scripts[i]?.src || '';
+    const match = scriptSrc.match(/mc\.yandex\.ru\/metrika\/tag\.js\?id=(\d+)/);
+    if (!match || !match[1]) {
+      continue;
     }
 
-    return null;
+    const counterId = Number(match[1]);
+    if (!Number.isFinite(counterId) || counterId <= 0) {
+      continue;
+    }
+
+    return counterId;
   }
 
-  return counterId;
+  return null;
 }
 
 function sendAnalyticsEvent(eventName) {
