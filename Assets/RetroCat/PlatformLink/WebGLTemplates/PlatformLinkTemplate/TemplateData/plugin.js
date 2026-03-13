@@ -222,6 +222,7 @@ function sendAnalyticsEvent(eventName) {
 
   try {
     window.ym(counterId, 'reachGoal', normalizedEventName);
+    console.log('Yandex Metrika event sent:', normalizedEventName);
   } catch (error) {
     console.warn('Yandex Metrika event send failed:', error);
   }
@@ -265,6 +266,7 @@ function sendAnalyticsEventWithData(eventName, eventDataJson) {
 
   try {
     window.ym(counterId, 'reachGoal', normalizedEventName, eventData);
+    console.log('Yandex Metrika event sent with data:', normalizedEventName, eventData);
   } catch (error) {
     console.warn('Yandex Metrika event send with data failed:', error);
   }
