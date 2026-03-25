@@ -279,49 +279,74 @@ function sendGameReadyMessage() {
 }
 
 function showInterstitialAd() {
-  ysdk.adv.showFullscreenAdv({
-      callbacks: {
-          onOpen: () => {
-              console.log('Interstetial opened.');
-              sendMessageToUnity('fjs_onInterstetialAdOpened');
-          },
-          onClose: (wasShown) => {
-              console.log('Interstetial closed.');
-              sendMessageToUnity('fjs_onInterstetialAdClosed');
-          }, 
-          onError: (error) => {
-              console.log('Error while open video ad:', error);
-              sendMessageToUnity('fjs_onInterstetialAdError'); // TODO: Add error message
-          },
-          onoffline: () => {
-              console.log('The interstitial is not open because the user is Offline.');
-              sendMessageToUnity('fjs_onInterstetialAdError');
-          }
-      }
-  })
+  if (!ysdk || !ysdk.adv || typeof ysdk.adv.showFullscreenAdv !== 'function') {
+    console.warn('Yandex SDK adv.showFullscreenAdv is not available');
+    sendMessageToUnity('fjs_onInterstitialAdError');
+    return;
+  }
+
+  const onOffline = () => {
+    console.log('The interstitial is not open because the user is Offline.');
+    sendMessageToUnity('fjs_onInterstitialAdError');
+  };
+
+  try {
+    ysdk.adv.showFullscreenAdv({
+        callbacks: {
+            onOpen: () => {
+                console.log('Interstitial opened.');
+                sendMessageToUnity('fjs_onInterstitialAdOpened');
+            },
+            onClose: (wasShown) => {
+                console.log('Interstitial closed.');
+                sendMessageToUnity('fjs_onInterstitialAdClosed');
+            }, 
+            onError: (error) => {
+                console.log('Error while open video ad:', error);
+                sendMessageToUnity('fjs_onInterstitialAdError'); // TODO: Add error message
+            },
+            onoffline: onOffline,
+            onOffline: onOffline
+        }
+    });
+  } catch (error) {
+    console.log('showFullscreenAdv error:', error);
+    sendMessageToUnity('fjs_onInterstitialAdError');
+  }
 }
 
 function showRewardedAd() {
-  ysdk.adv.showRewardedVideo({
-      callbacks: {
-          onOpen: () => {
-              console.log('Rewarded ad opened.');
-              sendMessageToUnity('fjs_onRewardedAdOpened');
-          },
-          onRewarded: () => {
-              console.log('Rewarded!');
-              sendMessageToUnity('fjs_onRewarded');
-          },
-          onClose: () => {
-              console.log('Rewarded ad closed.');
-              sendMessageToUnity('fjs_onRewardedAdClosed');
-          }, 
-          onError: (error) => {
-              console.log('Error while open video ad:', error);
-              sendMessageToUnity('fjs_onRewardedAdError');
-          }
-      }
-  })
+  if (!ysdk || !ysdk.adv || typeof ysdk.adv.showRewardedVideo !== 'function') {
+    console.warn('Yandex SDK adv.showRewardedVideo is not available');
+    sendMessageToUnity('fjs_onRewardedAdError');
+    return;
+  }
+
+  try {
+    ysdk.adv.showRewardedVideo({
+        callbacks: {
+            onOpen: () => {
+                console.log('Rewarded ad opened.');
+                sendMessageToUnity('fjs_onRewardedAdOpened');
+            },
+            onRewarded: () => {
+                console.log('Rewarded!');
+                sendMessageToUnity('fjs_onRewarded');
+            },
+            onClose: () => {
+                console.log('Rewarded ad closed.');
+                sendMessageToUnity('fjs_onRewardedAdClosed');
+            }, 
+            onError: (error) => {
+                console.log('Error while open video ad:', error);
+                sendMessageToUnity('fjs_onRewardedAdError');
+            }
+        }
+    });
+  } catch (error) {
+    console.log('showRewardedVideo error:', error);
+    sendMessageToUnity('fjs_onRewardedAdError');
+  }
 }
 
 function purchase(id) {

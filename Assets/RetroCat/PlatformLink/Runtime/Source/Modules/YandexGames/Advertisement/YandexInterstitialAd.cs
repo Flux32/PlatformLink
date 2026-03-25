@@ -24,28 +24,34 @@ namespace PlatformLink.Platform.YandexGames
                 Failed?.Invoke();
                 return;
             }
+
+            if (IsOpened)
+            {
+                return;
+            }
+
             IsOpened = true;
             jslib_showInterstitialAd();
         }
 
         public bool CanShow()
         {
-            return NoAdMode == false;
+            return IsOpened == false && NoAdMode == false;
         }
 
         #region Called from PlatformLink.js
-        private void fjs_onInterstetialAdOpened()
+        private void fjs_onInterstitialAdOpened()
         {
             Opened?.Invoke();
         }
 
-        private void fjs_onInterstetialAdClosed()
+        private void fjs_onInterstitialAdClosed()
         {
             IsOpened = false;
             Closed?.Invoke();
         }
 
-        private void fjs_onInterstetialAdFailed()
+        private void fjs_onInterstitialAdError()
         {
             IsOpened = false;
             Failed?.Invoke();

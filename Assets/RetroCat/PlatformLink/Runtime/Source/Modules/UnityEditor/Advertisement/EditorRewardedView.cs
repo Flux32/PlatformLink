@@ -40,7 +40,7 @@ public class EditorRewardedView : MonoBehaviour
     private void OnDisable()
     {
         _closeButton.onClick.RemoveListener(OnButtonCloseRewardedClicked);
-        _closeButton.onClick.RemoveListener(OnRewardButtonClicked);
+        _rewardButton.onClick.RemoveListener(OnRewardButtonClicked);
     }
 
     private void OnButtonCloseRewardedClicked()

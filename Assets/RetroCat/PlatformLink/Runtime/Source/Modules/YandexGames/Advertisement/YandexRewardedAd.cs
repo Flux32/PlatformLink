@@ -12,18 +12,24 @@ namespace PlatformLink.Platform.YandexGames
         public event Action Failed;
         public event Action<Reward> Rewarded;
 
-        public bool IsOpened => throw new NotImplementedException();
+        public bool IsOpened { get; private set; }
 
         [DllImport("__Internal")]
         private static extern void jslib_showRewardedAd();
 
         public bool CanShow()
         {
-            return true;
+            return IsOpened == false;
         }
 
         public void Show()
         {
+            if (IsOpened)
+            {
+                return;
+            }
+
+            IsOpened = true;
             jslib_showRewardedAd();
         }
 
@@ -35,11 +41,13 @@ namespace PlatformLink.Platform.YandexGames
 
         private void fjs_onRewardedAdClosed()
         {
+            IsOpened = false;
             Closed?.Invoke();
         }
 
-        private void fjs_onRewardedAdFailed()
+        private void fjs_onRewardedAdError()
         {
+            IsOpened = false;
             Failed?.Invoke();
         }
 
