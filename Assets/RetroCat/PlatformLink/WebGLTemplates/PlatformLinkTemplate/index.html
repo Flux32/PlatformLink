@@ -7,6 +7,7 @@
     <title>{{{ PRODUCT_NAME }}}</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
+    <link rel="stylesheet" href="TemplateData/loading-screen.css">
 
     <!-- Yandex Games SDK -->
     <script src="https://yandex.ru/games/sdk/v2"></script>
@@ -15,20 +16,10 @@
   <body>
     <div id="unity-container">
       <canvas id="unity-canvas" class="unity-canvas"></canvas>
-
-      <div id="canvas-overlay" class="canvas-overlay">
-        <div id="loading-page" class="loading-page">
-          <div class="loading-page__content">
-            <img src="TemplateData/logo.png" class="logo">
-
-            <div class="progress-bar loading-page__progress-bar">
-              <div id="progress-bar-fill" class="progress-bar-fill"></div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <div id="canvas-overlay" class="canvas-overlay"></div>
     </div>
     
+    <script src="./TemplateData/loading-screen.js"></script>
     <script src="./TemplateData/plugin.js"></script>
     <script src="./TemplateData/fit.js"></script>
 
@@ -53,8 +44,8 @@
 
       const container = document.querySelector("#unity-container");
       const canvas = document.querySelector("#unity-canvas");
-      const progressBarFill = document.querySelector("#progress-bar-fill");
       const canvasOverlay = document.querySelector("#canvas-overlay");
+      const loadingScreen = window.RetroLoadingScreen ? window.RetroLoadingScreen.create(canvasOverlay) : null;
 
 			let scaleToFit;
 
@@ -77,13 +68,19 @@
       script.src = loaderUrl;
       script.onload = () => {
         createUnityInstance(canvas, config, (progress) => {
-          progressBarFill.style.width = `${100 * progress}%`;
+          if (loadingScreen) {
+            loadingScreen.setProgress(progress);
+          }
 
           if (scaleToFit == true)
             fitGameScreen();
         }).then((unityInstance) => {
           myGameInstance = unityInstance;
-          canvasOverlay.style.display = "none";
+          if (loadingScreen) {
+            loadingScreen.hide();
+          } else {
+            canvasOverlay.style.display = "none";
+          }
         }).catch((message) => {
           alert(message);
         });

@@ -1,0 +1,112 @@
+.canvas-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    z-index: 10;
+}
+
+.loading-screen {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    color: #bcc4db;
+    font-family: Rubik, "Segoe UI", Tahoma, sans-serif;
+    background: radial-gradient(ellipse 52% 41% at 50% 47.4%, #1a2441 0%, #0f1629 50%, #040711 100%);
+}
+
+.loading-screen__content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+}
+
+.loading-screen__cat {
+    position: absolute;
+    left: 50%;
+    top: min(259px, 33vh);
+    width: clamp(204.019px, calc(163.61px + 10.776vw), 318.78px);
+    height: auto;
+    transform: translateX(-50%);
+    object-fit: contain;
+}
+
+.loading-screen__text {
+    position: absolute;
+    left: 50%;
+    top: clamp(477px, calc(431.6px + 12.113vw), 606px);
+    margin: 0;
+    transform: translateX(-50%);
+    color: #bcc4db;
+    font-size: clamp(25.2px, calc(19.29px + 1.577vw), 42px);
+    font-weight: 400;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.loading-screen__progress {
+    position: absolute;
+    left: 50%;
+    top: clamp(525px, calc(469.01px + 14.93vw), 684px);
+    width: clamp(343px, calc(207.44px + 36.15vw), 728px);
+    height: clamp(28px, calc(21.31px + 1.784vw), 47px);
+    padding: clamp(6px, calc(4.59px + 0.376vw), 10px);
+    transform: translateX(-50%);
+    border: clamp(1.8px, calc(1.38px + 0.113vw), 3px) solid rgba(255, 255, 255, 0.8);
+    border-radius: 999px;
+    box-sizing: border-box;
+}
+
+.loading-screen__progress-track {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #17203f 0%, #090f2e 100%);
+    box-shadow:
+        inset 0 0 0 1px rgba(31, 56, 118, 0.6),
+        inset 0 0 10px rgba(8, 23, 66, 0.95);
+}
+
+.loading-screen__progress-fill {
+    position: relative;
+    width: 0%;
+    height: 100%;
+    min-width: 0;
+    border-radius: inherit;
+    background: linear-gradient(180deg, #91e8fa 0%, #00a9f9 100%);
+    box-shadow:
+        0 0 clamp(8px, calc(6.6px + 0.376vw), 12px) rgba(38, 186, 249, 0.95),
+        inset 0 clamp(1px, calc(0.86px + 0.038vw), 1.4px) clamp(2px, calc(1.72px + 0.075vw), 3px) rgba(255, 255, 255, 0.45);
+    transition: width 0.12s linear;
+}
+
+.loading-screen__powered {
+    position: absolute;
+    left: 50%;
+    bottom: clamp(40px, calc(33.31px + 1.784vw), 59px);
+    margin: 0;
+    transform: translateX(-50%);
+    color: #bcc4db;
+    font-size: clamp(16px, calc(13.18px + 0.751vw), 24px);
+    font-weight: 400;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+}
+
+@media (max-width: 380px) {
+    .loading-screen__content {
+        max-width: 100%;
+    }
+
+    .loading-screen__text,
+    .loading-screen__powered {
+        white-space: normal;
+        width: calc(100% - 32px);
+    }
+}
