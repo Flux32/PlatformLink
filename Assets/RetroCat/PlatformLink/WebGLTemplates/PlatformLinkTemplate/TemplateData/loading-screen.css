@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Rubik:wght@400&display=swap");
+
 .canvas-overlay {
     position: absolute;
     inset: 0;
@@ -6,58 +8,70 @@
 }
 
 .loading-screen {
+    --pl-scale-x: 1;
+    --pl-scale-y: 1;
+
     position: relative;
     width: 100%;
     height: 100%;
     overflow: hidden;
     color: #bcc4db;
     font-family: Rubik, "Segoe UI", Tahoma, sans-serif;
-    background: radial-gradient(ellipse 52% 41% at 50% 47.4%, #1a2441 0%, #0f1629 50%, #040711 100%);
+}
+
+.loading-screen::before {
+    content: "";
+    position: absolute;
+    left: calc(var(--pl-bg-left) * var(--pl-scale-x) * 1px);
+    top: calc(var(--pl-bg-top) * var(--pl-scale-y) * 1px);
+    width: calc(var(--pl-bg-width) * var(--pl-scale-x) * 1px);
+    height: calc(var(--pl-bg-height) * var(--pl-scale-y) * 1px);
+    background-image: var(--pl-bg-image);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
 }
 
 .loading-screen__content {
     position: relative;
     width: 100%;
     height: 100%;
-    max-width: 1440px;
-    margin: 0 auto;
 }
 
 .loading-screen__cat {
     position: absolute;
-    left: 50%;
-    top: min(259px, 33vh);
-    width: clamp(204.019px, calc(163.61px + 10.776vw), 318.78px);
-    height: auto;
-    transform: translateX(-50%);
+    left: calc(var(--pl-cat-left) * var(--pl-scale-x) * 1px);
+    top: calc(var(--pl-cat-top) * var(--pl-scale-y) * 1px);
+    width: calc(var(--pl-cat-size) * var(--pl-scale-x) * 1px);
+    height: calc(var(--pl-cat-size) * var(--pl-scale-y) * 1px);
     object-fit: contain;
 }
 
 .loading-screen__text {
     position: absolute;
-    left: 50%;
-    top: clamp(477px, calc(431.6px + 12.113vw), 606px);
+    left: calc(var(--pl-loading-left) * var(--pl-scale-x) * 1px);
+    top: calc(var(--pl-loading-top) * var(--pl-scale-y) * 1px);
+    width: calc(var(--pl-loading-width) * var(--pl-scale-x) * 1px);
     margin: 0;
-    transform: translateX(-50%);
     color: #bcc4db;
-    font-size: clamp(25.2px, calc(19.29px + 1.577vw), 42px);
+    font-size: calc(var(--pl-loading-font-size) * var(--pl-scale-y) * 1px);
     font-weight: 400;
-    line-height: 1;
+    line-height: calc(var(--pl-loading-line-height) * var(--pl-scale-y) * 1px);
     text-align: center;
     white-space: nowrap;
 }
 
 .loading-screen__progress {
     position: absolute;
-    left: 50%;
-    top: clamp(525px, calc(469.01px + 14.93vw), 684px);
-    width: clamp(343px, calc(207.44px + 36.15vw), 728px);
-    height: clamp(28px, calc(21.31px + 1.784vw), 47px);
-    padding: clamp(6px, calc(4.59px + 0.376vw), 10px);
-    transform: translateX(-50%);
-    border: clamp(1.8px, calc(1.38px + 0.113vw), 3px) solid rgba(255, 255, 255, 0.8);
-    border-radius: 999px;
+    left: calc(var(--pl-progress-left) * var(--pl-scale-x) * 1px);
+    top: calc(var(--pl-progress-top) * var(--pl-scale-y) * 1px);
+    width: calc(var(--pl-progress-width) * var(--pl-scale-x) * 1px);
+    height: calc(var(--pl-progress-height) * var(--pl-scale-y) * 1px);
+    padding:
+        calc(var(--pl-progress-padding) * var(--pl-scale-y) * 1px)
+        calc(var(--pl-progress-padding) * var(--pl-scale-x) * 1px);
     box-sizing: border-box;
+    border: calc(var(--pl-progress-border) * var(--pl-scale-y) * 1px) solid rgba(255, 255, 255, 0.8);
+    border-radius: calc(34.5 * var(--pl-scale-y) * 1px);
 }
 
 .loading-screen__progress-track {
@@ -65,48 +79,106 @@
     width: 100%;
     height: 100%;
     overflow: hidden;
-    border-radius: 999px;
-    background: linear-gradient(180deg, #17203f 0%, #090f2e 100%);
-    box-shadow:
-        inset 0 0 0 1px rgba(31, 56, 118, 0.6),
-        inset 0 0 10px rgba(8, 23, 66, 0.95);
+    border-radius: calc(28 * var(--pl-scale-y) * 1px);
+    background: linear-gradient(180deg, #101a43 0%, #060d2e 100%);
+}
+
+.loading-screen__progress-track::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("loading-progress-track.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    filter: blur(calc(var(--pl-progress-track-blur) * var(--pl-scale-y) * 1px));
 }
 
 .loading-screen__progress-fill {
     position: relative;
+    z-index: 1;
     width: 0%;
     height: 100%;
     min-width: 0;
-    border-radius: inherit;
+    border-radius: calc(17.5 * var(--pl-scale-y) * 1px);
     background: linear-gradient(180deg, #91e8fa 0%, #00a9f9 100%);
     box-shadow:
-        0 0 clamp(8px, calc(6.6px + 0.376vw), 12px) rgba(38, 186, 249, 0.95),
-        inset 0 clamp(1px, calc(0.86px + 0.038vw), 1.4px) clamp(2px, calc(1.72px + 0.075vw), 3px) rgba(255, 255, 255, 0.45);
+        0 0 calc(var(--pl-progress-glow-blur) * var(--pl-scale-y) * 1px) #26baf9,
+        inset 0 calc(1.8 * var(--pl-scale-y) * 1px) calc(3.4 * var(--pl-scale-y) * 1px) rgba(255, 255, 255, 0.45);
     transition: width 0.12s linear;
 }
 
 .loading-screen__powered {
     position: absolute;
-    left: 50%;
-    bottom: clamp(40px, calc(33.31px + 1.784vw), 59px);
+    left: calc(var(--pl-powered-left) * var(--pl-scale-x) * 1px);
+    bottom: calc(var(--pl-powered-bottom) * var(--pl-scale-y) * 1px);
+    width: calc(var(--pl-powered-width) * var(--pl-scale-x) * 1px);
     margin: 0;
-    transform: translateX(-50%);
     color: #bcc4db;
-    font-size: clamp(16px, calc(13.18px + 0.751vw), 24px);
+    font-size: calc(var(--pl-powered-font-size) * var(--pl-scale-y) * 1px);
     font-weight: 400;
-    line-height: 1;
-    text-align: center;
+    line-height: calc(var(--pl-powered-line-height) * var(--pl-scale-y) * 1px);
+    text-align: right;
     white-space: nowrap;
 }
 
-@media (max-width: 380px) {
-    .loading-screen__content {
-        max-width: 100%;
-    }
+.loading-screen--pc {
+    --pl-design-width: 1440;
+    --pl-design-height: 1024;
+    --pl-bg-left: -240;
+    --pl-bg-top: -28;
+    --pl-bg-width: 1920;
+    --pl-bg-height: 1080;
+    --pl-bg-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 1920 1080' xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='none'><rect x='0' y='0' height='100%' width='100%' fill='url(%23grad)' opacity='1'/><defs><radialGradient id='grad' gradientUnits='userSpaceOnUse' cx='0' cy='0' r='10' gradientTransform='matrix(1.4365e-13 42 -74.667 3.3935e-13 960 512)'><stop stop-color='rgba(26,36,65,1)' offset='0'/><stop stop-color='rgba(15,22,41,1)' offset='0.5'/><stop stop-color='rgba(4,7,17,1)' offset='1'/></radialGradient></defs></svg>");
+    --pl-cat-left: 546;
+    --pl-cat-top: 259;
+    --pl-cat-size: 318.78;
+    --pl-loading-left: 613;
+    --pl-loading-top: 606;
+    --pl-loading-width: 214;
+    --pl-loading-font-size: 42;
+    --pl-loading-line-height: 50;
+    --pl-progress-left: 356;
+    --pl-progress-top: 684;
+    --pl-progress-width: 728;
+    --pl-progress-height: 47;
+    --pl-progress-padding: 10;
+    --pl-progress-border: 3;
+    --pl-progress-track-blur: 2;
+    --pl-progress-glow-blur: 6.45;
+    --pl-powered-left: 579;
+    --pl-powered-bottom: 59;
+    --pl-powered-width: 281;
+    --pl-powered-font-size: 24;
+    --pl-powered-line-height: 79.978;
+}
 
-    .loading-screen__text,
-    .loading-screen__powered {
-        white-space: normal;
-        width: calc(100% - 32px);
-    }
+.loading-screen--mobile {
+    --pl-design-width: 375;
+    --pl-design-height: 812;
+    --pl-bg-left: 0;
+    --pl-bg-top: 0;
+    --pl-bg-width: 375;
+    --pl-bg-height: 812;
+    --pl-bg-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 375 812' xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='none'><rect x='0' y='0' height='100%' width='100%' fill='url(%23grad)' opacity='1'/><defs><radialGradient id='grad' gradientUnits='userSpaceOnUse' cx='0' cy='0' r='10' gradientTransform='matrix(0.049999 22.705 -34.314 0.075562 187.5 384.95)'><stop stop-color='rgba(26,36,65,1)' offset='0'/><stop stop-color='rgba(15,22,41,1)' offset='0.5'/><stop stop-color='rgba(4,7,17,1)' offset='1'/></radialGradient></defs></svg>");
+    --pl-cat-left: 71.380859375;
+    --pl-cat-top: 259;
+    --pl-cat-size: 204.01919555664062;
+    --pl-loading-left: 123.80078125;
+    --pl-loading-top: 477;
+    --pl-loading-width: 129;
+    --pl-loading-font-size: 25.2;
+    --pl-loading-line-height: 30;
+    --pl-progress-left: 16;
+    --pl-progress-top: 525;
+    --pl-progress-width: 343;
+    --pl-progress-height: 28;
+    --pl-progress-padding: 6;
+    --pl-progress-border: 1.8;
+    --pl-progress-track-blur: 1.2;
+    --pl-progress-glow-blur: 3.87;
+    --pl-powered-left: 94;
+    --pl-powered-bottom: 40;
+    --pl-powered-width: 188;
+    --pl-powered-font-size: 16;
+    --pl-powered-line-height: 79.978;
 }
