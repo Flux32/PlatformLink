@@ -8,6 +8,8 @@ using System.IO;
 
 public class BuildPostprocess
 {
+    private const string LoadingScreenManualClosePlaceholder = "__PL_LOADING_SCREEN_MANUAL_CLOSE__";
+
     [PostProcessBuild]
     public static void OnPostprocessBuild(BuildTarget target, string pathToBuiltProject)
     {
@@ -16,6 +18,7 @@ public class BuildPostprocess
             ILogger logger = new PLinkLogger();
 
             TryInjectYandexMetrika(pathToBuiltProject, logger);
+            TryApplyLoadingScreenSettings(pathToBuiltProject, logger);
 
             BuildZipArchiving zipPacker = new BuildZipArchiving(logger);
             zipPacker.Archive(pathToBuiltProject);
@@ -82,5 +85,41 @@ public class BuildPostprocess
         }
 
         logger.Log($"Yandex Metrika script generated in {generatedScriptPaths.Count} folder(s) and injected into {injectedFiles}/{htmlPaths.Length} HTML file(s). Counter ID: {counterId}");
+    }
+
+    private static void TryApplyLoadingScreenSettings(string buildPath, ILogger logger)
+    {
+        string[] htmlPaths = Directory.GetFiles(buildPath, "*.html", SearchOption.AllDirectories);
+        if (htmlPaths.Length == 0)
+        {
+            logger.LogWarning("No HTML files found in WebGL build output. Loading Screen setting injection skipped.");
+            return;
+        }
+
+        bool manualClose = PlatformLinkSettings.Instance.Yandex?.LoadingScreen?.ManualClose == true;
+        string replacementValue = manualClose ? "true" : "false";
+
+        int updatedFiles = 0;
+        foreach (string htmlPath in htmlPaths)
+        {
+            try
+            {
+                string html = File.ReadAllText(htmlPath);
+                string updatedHtml = html.Replace(LoadingScreenManualClosePlaceholder, replacementValue);
+                if (updatedHtml == html)
+                {
+                    continue;
+                }
+
+                File.WriteAllText(htmlPath, updatedHtml);
+                updatedFiles++;
+            }
+            catch (System.Exception exception)
+            {
+                logger.LogWarning($"Failed to inject Loading Screen settings into '{htmlPath}'. {exception.Message}");
+            }
+        }
+
+        logger.Log($"Loading Screen manual close setting applied: {replacementValue}. Updated {updatedFiles}/{htmlPaths.Length} HTML file(s).");
     }
 }

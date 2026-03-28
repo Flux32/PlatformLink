@@ -54,6 +54,17 @@ mergeInto(LibraryManager.library, {
         sendGameReadyMessage();
     },
 
+    jslib_closeLoadingScreen: function() {
+        if (typeof window !== 'undefined' && window.RetroLoadingScreen && typeof window.RetroLoadingScreen.close === 'function') {
+            window.RetroLoadingScreen.close();
+            return;
+        }
+
+        if (typeof closeLoadingScreen === 'function') {
+            closeLoadingScreen();
+        }
+    },
+
     jslib_sendAnalyticsEvent: function(eventName) {
         sendAnalyticsEvent(UTF8ToString(eventName));
     },

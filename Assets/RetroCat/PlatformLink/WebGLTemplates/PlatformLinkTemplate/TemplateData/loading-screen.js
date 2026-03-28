@@ -1,4 +1,6 @@
 (function () {
+  let currentOverlayElement = null;
+
   function getMarkup() {
     return [
       '<div id="loading-page" class="loading-screen" data-node-id="3408:21099">',
@@ -16,11 +18,22 @@
     ].join("");
   }
 
+  function close() {
+    if (!currentOverlayElement) {
+      return;
+    }
+
+    currentOverlayElement.style.display = "none";
+    currentOverlayElement = null;
+  }
+
   function create(overlayElement) {
     if (!overlayElement) {
       return null;
     }
 
+    currentOverlayElement = overlayElement;
+    overlayElement.style.display = "";
     overlayElement.innerHTML = getMarkup();
 
     const progressBarFill = overlayElement.querySelector("#progress-bar-fill");
@@ -35,13 +48,14 @@
         const normalizedProgress = Math.max(0, Math.min(1, Number(progress) || 0));
         progressBarFill.style.width = `${normalizedProgress * 100}%`;
       },
-      hide() {
-        overlayElement.style.display = "none";
-      }
+      hide: close
     };
   }
 
   window.RetroLoadingScreen = {
-    create
+    create,
+    close
   };
+
+  window.closeLoadingScreen = close;
 })();

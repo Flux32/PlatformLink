@@ -25,6 +25,7 @@
 
     <script>      
       const buildUrl = "Build";
+      const loadingScreenManualClose = "__PL_LOADING_SCREEN_MANUAL_CLOSE__" === "true";
       const loaderUrl = buildUrl + "/{{{ LOADER_FILENAME }}}";
       const config = {
         dataUrl: buildUrl + "/{{{ DATA_FILENAME }}}",
@@ -76,9 +77,9 @@
             fitGameScreen();
         }).then((unityInstance) => {
           myGameInstance = unityInstance;
-          if (loadingScreen) {
+          if (loadingScreen && loadingScreenManualClose == false) {
             loadingScreen.hide();
-          } else {
+          } else if (!loadingScreen) {
             canvasOverlay.style.display = "none";
           }
         }).catch((message) => {
