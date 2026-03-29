@@ -5,13 +5,28 @@
   };
 
   const DESIGN = {
-    [MODE.PC]: { width: 1440, height: 1024, catTop: 259, catSize: 318.78, loadingTop: 606 },
-    [MODE.MOBILE]: { width: 375, height: 812, catTop: 259, catSize: 204.01919555664062, loadingTop: 477 }
+    [MODE.PC]: {
+      width: 1440,
+      height: 1024,
+      catTop: 259,
+      catSize: 318.78,
+      loadingTop: 606,
+      progressTop: 684
+    },
+    [MODE.MOBILE]: {
+      width: 375,
+      height: 812,
+      catTop: 259,
+      catSize: 204.01919555664062,
+      loadingTop: 477,
+      progressTop: 525
+    }
   };
 
   const MOBILE_MAX_WIDTH = 812;
   const MOBILE_PORTRAIT_ASPECT = 1;
   const MOBILE_FORCE_WIDTH = 480;
+  const CAT_SAFE_GAP_PX = 14;
 
   let currentOverlayElement = null;
   let currentRootElement = null;
@@ -65,9 +80,21 @@
     currentRootElement.style.setProperty("--pl-scale-x", `${scaleX}`);
     currentRootElement.style.setProperty("--pl-scale-y", `${scaleY}`);
 
-    const desiredCatTop = (design.catTop + (design.catSize * 0.5)) * scaleY - (design.catSize * 0.5);
-    const maxCatTop = (design.loadingTop * scaleY) - design.catSize - 12;
+    const baseCatSizePx = design.catSize;
+    const scaledDownCatSizePx = baseCatSizePx * Math.min(scaleY, 1);
+
+    const loadingTopPx = design.loadingTop * scaleY;
+    const progressTopPx = design.progressTop * scaleY;
+    const minTopLimitPx = Math.min(loadingTopPx, progressTopPx);
+
+    const maxCatSizeBySpacePx = Math.max(0, minTopLimitPx - CAT_SAFE_GAP_PX);
+    const catSizePx = Math.min(baseCatSizePx, scaledDownCatSizePx, maxCatSizeBySpacePx);
+
+    const desiredCatTop = design.catTop * scaleY;
+    const maxCatTop = minTopLimitPx - catSizePx - CAT_SAFE_GAP_PX;
     const catTopPx = Math.max(0, Math.min(desiredCatTop, maxCatTop));
+
+    currentRootElement.style.setProperty("--pl-cat-size-px", `${catSizePx}`);
     currentRootElement.style.setProperty("--pl-cat-top-px", `${catTopPx}`);
 
     applyProgress(currentProgress);

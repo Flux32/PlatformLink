@@ -12,6 +12,13 @@ namespace PlatformLink.Platform.YandexGames
         public string AppId => GetAppId();
         public string AppUrl => $"https://yandex.ru/games/app/{AppId}";
         
+        public void CloseLoadingScreen()
+        {
+#if UNITY_WEBGL && !UNITY_EDITOR
+            jslib_closeLoadingScreen();
+#endif
+        }
+        
         [DllImport("__Internal")]
         private static extern string jslib_getDeviceType();
         
@@ -38,5 +45,10 @@ namespace PlatformLink.Platform.YandexGames
         private static extern string jslib_getAppId();
 
         private string GetAppId() => jslib_getAppId();
+        
+#if UNITY_WEBGL && !UNITY_EDITOR
+        [DllImport("__Internal")]
+        private static extern void jslib_closeLoadingScreen();
+#endif
     }
 }

@@ -74,7 +74,7 @@ public class PlatformLinkSettingsWindow : EditorWindow
         yandexGamesTab.BindProperty(so.FindProperty("_yandex"));
         yandexGamesTab.Add(new HelpBox("Enable Yandex Metrika to inject counter code into every HTML file of the WebGL build.", HelpBoxMessageType.Info));
         yandexGamesTab.Add(new HelpBox("Counter ID is the numeric value from Metrika. It is used in all places of the counter snippet (tag.js?id=..., ym(...), /watch/...).", HelpBoxMessageType.Info));
-        yandexGamesTab.Add(new HelpBox("Loading Screen > _manualClose keeps the loading overlay visible after Unity starts. Close it manually by calling PlatformLink.LoadingScreen.Close().", HelpBoxMessageType.Info));
+        yandexGamesTab.Add(new HelpBox("Loading Screen > _manualClose keeps the loading overlay visible after Unity starts. Close it manually by calling PLink.Environment.CloseLoadingScreen().", HelpBoxMessageType.Info));
 
         _selectedTab = editorTab;
 

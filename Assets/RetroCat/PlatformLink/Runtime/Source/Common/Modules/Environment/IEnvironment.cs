@@ -5,6 +5,7 @@
         DeviceType DeviceType { get; }
         string Language { get; }
         string AppId { get; }
-        public string AppUrl { get; }
+        string AppUrl { get; }
+        void CloseLoadingScreen();
     }
 }

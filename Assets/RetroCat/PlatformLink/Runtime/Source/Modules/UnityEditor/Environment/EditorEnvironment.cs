@@ -11,6 +11,7 @@ namespace PlatformLink.Platform.UnityEditor
         public DeviceType DeviceType { get; private set; }
         public string AppId => "";
         public string AppUrl => Application.absoluteURL;
+        public void CloseLoadingScreen() { }
 
         public EditorEnvironment(EnvironmentEditorSettings settings)
         {
