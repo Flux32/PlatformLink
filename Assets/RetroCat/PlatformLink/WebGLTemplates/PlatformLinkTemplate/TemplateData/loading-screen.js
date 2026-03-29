@@ -25,6 +25,7 @@
       '    <p class="loading-screen__text">Загрузка...</p>',
       '    <div class="loading-screen__progress">',
       '      <div class="loading-screen__progress-track">',
+      '        <div id="progress-bar-light" class="loading-screen__progress-light"></div>',
       '        <div id="progress-bar-fill" class="loading-screen__progress-fill"></div>',
       '      </div>',
       '    </div>',
@@ -85,6 +86,7 @@
     overlayElement.innerHTML = getMarkup();
 
     currentRootElement = overlayElement.querySelector("#loading-page");
+    const progressBarLight = overlayElement.querySelector("#progress-bar-light");
     const progressBarFill = overlayElement.querySelector("#progress-bar-fill");
 
     applyLayout();
@@ -102,7 +104,12 @@
         }
 
         const normalizedProgress = Math.max(0, Math.min(1, Number(progress) || 0));
-        progressBarFill.style.width = `${normalizedProgress * 100}%`;
+        const width = `${normalizedProgress * 100}%`;
+        progressBarFill.style.width = width;
+
+        if (progressBarLight) {
+          progressBarLight.style.width = width;
+        }
       },
       hide: close
     };

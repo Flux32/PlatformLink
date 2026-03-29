@@ -41,8 +41,8 @@
     position: absolute;
     left: calc(var(--pl-cat-left) * var(--pl-scale-x) * 1px);
     top: calc(var(--pl-cat-top) * var(--pl-scale-y) * 1px);
-    width: calc(var(--pl-cat-size) * var(--pl-scale-x) * 1px);
-    height: calc(var(--pl-cat-size) * var(--pl-scale-y) * 1px);
+    width: calc(var(--pl-cat-size) * 1px);
+    height: calc(var(--pl-cat-size) * 1px);
     object-fit: contain;
 }
 
@@ -80,44 +80,56 @@
     height: 100%;
     overflow: hidden;
     border-radius: calc(28 * var(--pl-scale-y) * 1px);
-    background: linear-gradient(180deg, #101a43 0%, #060d2e 100%);
+    background:
+        linear-gradient(180deg, rgba(123, 176, 230, 0.16) 0%, rgba(18, 36, 95, 0.24) 26%, rgba(8, 13, 47, 0.95) 100%),
+        linear-gradient(180deg, #101a43 0%, #060d2e 100%);
+    box-shadow:
+        inset 0 calc(0.8 * var(--pl-scale-y) * 1px) calc(1.6 * var(--pl-scale-y) * 1px) rgba(255, 255, 255, 0.18),
+        inset 0 calc(-1.8 * var(--pl-scale-y) * 1px) calc(4.2 * var(--pl-scale-y) * 1px) rgba(4, 7, 27, 0.9);
 }
 
-.loading-screen__progress-track::before {
-    content: "";
+.loading-screen__progress-light {
     position: absolute;
-    inset: 0;
-    background-image: url("loading-progress-track.png");
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-    filter: blur(calc(var(--pl-progress-track-blur) * var(--pl-scale-y) * 1px));
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 0%;
+    height: 100%;
+    min-width: 0;
+    border-radius: calc(17.5 * var(--pl-scale-y) * 1px);
+    background: #26baf9;
+    filter: blur(calc(var(--pl-progress-glow-blur) * var(--pl-scale-y) * 1px));
+    opacity: 0.95;
+    transition: width 0.12s linear;
+    pointer-events: none;
 }
 
 .loading-screen__progress-fill {
     position: relative;
-    z-index: 1;
+    z-index: 2;
     width: 0%;
     height: 100%;
     min-width: 0;
     border-radius: calc(17.5 * var(--pl-scale-y) * 1px);
     background: linear-gradient(180deg, #91e8fa 0%, #00a9f9 100%);
     box-shadow:
-        0 0 calc(var(--pl-progress-glow-blur) * var(--pl-scale-y) * 1px) #26baf9,
         inset 0 calc(1.8 * var(--pl-scale-y) * 1px) calc(3.4 * var(--pl-scale-y) * 1px) rgba(255, 255, 255, 0.45);
     transition: width 0.12s linear;
 }
 
 .loading-screen__powered {
     position: absolute;
-    left: calc(var(--pl-powered-left) * var(--pl-scale-x) * 1px);
+    left: 50%;
     bottom: calc(var(--pl-powered-bottom) * var(--pl-scale-y) * 1px);
-    width: calc(var(--pl-powered-width) * var(--pl-scale-x) * 1px);
+    transform: translateX(-50%);
+    width: max-content;
+    max-width: calc(100% - 24px);
     margin: 0;
     color: #bcc4db;
     font-size: calc(var(--pl-powered-font-size) * var(--pl-scale-y) * 1px);
     font-weight: 400;
     line-height: calc(var(--pl-powered-line-height) * var(--pl-scale-y) * 1px);
-    text-align: right;
+    text-align: center;
     white-space: nowrap;
 }
 
@@ -143,11 +155,8 @@
     --pl-progress-height: 47;
     --pl-progress-padding: 10;
     --pl-progress-border: 3;
-    --pl-progress-track-blur: 2;
     --pl-progress-glow-blur: 6.45;
-    --pl-powered-left: 579;
     --pl-powered-bottom: 59;
-    --pl-powered-width: 281;
     --pl-powered-font-size: 24;
     --pl-powered-line-height: 79.978;
 }
@@ -174,11 +183,8 @@
     --pl-progress-height: 28;
     --pl-progress-padding: 6;
     --pl-progress-border: 1.8;
-    --pl-progress-track-blur: 1.2;
     --pl-progress-glow-blur: 3.87;
-    --pl-powered-left: 94;
     --pl-powered-bottom: 40;
-    --pl-powered-width: 188;
     --pl-powered-font-size: 16;
     --pl-powered-line-height: 79.978;
 }
