@@ -43,8 +43,23 @@
     top: calc(var(--pl-cat-top-px) * 1px);
     width: calc(var(--pl-cat-size-px) * 1px);
     height: calc(var(--pl-cat-size-px) * 1px);
-    transform: translateX(-50%);
+    transform: translateX(-50%) scale(1);
+    transform-origin: center center;
+    animation: loading-screen-cat-bounce 2.8s ease-in-out infinite;
+    will-change: transform;
     object-fit: contain;
+}
+
+@keyframes loading-screen-cat-bounce {
+    0% {
+        transform: translateX(-50%) scale(1);
+    }
+    50% {
+        transform: translateX(-50%) scale(1.1);
+    }
+    100% {
+        transform: translateX(-50%) scale(1);
+    }
 }
 
 .loading-screen__text {
@@ -63,9 +78,13 @@
 
 .loading-screen__progress {
     position: absolute;
-    left: calc(var(--pl-progress-left) * var(--pl-scale-x) * 1px);
+    left: 50%;
     top: calc(var(--pl-progress-top) * var(--pl-scale-y) * 1px);
-    width: calc(var(--pl-progress-width) * var(--pl-scale-x) * 1px);
+    transform: translateX(-50%);
+    width: min(
+        calc(var(--pl-progress-width) * var(--pl-scale-x) * 1px),
+        calc(var(--pl-progress-max-width) * 1px)
+    );
     height: calc(var(--pl-progress-height) * var(--pl-scale-y) * 1px);
     box-sizing: border-box;
     border: calc(var(--pl-progress-border) * var(--pl-scale-y) * 1px) solid rgba(255, 255, 255, 0.8);
@@ -91,16 +110,14 @@
 
 .loading-screen__progress-light {
     position: absolute;
-    z-index: 2;
-    left: calc(var(--pl-progress-padding) * var(--pl-scale-x) * 1px);
-    top: calc(var(--pl-progress-padding) * var(--pl-scale-y) * 1px);
-    width: 0px;
-    bottom: calc(var(--pl-progress-padding) * var(--pl-scale-y) * 1px);
-    min-width: 0;
+    z-index: 1;
+    inset: 0;
     border-radius: calc(17.5 * var(--pl-scale-y) * 1px);
     background: #26baf9;
     filter: blur(calc(var(--pl-progress-light-blur) * var(--pl-scale-y) * 1px));
-    opacity: 1;
+    transform-origin: left center;
+    transform: scaleX(var(--pl-progress-value, 0));
+    opacity: 0;
     transition: opacity 0.08s linear;
     pointer-events: none;
 }
@@ -114,17 +131,21 @@
     bottom: calc(var(--pl-progress-padding) * var(--pl-scale-y) * 1px);
     overflow: hidden;
     border-radius: calc(28 * var(--pl-scale-y) * 1px);
+    --pl-progress-value: 0;
 }
 
 .loading-screen__progress-fill {
-    position: relative;
-    width: 0px;
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    width: 100%;
     height: 100%;
-    min-width: 0;
     border-radius: calc(17.5 * var(--pl-scale-y) * 1px);
     background: linear-gradient(180deg, #91e8fa 0%, #00a9f9 100%);
     box-shadow:
         inset 0 calc(1.8 * var(--pl-scale-y) * 1px) calc(3.4 * var(--pl-scale-y) * 1px) rgba(255, 255, 255, 0.45);
+    transform-origin: left center;
+    transform: scaleX(var(--pl-progress-value, 0));
     transition: none;
 }
 
@@ -140,6 +161,24 @@
     font-size: calc(var(--pl-powered-font-size) * var(--pl-scale-y) * 1px);
     font-weight: 400;
     line-height: calc(var(--pl-powered-line-height) * var(--pl-scale-y) * 1px);
+    text-align: center;
+    white-space: nowrap;
+}
+
+.loading-screen__percent {
+    position: absolute;
+    left: 50%;
+    top: calc(
+        (var(--pl-progress-top) + var(--pl-progress-height) + var(--pl-percent-gap)) *
+        var(--pl-scale-y) *
+        1px
+    );
+    transform: translateX(-50%);
+    margin: 0;
+    color: #bcc4db;
+    font-size: calc(var(--pl-percent-font-size) * 1px);
+    font-weight: 400;
+    line-height: 1;
     text-align: center;
     white-space: nowrap;
 }
@@ -164,12 +203,15 @@
     --pl-progress-left: 356;
     --pl-progress-top: 684;
     --pl-progress-width: 728;
+    --pl-progress-max-width: 728;
     --pl-progress-height: 47;
     --pl-progress-padding: 10;
     --pl-progress-border: 3;
     --pl-progress-track-blur: 2;
     --pl-progress-light-blur: 6.45;
     --pl-progress-glow-blur: 6.45;
+    --pl-percent-gap: 28;
+    --pl-percent-font-size: 42;
     --pl-powered-bottom: 59;
     --pl-powered-font-size: 24;
     --pl-powered-line-height: 79.978;
@@ -195,12 +237,15 @@
     --pl-progress-left: 16;
     --pl-progress-top: 525;
     --pl-progress-width: 343;
+    --pl-progress-max-width: 400;
     --pl-progress-height: 28;
     --pl-progress-padding: 6;
     --pl-progress-border: 1.8;
     --pl-progress-track-blur: 1.2;
     --pl-progress-light-blur: 3.87;
     --pl-progress-glow-blur: 3.87;
+    --pl-percent-gap: 19;
+    --pl-percent-font-size: 24;
     --pl-powered-bottom: 40;
     --pl-powered-font-size: 16;
     --pl-powered-line-height: 79.978;
