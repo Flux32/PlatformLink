@@ -39,10 +39,11 @@
 
 .loading-screen__cat {
     position: absolute;
-    left: calc(var(--pl-cat-left) * var(--pl-scale-x) * 1px);
-    top: calc(var(--pl-cat-top) * var(--pl-scale-y) * 1px);
+    left: 50%;
+    top: calc(var(--pl-cat-top-px) * 1px);
     width: calc(var(--pl-cat-size) * 1px);
     height: calc(var(--pl-cat-size) * 1px);
+    transform: translateX(-50%);
     object-fit: contain;
 }
 
@@ -66,19 +67,18 @@
     top: calc(var(--pl-progress-top) * var(--pl-scale-y) * 1px);
     width: calc(var(--pl-progress-width) * var(--pl-scale-x) * 1px);
     height: calc(var(--pl-progress-height) * var(--pl-scale-y) * 1px);
-    padding:
-        calc(var(--pl-progress-padding) * var(--pl-scale-y) * 1px)
-        calc(var(--pl-progress-padding) * var(--pl-scale-x) * 1px);
     box-sizing: border-box;
     border: calc(var(--pl-progress-border) * var(--pl-scale-y) * 1px) solid rgba(255, 255, 255, 0.8);
     border-radius: calc(34.5 * var(--pl-scale-y) * 1px);
+    overflow: visible;
 }
 
 .loading-screen__progress-track {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
+    position: absolute;
+    left: calc(var(--pl-progress-padding) * var(--pl-scale-x) * 1px);
+    top: calc(var(--pl-progress-padding) * var(--pl-scale-y) * 1px);
+    right: calc(var(--pl-progress-padding) * var(--pl-scale-x) * 1px);
+    bottom: calc(var(--pl-progress-padding) * var(--pl-scale-y) * 1px);
     border-radius: calc(28 * var(--pl-scale-y) * 1px);
     background:
         linear-gradient(180deg, rgba(123, 176, 230, 0.16) 0%, rgba(18, 36, 95, 0.24) 26%, rgba(8, 13, 47, 0.95) 100%),
@@ -86,28 +86,39 @@
     box-shadow:
         inset 0 calc(0.8 * var(--pl-scale-y) * 1px) calc(1.6 * var(--pl-scale-y) * 1px) rgba(255, 255, 255, 0.18),
         inset 0 calc(-1.8 * var(--pl-scale-y) * 1px) calc(4.2 * var(--pl-scale-y) * 1px) rgba(4, 7, 27, 0.9);
+    filter: blur(calc(var(--pl-progress-track-blur) * var(--pl-scale-y) * 1px));
 }
 
 .loading-screen__progress-light {
     position: absolute;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 0%;
-    height: 100%;
+    z-index: 2;
+    left: calc(var(--pl-progress-padding) * var(--pl-scale-x) * 1px);
+    top: calc(var(--pl-progress-padding) * var(--pl-scale-y) * 1px);
+    width: 0px;
+    bottom: calc(var(--pl-progress-padding) * var(--pl-scale-y) * 1px);
     min-width: 0;
     border-radius: calc(17.5 * var(--pl-scale-y) * 1px);
     background: #26baf9;
-    filter: blur(calc(var(--pl-progress-glow-blur) * var(--pl-scale-y) * 1px));
-    opacity: 0.95;
-    transition: width 0.12s linear;
+    filter: blur(calc(var(--pl-progress-light-blur) * var(--pl-scale-y) * 1px));
+    opacity: 1;
+    transition: width 0.12s linear, opacity 0.12s linear;
     pointer-events: none;
+}
+
+.loading-screen__progress-fill-clip {
+    position: absolute;
+    z-index: 3;
+    left: calc(var(--pl-progress-padding) * var(--pl-scale-x) * 1px);
+    top: calc(var(--pl-progress-padding) * var(--pl-scale-y) * 1px);
+    right: calc(var(--pl-progress-padding) * var(--pl-scale-x) * 1px);
+    bottom: calc(var(--pl-progress-padding) * var(--pl-scale-y) * 1px);
+    overflow: hidden;
+    border-radius: calc(28 * var(--pl-scale-y) * 1px);
 }
 
 .loading-screen__progress-fill {
     position: relative;
-    z-index: 2;
-    width: 0%;
+    width: 0px;
     height: 100%;
     min-width: 0;
     border-radius: calc(17.5 * var(--pl-scale-y) * 1px);
@@ -141,8 +152,8 @@
     --pl-bg-width: 1920;
     --pl-bg-height: 1080;
     --pl-bg-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 1920 1080' xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='none'><rect x='0' y='0' height='100%' width='100%' fill='url(%23grad)' opacity='1'/><defs><radialGradient id='grad' gradientUnits='userSpaceOnUse' cx='0' cy='0' r='10' gradientTransform='matrix(1.4365e-13 42 -74.667 3.3935e-13 960 512)'><stop stop-color='rgba(26,36,65,1)' offset='0'/><stop stop-color='rgba(15,22,41,1)' offset='0.5'/><stop stop-color='rgba(4,7,17,1)' offset='1'/></radialGradient></defs></svg>");
-    --pl-cat-left: 546;
     --pl-cat-top: 259;
+    --pl-cat-top-px: 259;
     --pl-cat-size: 318.78;
     --pl-loading-left: 613;
     --pl-loading-top: 606;
@@ -155,6 +166,8 @@
     --pl-progress-height: 47;
     --pl-progress-padding: 10;
     --pl-progress-border: 3;
+    --pl-progress-track-blur: 2;
+    --pl-progress-light-blur: 6.45;
     --pl-progress-glow-blur: 6.45;
     --pl-powered-bottom: 59;
     --pl-powered-font-size: 24;
@@ -169,8 +182,8 @@
     --pl-bg-width: 375;
     --pl-bg-height: 812;
     --pl-bg-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 375 812' xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='none'><rect x='0' y='0' height='100%' width='100%' fill='url(%23grad)' opacity='1'/><defs><radialGradient id='grad' gradientUnits='userSpaceOnUse' cx='0' cy='0' r='10' gradientTransform='matrix(0.049999 22.705 -34.314 0.075562 187.5 384.95)'><stop stop-color='rgba(26,36,65,1)' offset='0'/><stop stop-color='rgba(15,22,41,1)' offset='0.5'/><stop stop-color='rgba(4,7,17,1)' offset='1'/></radialGradient></defs></svg>");
-    --pl-cat-left: 71.380859375;
     --pl-cat-top: 259;
+    --pl-cat-top-px: 259;
     --pl-cat-size: 204.01919555664062;
     --pl-loading-left: 123.80078125;
     --pl-loading-top: 477;
@@ -183,6 +196,8 @@
     --pl-progress-height: 28;
     --pl-progress-padding: 6;
     --pl-progress-border: 1.8;
+    --pl-progress-track-blur: 1.2;
+    --pl-progress-light-blur: 3.87;
     --pl-progress-glow-blur: 3.87;
     --pl-powered-bottom: 40;
     --pl-powered-font-size: 16;
