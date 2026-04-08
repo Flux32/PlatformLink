@@ -42,6 +42,7 @@
   let currentRootElement = null;
   let currentProgressBarLight = null;
   let currentProgressFillClip = null;
+  let currentProgressGlow = null;
   let currentProgressPercent = null;
   let currentDisplayedProgress = 0;
   let currentSourceProgress = 0;
@@ -59,6 +60,7 @@
       '    <p class="loading-screen__text">Загрузка...</p>',
       '    <div class="loading-screen__progress">',
       '      <div class="loading-screen__progress-track"></div>',
+      '      <div class="loading-screen__progress-glow"></div>',
       '      <div class="loading-screen__progress-fill-clip">',
       '        <div id="progress-bar-light" class="loading-screen__progress-light"></div>',
       '        <div id="progress-bar-fill" class="loading-screen__progress-fill"></div>',
@@ -132,6 +134,10 @@
     const clampedProgress = Math.max(0, Math.min(1, progress));
     currentProgressFillClip.style.setProperty("--pl-progress-value", `${clampedProgress}`);
 
+    if (currentProgressGlow) {
+      currentProgressGlow.style.setProperty("--pl-progress-width-percent", `${clampedProgress * 100}`);
+    }
+
     if (currentProgressBarLight) {
       currentProgressBarLight.style.opacity = clampedProgress > 0 ? "1" : "0";
     }
@@ -154,6 +160,7 @@
     currentRootElement = null;
     currentProgressBarLight = null;
     currentProgressFillClip = null;
+    currentProgressGlow = null;
     currentProgressPercent = null;
     currentDisplayedProgress = 0;
     currentSourceProgress = 0;
@@ -281,6 +288,7 @@
     currentRootElement = overlayElement.querySelector("#loading-page");
     currentProgressBarLight = overlayElement.querySelector("#progress-bar-light");
     currentProgressFillClip = overlayElement.querySelector(".loading-screen__progress-fill-clip");
+    currentProgressGlow = overlayElement.querySelector(".loading-screen__progress-glow");
     currentProgressPercent = overlayElement.querySelector("#loading-progress-percent");
 
     currentDisplayedProgress = 0;
