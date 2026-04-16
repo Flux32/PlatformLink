@@ -2,6 +2,8 @@ using System;
 using PlatformLink.PluginDebug;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Advertisement;
+using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Advertisement.Adapters;
+using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Advertisement.Adapters.Stub;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Device;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Environment;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Leaderboards;
@@ -97,8 +99,9 @@ namespace PlatformLink
 #elif UNITY_WEBGL
             IModuleFactory moduleFactory = new YandexModuleFactory(_logger);
 #endif
-            IInterstitialAd interstetialAd = moduleFactory.CreateInterstitialAd();
-            IRewardedAd rewardedAd = moduleFactory.CreateRewardedAd();
+            PlatformSettingsEntry activeEntry = ResolveActivePlatformEntry();
+            IInterstitialAd interstetialAd = new InterstitialAdModule(ResolveInterstitialAdapter(activeEntry));
+            IRewardedAd rewardedAd = new RewardedAdModule(ResolveRewardedAdapter(activeEntry));
             _advertisement = new Advertisement(interstetialAd, rewardedAd);
             _environment = moduleFactory.CreateEnvironment();
             _storage = moduleFactory.CreateStorage();
@@ -128,6 +131,45 @@ namespace PlatformLink
             IsInitialized = true;
             Initilized?.Invoke();
             callback?.Invoke();
+        }
+
+        private PlatformSettingsEntry ResolveActivePlatformEntry()
+        {
+            PlatformLinkSettings settings = PlatformLinkSettings.Instance;
+
+#if UNITY_EDITOR
+            foreach (PlatformSettingsEntry entry in settings.Platforms)
+            {
+                if (entry.Type == PlatformSettingsType.Editor)
+                    return entry;
+            }
+#endif
+
+            return settings.GetActivePlatformEntry();
+        }
+
+        private IInterstitialAdAdapter ResolveInterstitialAdapter(PlatformSettingsEntry entry)
+        {
+            if (entry == null)
+                return new StubInterstitialAdAdapter(_logger);
+
+            IModuleAdapterConfig config = entry.FindAdapterConfig(PlatformModuleKind.InterstitialAd);
+            if (config is InterstitialAdapterConfig interstitialConfig)
+                return interstitialConfig.CreateAdapter(_logger);
+
+            return new StubInterstitialAdAdapter(_logger);
+        }
+
+        private IRewardedAdAdapter ResolveRewardedAdapter(PlatformSettingsEntry entry)
+        {
+            if (entry == null)
+                return new StubRewardedAdAdapter(_logger);
+
+            IModuleAdapterConfig config = entry.FindAdapterConfig(PlatformModuleKind.RewardedAd);
+            if (config is RewardedAdapterConfig rewardedConfig)
+                return rewardedConfig.CreateAdapter(_logger);
+
+            return new StubRewardedAdAdapter(_logger);
         }
 
         private void InitializeRemoteConfig(Action onCompleted)

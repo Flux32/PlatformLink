@@ -1,7 +1,6 @@
 #if UNITY_EDITOR
 using PlatformLink.Platform.UnityEditor;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules;
-using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Advertisement;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Analytics;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Device;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Environment;
@@ -24,34 +23,14 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.UnityEditor.Factories
 {
     public class EditorModuleFactory : IModuleFactory
     {
-        private const string InterstitialViewPath = "Prefabs/Ad/interstetial_editor_ad";
-        private const string RewardedViewPath = "Prefabs/Ad/rewarded_editor_ad";
-        
         private readonly ILogger _logger;
-            
+
         public EditorModuleFactory(ILogger logger)
         {
             _logger = logger;
         }
-        
-        private EditorSettings EditorSettings => PlatformLinkSettings.Instance.Editor;
-        
-        public IInterstitialAd CreateInterstitialAd()
-        {
-            EditorInterstitialView interstitialViewPrefab = Resources.Load<EditorInterstitialView>(InterstitialViewPath);
-            EditorInterstitialView interstitialView = Object.Instantiate(interstitialViewPrefab);
-        
-            Object.DontDestroyOnLoad(interstitialView.gameObject);
-            return new EditorInterstitialAd(_logger, interstitialView);
-        }
 
-        public IRewardedAd CreateRewardedAd()
-        {
-            EditorRewardedView rewardedViewPrefab = Resources.Load<EditorRewardedView>(RewardedViewPath);
-            EditorRewardedView rewardedView = Object.Instantiate(rewardedViewPrefab);
-        
-            return new EditorRewardedAd(_logger, rewardedView);
-        }
+        private EditorSettings EditorSettings => PlatformLinkSettings.Instance.Editor;
 
         public IEnvironment CreateEnvironment()
         {

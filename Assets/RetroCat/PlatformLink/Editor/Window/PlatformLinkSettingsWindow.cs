@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using RetroCat.PlatformLink.Editor.Modules;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -75,7 +77,7 @@ public class PlatformLinkSettingsWindow : EditorWindow
         if (index < 0 || index >= _platforms.Count)
             return;
 
-        PlatformBuilder.Build(_platforms[index]);
+        PlatformBuilder.Build(index);
     }
 
     private void UpdateBuildButtonState()
@@ -308,8 +310,10 @@ public class PlatformLinkSettingsWindow : EditorWindow
         SerializedProperty platformProperty = _platformsProperty.GetArrayElementAtIndex(index);
         SerializedProperty typeProperty = platformProperty.FindPropertyRelative("_type");
         PlatformSettingsType platformType = (PlatformSettingsType)typeProperty.enumValueIndex;
-        SerializedProperty settingsProperty = GetSettingsProperty(platformProperty, platformType);
 
+        RenderModulesSection(index, platformProperty, platformType);
+
+        SerializedProperty settingsProperty = GetSettingsProperty(platformProperty, platformType);
         if (settingsProperty == null)
             return;
 
@@ -317,6 +321,207 @@ public class PlatformLinkSettingsWindow : EditorWindow
         settingsField.BindProperty(settingsProperty);
         _settingsContent.Add(settingsField);
         AddHelpBoxes(platformType);
+    }
+
+    private void RenderModulesSection(int entryIndex, SerializedProperty platformProperty, PlatformSettingsType platformType)
+    {
+        Foldout foldout = new Foldout { text = "Modules", value = true };
+        foldout.style.marginBottom = 8;
+
+        SerializedProperty modulesProperty = platformProperty.FindPropertyRelative("_modules");
+        PlatformSettingsEntry entry = _platforms[entryIndex];
+
+        for (int i = 0; i < modulesProperty.arraySize; i++)
+        {
+            SerializedProperty moduleProperty = modulesProperty.GetArrayElementAtIndex(i);
+            SerializedProperty adapterConfigProperty = moduleProperty.FindPropertyRelative("_adapterConfig");
+            if (i >= entry.Modules.Count)
+                continue;
+
+            foldout.Add(CreateModuleRow(entryIndex, i, entry.Modules[i], platformType, adapterConfigProperty));
+        }
+
+        Button addButton = new Button(() => ShowAddModuleMenu(entryIndex, platformType))
+        {
+            text = "+ Add Module",
+        };
+        addButton.style.marginTop = 4;
+        foldout.Add(addButton);
+
+        _settingsContent.Add(foldout);
+    }
+
+    private VisualElement CreateModuleRow(int entryIndex, int moduleIndex, PlatformModuleEntry moduleEntry, PlatformSettingsType platformType, SerializedProperty adapterConfigProperty)
+    {
+        VisualElement wrapper = new VisualElement
+        {
+            style =
+            {
+                marginTop = 2,
+                marginBottom = 2,
+                paddingTop = 4,
+                paddingBottom = 4,
+                paddingLeft = 6,
+                paddingRight = 6,
+                borderLeftWidth = 2,
+                borderLeftColor = new Color(0.4f, 0.6f, 0.9f, 0.8f),
+                backgroundColor = new Color(0, 0, 0, 0.08f),
+            }
+        };
+
+        VisualElement header = new VisualElement
+        {
+            style = { flexDirection = FlexDirection.Row, alignItems = Align.Center }
+        };
+
+        Label kindLabel = new Label(ModuleAdapterRegistry.GetKindDisplayName(moduleEntry.Kind))
+        {
+            style = { flexGrow = 1, unityFontStyleAndWeight = FontStyle.Bold }
+        };
+
+        string adapterDisplay = moduleEntry.HasAdapter
+            ? moduleEntry.AdapterConfig.DisplayName
+            : "(none)";
+        Button adapterButton = new Button(() => ShowAdapterMenu(entryIndex, moduleIndex, moduleEntry.Kind, platformType))
+        {
+            text = $"Adapter: {adapterDisplay} ▼",
+            style = { marginRight = 4 }
+        };
+
+        Button removeButton = new Button(() => RemoveModule(entryIndex, moduleIndex))
+        {
+            text = "×",
+            style = { width = 22 }
+        };
+
+        header.Add(kindLabel);
+        header.Add(adapterButton);
+        header.Add(removeButton);
+        wrapper.Add(header);
+
+        if (moduleEntry.HasAdapter)
+        {
+            PropertyField adapterField = new PropertyField(adapterConfigProperty, string.Empty);
+            adapterField.BindProperty(adapterConfigProperty);
+            wrapper.Add(adapterField);
+        }
+
+        return wrapper;
+    }
+
+    private void ShowAddModuleMenu(int entryIndex, PlatformSettingsType platformType)
+    {
+        GenericMenu menu = new GenericMenu();
+        PlatformSettingsEntry entry = _settings.Platforms[entryIndex];
+        IReadOnlyList<ModuleAdapterRegistry.AdapterDescriptor> adapters = ModuleAdapterRegistry.GetAdapters(platformType);
+
+        foreach (PlatformModuleKind kind in Enum.GetValues(typeof(PlatformModuleKind)))
+        {
+            string label = ModuleAdapterRegistry.GetKindDisplayName(kind);
+
+            if (entry.HasModuleOfKind(kind))
+            {
+                menu.AddDisabledItem(new GUIContent(label));
+                continue;
+            }
+
+            bool hasAdaptersForPlatform = false;
+            for (int i = 0; i < adapters.Count; i++)
+            {
+                if (adapters[i].Kind == kind)
+                {
+                    hasAdaptersForPlatform = true;
+                    break;
+                }
+            }
+
+            if (hasAdaptersForPlatform == false)
+            {
+                menu.AddDisabledItem(new GUIContent($"{label} (no adapters)"));
+                continue;
+            }
+
+            PlatformModuleKind captured = kind;
+            menu.AddItem(new GUIContent(label), false, () => AddModule(entryIndex, captured));
+        }
+
+        menu.ShowAsContext();
+    }
+
+    private void ShowAdapterMenu(int entryIndex, int moduleIndex, PlatformModuleKind kind, PlatformSettingsType platformType)
+    {
+        GenericMenu menu = new GenericMenu();
+        PlatformModuleEntry moduleEntry = _settings.Platforms[entryIndex].Modules[moduleIndex];
+
+        menu.AddItem(new GUIContent("None"), moduleEntry.HasAdapter == false, () => ClearAdapter(entryIndex, moduleIndex));
+        menu.AddSeparator(string.Empty);
+
+        IReadOnlyList<ModuleAdapterRegistry.AdapterDescriptor> adapters = ModuleAdapterRegistry.GetAdapters(platformType);
+        bool anyAdded = false;
+        for (int i = 0; i < adapters.Count; i++)
+        {
+            if (adapters[i].Kind != kind)
+                continue;
+
+            anyAdded = true;
+            ModuleAdapterRegistry.AdapterDescriptor captured = adapters[i];
+            bool isCurrent = moduleEntry.HasAdapter
+                && moduleEntry.AdapterConfig.GetType() == captured.ConfigType;
+            menu.AddItem(new GUIContent(captured.DisplayName), isCurrent, () => SetAdapter(entryIndex, moduleIndex, captured));
+        }
+
+        if (anyAdded == false)
+            menu.AddDisabledItem(new GUIContent("No adapters available"));
+
+        menu.ShowAsContext();
+    }
+
+    private void AddModule(int entryIndex, PlatformModuleKind kind)
+    {
+        if (entryIndex < 0 || entryIndex >= _settings.Platforms.Count)
+            return;
+
+        Undo.RecordObject(_settings, "Add Module");
+        _settings.Platforms[entryIndex].AddModule(kind);
+        ApplySettingsChanges();
+        RefreshPlatforms();
+        SetSelectedIndex(entryIndex);
+    }
+
+    private void SetAdapter(int entryIndex, int moduleIndex, ModuleAdapterRegistry.AdapterDescriptor adapter)
+    {
+        if (entryIndex < 0 || entryIndex >= _settings.Platforms.Count)
+            return;
+
+        Undo.RecordObject(_settings, "Set Adapter");
+        _settings.Platforms[entryIndex].Modules[moduleIndex].SetAdapter(adapter.CreateConfig());
+        ApplySettingsChanges();
+        RefreshPlatforms();
+        SetSelectedIndex(entryIndex);
+    }
+
+    private void ClearAdapter(int entryIndex, int moduleIndex)
+    {
+        if (entryIndex < 0 || entryIndex >= _settings.Platforms.Count)
+            return;
+
+        Undo.RecordObject(_settings, "Clear Adapter");
+        _settings.Platforms[entryIndex].Modules[moduleIndex].ClearAdapter();
+        ApplySettingsChanges();
+        RefreshPlatforms();
+        SetSelectedIndex(entryIndex);
+    }
+
+    private void RemoveModule(int entryIndex, int moduleIndex)
+    {
+        if (entryIndex < 0 || entryIndex >= _settings.Platforms.Count)
+            return;
+
+        Undo.RecordObject(_settings, "Remove Module");
+        _settings.Platforms[entryIndex].RemoveModuleAt(moduleIndex);
+        ApplySettingsChanges();
+        RefreshPlatforms();
+        SetSelectedIndex(entryIndex);
     }
 
     private void AddHelpBoxes(PlatformSettingsType type)
@@ -327,10 +532,6 @@ public class PlatformLinkSettingsWindow : EditorWindow
                 _settingsContent.Add(new HelpBox("Editor Platform Games: this list controls which games are returned by PLink.Platform.GetAllGames() while running in the Unity Editor.", HelpBoxMessageType.Info));
                 _settingsContent.Add(new HelpBox("Editor Leaderboards: use 'Fake Loading Time (Seconds)' to simulate request latency for EditorLeaderboard.", HelpBoxMessageType.Info));
                 _settingsContent.Add(new HelpBox("Editor Platform: toggle 'Authorized' to control the initial PLink.Platform.Authorized value in the Unity Editor.", HelpBoxMessageType.Info));
-                break;
-            case PlatformSettingsType.Android:
-            case PlatformSettingsType.Ios:
-                _settingsContent.Add(new HelpBox("Google Mobile Ads App ID will look similar to this sample ID: ca-app-pub-3940256099942544~3347511713", HelpBoxMessageType.Info));
                 break;
             case PlatformSettingsType.YandexGames:
                 _settingsContent.Add(new HelpBox("Enable Yandex Metrika to inject counter code into every HTML file of the WebGL build.", HelpBoxMessageType.Info));
@@ -346,10 +547,6 @@ public class PlatformLinkSettingsWindow : EditorWindow
         {
             case PlatformSettingsType.Editor:
                 return platformProperty.FindPropertyRelative("_editorSettings");
-            case PlatformSettingsType.Android:
-                return platformProperty.FindPropertyRelative("_androidSettings").FindPropertyRelative("_admobSettings");
-            case PlatformSettingsType.Ios:
-                return platformProperty.FindPropertyRelative("_iosSettings").FindPropertyRelative("_admobSettings");
             case PlatformSettingsType.YandexGames:
                 return platformProperty.FindPropertyRelative("_yandexSettings");
             default:

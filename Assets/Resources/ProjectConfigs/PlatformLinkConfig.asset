@@ -86,6 +86,7 @@ MonoBehaviour:
       _yandexMetrikaId: 
       _loadingScreen:
         _manualClose: 0
+    _modules: []
   - _name: Android
     _type: 1
     _editorSettings:
@@ -159,6 +160,13 @@ MonoBehaviour:
       _yandexMetrikaId: 
       _loadingScreen:
         _manualClose: 0
+    _modules:
+    - _kind: 0
+      _adapterConfig:
+        rid: 6810088430150090846
+    - _kind: 1
+      _adapterConfig:
+        rid: 6810088430150090847
   - _name: Yandex Games
     _type: 3
     _editorSettings:
@@ -232,6 +240,8 @@ MonoBehaviour:
       _yandexMetrikaId: 
       _loadingScreen:
         _manualClose: 0
+    _modules: []
+  _activePlatformIndex: -1
   _editor:
     _environment:
       _language: En
@@ -303,3 +313,12 @@ MonoBehaviour:
     _yandexMetrikaId: 
     _loadingScreen:
       _manualClose: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: 6810088430150090846
+      type: {class: YandexMobileAdsInterstitialAdapterConfig, ns: , asm: RetroCat.PlatformLink}
+      data: 
+    - rid: 6810088430150090847
+      type: {class: AdmobRewardedAdapterConfig, ns: , asm: RetroCat.PlatformLink}
+      data: 

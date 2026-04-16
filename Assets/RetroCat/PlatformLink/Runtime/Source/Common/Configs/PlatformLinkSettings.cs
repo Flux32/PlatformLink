@@ -5,10 +5,28 @@ using UnityEngine;
 public class PlatformLinkSettings : ScriptableObject
 {
     [SerializeField] private List<PlatformSettingsEntry> _platforms = new List<PlatformSettingsEntry>();
+    [SerializeField, HideInInspector] private int _activePlatformIndex = -1;
     [SerializeField, HideInInspector] private EditorSettings _editor = new EditorSettings();
     [SerializeField, HideInInspector] private AndroidSettings _android = new AndroidSettings();
     [SerializeField, HideInInspector] private IosSettings _ios = new IosSettings();
     [SerializeField, HideInInspector] private YandexSettings _yandex = new YandexSettings();
+
+    public int ActivePlatformIndex => _activePlatformIndex;
+
+    public void SetActivePlatformIndex(int index)
+    {
+        _activePlatformIndex = index;
+    }
+
+    public PlatformSettingsEntry GetActivePlatformEntry()
+    {
+        EnsurePlatformEntries();
+
+        if (_activePlatformIndex >= 0 && _activePlatformIndex < _platforms.Count)
+            return _platforms[_activePlatformIndex];
+
+        return null;
+    }
 
     public IReadOnlyList<PlatformSettingsEntry> Platforms
     {

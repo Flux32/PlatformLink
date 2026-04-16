@@ -1,29 +1,18 @@
-﻿#if UNITY_EDITOR
+#if UNITY_EDITOR
 using System;
-using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Advertisement;
+using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Advertisement.Adapters;
 using ILogger = PlatformLink.PluginDebug.ILogger;
 
 namespace PlatformLink.Platform.UnityEditor
 {
-    public class EditorInterstitialAd : IInterstitialAd
+    public class EditorInterstitialAdapter : IInterstitialAdAdapter
     {
-        private readonly ILogger _logger;
-
         private const string InterstitialOpenedMessage = "interstitial opened";
         private const string InterstitialClosedMessage = "interstitial closed";
 
+        private readonly ILogger _logger;
         private readonly EditorInterstitialView _interstitialClient;
-        
-        public EditorInterstitialAd(ILogger logger, 
-            EditorInterstitialView editorClient)
-        {
-            _logger = logger;
-            _interstitialClient = editorClient;
 
-            _interstitialClient.Opened += OnOpened;
-            _interstitialClient.Closed += OnClosed;
-        }
-        
         public event Action Opened;
         public event Action Closed;
         public event Action Failed;
@@ -31,18 +20,13 @@ namespace PlatformLink.Platform.UnityEditor
         public bool IsOpened { get; private set; }
         public bool NoAdMode { get; set; }
 
-        private void OnClosed()
+        public EditorInterstitialAdapter(ILogger logger, EditorInterstitialView editorClient)
         {
-            IsOpened = false;
-            _logger.Log(InterstitialClosedMessage);
-            Closed?.Invoke();
-        }
+            _logger = logger;
+            _interstitialClient = editorClient;
 
-        private void OnOpened()
-        {
-            IsOpened = true;
-            _logger.Log(InterstitialOpenedMessage);
-            Opened?.Invoke();
+            _interstitialClient.Opened += OnOpened;
+            _interstitialClient.Closed += OnClosed;
         }
 
         public void Show()
@@ -52,7 +36,7 @@ namespace PlatformLink.Platform.UnityEditor
                 Failed?.Invoke();
                 return;
             }
-            
+
             if (IsOpened)
                 _logger.LogWarning("Attempt to show interstitial on top of open interstitial");
             else
@@ -62,6 +46,20 @@ namespace PlatformLink.Platform.UnityEditor
         public bool CanShow()
         {
             return IsOpened == false && NoAdMode == false;
+        }
+
+        private void OnOpened()
+        {
+            IsOpened = true;
+            _logger.Log(InterstitialOpenedMessage);
+            Opened?.Invoke();
+        }
+
+        private void OnClosed()
+        {
+            IsOpened = false;
+            _logger.Log(InterstitialClosedMessage);
+            Closed?.Invoke();
         }
     }
 }

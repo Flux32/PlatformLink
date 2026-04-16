@@ -1,11 +1,12 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 using UnityEngine;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Advertisement;
+using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Advertisement.Adapters;
 
 namespace PlatformLink.Platform.YandexGames
 {
-    public class YandexRewardedAd : MonoBehaviour, IRewardedAd
+    public class YandexGamesRewardedAdapter : MonoBehaviour, IRewardedAdAdapter
     {
         public event Action Opened;
         public event Action Closed;
@@ -25,9 +26,7 @@ namespace PlatformLink.Platform.YandexGames
         public void Show()
         {
             if (IsOpened)
-            {
                 return;
-            }
 
             IsOpened = true;
             jslib_showRewardedAd();

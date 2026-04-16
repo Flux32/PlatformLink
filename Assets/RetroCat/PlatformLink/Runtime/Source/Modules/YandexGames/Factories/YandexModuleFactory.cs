@@ -2,7 +2,6 @@
 using PlatformLink.Platform.YandexGames;
 using PlatformLink.PluginDebug;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules;
-using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Advertisement;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Analytics;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Device;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Environment;
@@ -32,16 +31,6 @@ namespace RetroCat.PlatformLink.Runtime.Source.Modules.YandexGames.Factories
         public IEnvironment CreateEnvironment()
         {
             return PlatformLinkObject.AddComponent<YandexEnvironment>();
-        }
-
-        public IInterstitialAd CreateInterstitialAd()
-        {
-            return PlatformLinkObject.AddComponent<YandexInterstitialAd>();
-        }
-
-        public IRewardedAd CreateRewardedAd()
-        {
-            return PlatformLinkObject.AddComponent<YandexRewardedAd>();
         }
 
         public IStorage CreateStorage()

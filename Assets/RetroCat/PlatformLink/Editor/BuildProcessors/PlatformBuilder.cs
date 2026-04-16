@@ -5,8 +5,15 @@ using UnityEngine;
 
 public static class PlatformBuilder
 {
-    public static void Build(PlatformSettingsEntry entry)
+    public static void Build(int entryIndex)
     {
+        PlatformLinkSettings settings = PlatformLinkSettings.Instance;
+
+        if (entryIndex < 0 || entryIndex >= settings.Platforms.Count)
+            return;
+
+        PlatformSettingsEntry entry = settings.Platforms[entryIndex];
+
         if (PlatformBuildTargetResolver.TryGetBuildTarget(entry.Type, out BuildTarget target) == false)
             return;
 
@@ -29,6 +36,10 @@ public static class PlatformBuilder
 
         if (string.IsNullOrEmpty(outputPath))
             return;
+
+        settings.SetActivePlatformIndex(entryIndex);
+        EditorUtility.SetDirty(settings);
+        AssetDatabase.SaveAssets();
 
         BuildPlayerOptions options = new BuildPlayerOptions
         {

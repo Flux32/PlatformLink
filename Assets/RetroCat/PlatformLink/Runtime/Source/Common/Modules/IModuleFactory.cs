@@ -1,5 +1,4 @@
-﻿using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Advertisement;
-using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Environment;
+﻿using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Environment;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Device;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Leaderboards;
 using RetroCat.PlatformLink.Runtime.Source.Common.Modules.Platform;
@@ -12,8 +11,6 @@ namespace RetroCat.PlatformLink.Runtime.Source.Common.Modules
 {
     public interface IModuleFactory
     {
-        IInterstitialAd CreateInterstitialAd();
-        IRewardedAd CreateRewardedAd();
         IEnvironment CreateEnvironment();
         IStorage CreateStorage();
         IPurchases CreatePurchases();
