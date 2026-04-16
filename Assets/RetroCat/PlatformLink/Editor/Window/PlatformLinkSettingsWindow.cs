@@ -18,6 +18,8 @@ public class PlatformLinkSettingsWindow : EditorWindow
     private ListView _platformsList;
     private ToolbarMenu _addPlatformMenu;
     private VisualElement _settingsContent;
+    private VisualElement _settingsFooter;
+    private Button _buildButton;
 
     [MenuItem("Window/PlatformLink/Settings", false, int.MaxValue)]
     private static void Open()
@@ -50,12 +52,55 @@ public class PlatformLinkSettingsWindow : EditorWindow
         _platformsList = rootVisualElement.Q<ListView>("platforms-list");
         _addPlatformMenu = rootVisualElement.Q<ToolbarMenu>("add-platform-menu");
         _settingsContent = rootVisualElement.Q<VisualElement>("settings-content");
+        _settingsFooter = rootVisualElement.Q<VisualElement>("settings-footer");
+        _buildButton = rootVisualElement.Q<Button>("build-button");
 
         ConfigureAddPlatformMenu();
         ConfigurePlatformsList();
+        ConfigureBuildButton();
         RefreshPlatforms();
         EnsureValidSelection();
         RenderSelectedPlatformSettings();
+    }
+
+    private void ConfigureBuildButton()
+    {
+        _buildButton.clicked += HandleBuildClicked;
+        _buildButton.schedule.Execute(UpdateBuildButtonState).Every(500);
+    }
+
+    private void HandleBuildClicked()
+    {
+        int index = _platformsList.selectedIndex;
+        if (index < 0 || index >= _platforms.Count)
+            return;
+
+        PlatformBuilder.Build(_platforms[index]);
+    }
+
+    private void UpdateBuildButtonState()
+    {
+        int index = _platformsList.selectedIndex;
+        if (index < 0 || index >= _platforms.Count)
+        {
+            _settingsFooter.style.display = DisplayStyle.None;
+            return;
+        }
+
+        PlatformSettingsType type = _platforms[index].Type;
+        if (PlatformBuildTargetResolver.TryGetBuildTarget(type, out BuildTarget target) == false)
+        {
+            _settingsFooter.style.display = DisplayStyle.None;
+            return;
+        }
+
+        _settingsFooter.style.display = DisplayStyle.Flex;
+
+        bool isActive = EditorUserBuildSettings.activeBuildTarget == target;
+        _buildButton.SetEnabled(isActive);
+        _buildButton.tooltip = isActive
+            ? $"Build the project for {target}."
+            : $"Switch active Build Target to {target} to enable this build.";
     }
 
     private void ConfigureAddPlatformMenu()
@@ -251,6 +296,7 @@ public class PlatformLinkSettingsWindow : EditorWindow
     private void RenderSelectedPlatformSettings()
     {
         _settingsContent.Clear();
+        UpdateBuildButtonState();
 
         int index = _platformsList.selectedIndex;
         if (index < 0 || index >= _platforms.Count)
